@@ -47,6 +47,7 @@
 
     <Button
         android:id="@+id/btngo"
+        style="@android:style/Widget.Material.Light.Button"
         android:layout_width="89dp"
         android:layout_height="38dp"
         android:text="megnéz"

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.norbo.android.projects.rssolvaso.controller.RssController;
@@ -29,14 +30,26 @@ public class RssActivity extends AppCompatActivity {
         TextView tvCsatornaCim = findViewById(R.id.tvCsatornaCim);
         tvCsatornaCim.setText(getIntent().getStringExtra("cim"));
 
+        final ProgressBar progressBar = new ProgressBar(this);
+
+        final RssController rssController = new RssController(this);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final List<RssItem> rssItems = RssController.getRssItems(link);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        rssController.showProgress();
+                    }
+                });
+
+                final List<RssItem> rssItems = rssController.getRssItems(link);
                 if(rssItems != null) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            rssController.dismissProgress();
                             rv.setAdapter(new RssItemAdapter(getApplicationContext(), rssItems));
                             rv.setItemAnimator(new DefaultItemAnimator());
                             rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

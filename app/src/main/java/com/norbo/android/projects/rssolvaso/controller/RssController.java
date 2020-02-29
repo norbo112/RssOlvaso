@@ -1,6 +1,10 @@
 package com.norbo.android.projects.rssolvaso.controller;
 
+import android.app.Application;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.norbo.android.projects.rssolvaso.model.RssItem;
 
@@ -27,14 +31,21 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 public class RssController {
-    public static List<RssItem> getRssItems(String url) {
+    private ProgressDialog progressBar;
+    private Context context;
+
+    public RssController(Context context) {
+        this.context = context;
+    }
+
+    public List<RssItem> getRssItems(String url) {
         List<RssItem> rssitems = new ArrayList<>();
         try {
-
             URLConnection con = new URL(url).openConnection();
 
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                     + "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36");
+
             String line = null;
             StringBuilder sb = new StringBuilder();
 
@@ -79,5 +90,22 @@ public class RssController {
         }
 
         return rssitems;
+    }
+
+    public void showProgress() {
+        if (progressBar == null) {
+            progressBar = new ProgressDialog(context);
+            progressBar.setTitle("Betöltés...");
+        }
+
+        progressBar.show();
+
+
+    }
+
+    public void dismissProgress() {
+        if(progressBar != null && progressBar.isShowing()) {
+            progressBar.dismiss();
+        }
     }
 }
