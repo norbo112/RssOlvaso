@@ -49,7 +49,6 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         RssItem rssItem = rssItems.get(position);
         tvTitle.setText(rssItem.getTitle());
         tvPubDate.setText(rssItem.getPubDate());
-        //tvDesc.setText(rssItem.getDescription());
         tvDesc.setText(Html.fromHtml(rssItem.getDescription()));
 
         final String link = rssItem.getLink();
