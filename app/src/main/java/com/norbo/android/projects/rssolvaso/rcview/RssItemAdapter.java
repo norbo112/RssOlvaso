@@ -59,6 +59,7 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
                 Log.i(RssItemAdapter.class.getSimpleName(), "Választott link: "+link);
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(link));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 if(intent.resolveActivity(context.getPackageManager()) != null)
                     context.startActivity(intent);;
             }
