@@ -6,8 +6,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,37 +43,48 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //initUrlMap();
-
         ListView lv = findViewById(R.id.listCsatorna);
-        final RecyclerView rv = findViewById(R.id.rvRssHir);
 
         viewModel = new ViewModelProvider(this).get(RssLinkViewModel.class);
 
         viewModel.getAllLinks().observe(this, new Observer<List<RssLink>>() {
             @Override
             public void onChanged(List<RssLink> rssLinks) {
-                /*int capacity = 0;
-                for (RssLink link: rssLinks) {
-                    urlMapString[capacity++] = link.getCsatornaNeve();
-                }
-                urlMapString = Arrays.copyOf(urlMapString, capacity);*/
                 lv.setAdapter(new ArrayAdapter<RssLink>(MainActivity.this
                         , android.R.layout.simple_list_item_1,
                         rssLinks));
             }
         });
 
-
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), RssActivity.class);
-                intent.putExtra("cim", urlMapString[position]);
+                intent.putExtra("cim", viewModel.getAllLinks().getValue().get(position).getCsatornaNeve());
                 intent.putExtra("link", viewModel.getAllLinks().getValue().get(position).getCsatornaLink());
                 startActivity(intent);
             }
+        });
+
+        lv.setOnItemLongClickListener((parent, view, position, id) -> {
+            new AlertDialog.Builder(this)
+                    .setMessage("Biztos törölni akarod?")
+                    .setTitle("Csatorna törlése")
+                    .setPositiveButton("Igen", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            viewModel.delete(viewModel.getAllLinks().getValue().get(position).getCsatornaNeve());
+                        }
+                    })
+                    .setNegativeButton("Nem", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i(MainActivity.class.getSimpleName(), "onClick: nem törölted");
+                        }
+                    })
+                    .create()
+                    .show();
+            return true;
         });
 
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
@@ -106,36 +120,6 @@ public class MainActivity extends AppCompatActivity {
         toast.setView(view);
         toast.show();
     }
-
-    private void initUrlMap() {
-//        urlmap.put("Itthon", "https://www.origo.hu/contentpartner/rss/itthon/origo.xml");
-//        urlmap.put("Nagyvilág", "https://www.origo.hu/contentpartner/rss/nagyvilag/origo.xml");
-//        urlmap.put("Gazdaság", "https://www.origo.hu/contentpartner/rss/uzletinegyed/origo.xml");
-//        urlmap.put("Filmklub", "https://www.origo.hu/contentpartner/rss/filmklub/origo.xml");
-//        urlmap.put("Sport", "https://www.origo.hu/contentpartner/rss/sport/origo.xml");
-//        urlmap.put("Tudomány", "https://www.origo.hu/contentpartner/rss/tudomany/origo.xml");
-//        urlmap.put("Technika", "https://www.origo.hu/contentpartner/rss/techbazis/origo.xml");
-//        urlmap.put("HVG-Világ", "http://hvg.hu/rss/vilag");
-//        urlmap.put("HVG-Gazdaság", "http://hvg.hu/rss/gazdasag");
-//        urlmap.put("HVG-Itthon", "http://hvg.hu/rss/itthon");
-//        urlmap.put("Index 24 Óra", "https://index.hu/24ora/rss/");
-//        urlmap.put("NewYork Times: Europe", "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml");
-
-//        for (Map.Entry<String, String> entry: urlmap.entrySet()) {
-//            urlMapString[urlMapStringPoz++] = entry.getKey();
-//        }
-//
-//        urlMapString = Arrays.copyOf(urlMapString, urlMapStringPoz);
-//        Arrays.sort(urlMapString);
-    }
-
-    /*private String getUrl(String keyName) {
-        if(urlmap.containsKey(keyName)) {
-            return urlmap.get(keyName);
-        }
-
-        return null;
-    }*/
 
     private String getUrl(List<RssLink> links, String search) {
         for (RssLink link: links) {

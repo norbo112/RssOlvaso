@@ -20,4 +20,7 @@ public interface RssLinkDao {
 
     @Query("SELECT * FROM rsslink ORDER BY csatronanev")
     LiveData<List<RssLink>> getAllLinks();
+
+    @Query("DELETE FROM rsslink WHERE csatronanev = :csatornanev")
+    void delete(String csatornanev);
 }
