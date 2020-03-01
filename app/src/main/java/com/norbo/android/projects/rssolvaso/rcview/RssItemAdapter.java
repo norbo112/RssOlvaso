@@ -3,6 +3,7 @@ package com.norbo.android.projects.rssolvaso.rcview;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +48,8 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         RssItem rssItem = rssItems.get(position);
         tvTitle.setText(rssItem.getTitle());
         tvPubDate.setText(rssItem.getPubDate());
-        tvDesc.setText(rssItem.getDescription());
+        //tvDesc.setText(rssItem.getDescription());
+        tvDesc.setText(Html.fromHtml(rssItem.getDescription()));
 
         final String link = rssItem.getLink();
 

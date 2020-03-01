@@ -30,8 +30,6 @@ public class RssActivity extends AppCompatActivity {
         TextView tvCsatornaCim = findViewById(R.id.tvCsatornaCim);
         tvCsatornaCim.setText(getIntent().getStringExtra("cim"));
 
-        final ProgressBar progressBar = new ProgressBar(this);
-
         final RssController rssController = new RssController(this);
 
         new Thread(new Runnable() {
