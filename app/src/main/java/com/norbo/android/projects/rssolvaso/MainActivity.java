@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.norbo.android.projects.rssolvaso.database.model.RssLink;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.RssLinkViewModel;
 import com.norbo.android.projects.rssolvaso.model.RssItem;
+import com.norbo.android.projects.rssolvaso.model.sajatlv.SajatListViewAdapter;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -50,9 +52,10 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getAllLinks().observe(this, new Observer<List<RssLink>>() {
             @Override
             public void onChanged(List<RssLink> rssLinks) {
-                lv.setAdapter(new ArrayAdapter<RssLink>(MainActivity.this
+                lv.setAdapter(new SajatListViewAdapter(MainActivity.this, rssLinks));
+                /*lv.setAdapter(new ArrayAdapter<RssLink>(MainActivity.this
                         , android.R.layout.simple_list_item_1,
-                        rssLinks));
+                        rssLinks));*/
             }
         });
 

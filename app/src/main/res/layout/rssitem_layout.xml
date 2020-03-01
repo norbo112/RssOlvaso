@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    android:background="#F1F1E4">
+    android:background="#FFF9C4">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -45,14 +45,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPubDate" />
 
-    <Button
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btngo"
-        style="@android:style/Widget.Material.Light.Button"
-        android:layout_width="89dp"
-        android:layout_height="38dp"
-        android:text="megnéz"
-        android:textAppearance="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:clickable="true"
+        app:backgroundTint="#FFC107"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDesc" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDesc"
+        app:srcCompat="@drawable/ic_visibility_black_24dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

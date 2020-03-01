@@ -7,13 +7,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.R;
 
 public class RssItemViewHolder extends RecyclerView.ViewHolder {
     TextView tvTitle;
     TextView tvPubDate;
     TextView tvDesc;
-    Button btnGo;
+    FloatingActionButton btnGo;
 
     public RssItemViewHolder(@NonNull View itemView) {
         super(itemView);

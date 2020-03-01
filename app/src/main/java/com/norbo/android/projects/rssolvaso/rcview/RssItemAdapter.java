@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.model.RssItem;
 
@@ -43,7 +44,7 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         TextView tvTitle = holder.tvTitle;
         TextView tvPubDate = holder.tvPubDate;
         TextView tvDesc = holder.tvDesc;
-        Button btnGo = holder.btnGo;
+        FloatingActionButton btnGo = holder.btnGo;
 
         RssItem rssItem = rssItems.get(position);
         tvTitle.setText(rssItem.getTitle());
