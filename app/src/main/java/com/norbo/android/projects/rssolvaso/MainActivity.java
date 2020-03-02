@@ -121,14 +121,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showAlertDialog(int poz) {
-        String csatornaNev = viewModel.getAllLinks().getValue().get(poz).getCsatornaNeve();
+        int csatornaid = viewModel.getAllLinks().getValue().get(poz).getId();
+        String csatronanev = viewModel.getAllLinks().getValue().get(poz).getCsatornaNeve();
         new AlertDialog.Builder(this)
                 .setMessage("Biztos törölni akarod?")
-                .setTitle(csatornaNev+" törlése")
+                .setTitle(csatronanev+" törlése")
                 .setPositiveButton("Igen", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        viewModel.delete(csatornaNev);
+                        viewModel.delete(csatornaid);
                     }
                 })
                 .setNegativeButton("Nem", new DialogInterface.OnClickListener() {

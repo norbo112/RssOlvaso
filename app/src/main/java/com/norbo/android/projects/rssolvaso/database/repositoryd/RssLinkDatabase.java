@@ -52,13 +52,10 @@ public abstract class RssLinkDatabase extends RoomDatabase {
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
 
-            // If you want to keep data through app restarts,
-            // comment out the following block
             dbWriteExecutor.execute(() -> {
-                // Populate the database in the background.
-                // If you want to start with more words, just add them.
-                RssLinkDao dao = INSTANCE.rssLinkDao();
-                //dao.deleteAll();
+
+                /*RssLinkDao dao = INSTANCE.rssLinkDao();
+                dao.deleteAll();
 
                 Map<String, String> urlmap = new HashMap<>();
 
@@ -75,10 +72,10 @@ public abstract class RssLinkDatabase extends RoomDatabase {
                 urlmap.put("Index 24 Óra", "https://index.hu/24ora/rss/");
                 urlmap.put("NewYork Times: Europe", "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml");
 
-                for (Map.Entry<String, String> entry: urlmap.entrySet()) {
+                for (Map.Entry<String, String> entry : urlmap.entrySet()) {
                     RssLink item = new RssLink(entry.getKey(), entry.getValue());
                     dao.insert(item);
-                }
+                }*/
             });
         }
     };

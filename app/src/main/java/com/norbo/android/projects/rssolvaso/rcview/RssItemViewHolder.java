@@ -1,20 +1,19 @@
 package com.norbo.android.projects.rssolvaso.rcview;
 
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.R;
 
 public class RssItemViewHolder extends RecyclerView.ViewHolder {
     TextView tvTitle;
     TextView tvPubDate;
     TextView tvDesc;
-    FloatingActionButton btnGo;
+    ImageView btnGo;
 
     public RssItemViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -22,6 +21,6 @@ public class RssItemViewHolder extends RecyclerView.ViewHolder {
         tvTitle = itemView.findViewById(R.id.tvTitle);
         tvPubDate = itemView.findViewById(R.id.tvPubDate);
         tvDesc = itemView.findViewById(R.id.tvDesc);
-        btnGo = itemView.findViewById(R.id.btngo);
+        btnGo = itemView.findViewById(R.id.btnGo);
     }
 }

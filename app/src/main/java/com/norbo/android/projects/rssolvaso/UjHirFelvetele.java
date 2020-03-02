@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class UjHirFelvetele extends AppCompatActivity {
     public static final String EXTRA_CSAT_NEV = "com.norbo.android.projects.rssolvaso.EXTRA_REPLY_CSAT_NEV";
@@ -14,6 +15,7 @@ public class UjHirFelvetele extends AppCompatActivity {
 
     private EditText etCsatNev;
     private EditText etCsatLink;
+    private TextView etTvCim;
 
     private boolean menuEdit;
     private int id;
@@ -25,6 +27,7 @@ public class UjHirFelvetele extends AppCompatActivity {
 
         etCsatNev = findViewById(R.id.etCsatornaNeve);
         etCsatLink = findViewById(R.id.etCsatornaLink);
+        etTvCim = findViewById(R.id.tvCim);
 
         if(getIntent().getStringExtra(MainActivity.CSAT_NEV) != null)
             etCsatNev.setText(getIntent().getStringExtra(MainActivity.CSAT_NEV) );
@@ -32,8 +35,10 @@ public class UjHirFelvetele extends AppCompatActivity {
         if(getIntent().getStringExtra(MainActivity.CSAT_LINK) != null)
             etCsatLink.setText(getIntent().getStringExtra(MainActivity.CSAT_LINK) );
 
-        if(getIntent().getBooleanExtra(MainActivity.MENU_EDIT, false))
+        if(getIntent().getBooleanExtra(MainActivity.MENU_EDIT, false)) {
             menuEdit = true;
+            etTvCim.setText(R.string.ujcsatorna_cim);
+        }
 
         id = getIntent().getIntExtra(MainActivity.CSAT_ID, 0);
 

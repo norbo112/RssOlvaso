@@ -30,9 +30,9 @@ public class RssLinkRepository {
         });
     }
 
-    public void delete(String csatornaNev) {
+    public void delete(int id) {
         RssLinkDatabase.dbWriteExecutor.execute(() -> {
-            rssLinkDao.delete(csatornaNev);
+            rssLinkDao.delete(id);
         });
     }
 

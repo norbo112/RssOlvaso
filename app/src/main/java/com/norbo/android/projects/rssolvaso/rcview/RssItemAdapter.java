@@ -8,14 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.model.RssItem;
 
@@ -44,7 +42,7 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         TextView tvTitle = holder.tvTitle;
         TextView tvPubDate = holder.tvPubDate;
         TextView tvDesc = holder.tvDesc;
-        FloatingActionButton btnGo = holder.btnGo;
+        ImageView btnGo = holder.btnGo;
 
         RssItem rssItem = rssItems.get(position);
         tvTitle.setText(rssItem.getTitle());

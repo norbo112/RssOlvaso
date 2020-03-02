@@ -21,8 +21,8 @@ public interface RssLinkDao {
     @Query("SELECT * FROM rsslink ORDER BY csatronanev")
     LiveData<List<RssLink>> getAllLinks();
 
-    @Query("DELETE FROM rsslink WHERE csatronanev = :csatornanev")
-    void delete(String csatornanev);
+    @Query("DELETE FROM rsslink WHERE id= :id")
+    void delete(int id);
 
     @Query("UPDATE rsslink SET csatronanev=:csatornanev, csatornalink=:csatornalink WHERE id=:id")
     void update(int id, String csatornanev, String csatornalink);
