@@ -15,6 +15,9 @@ public class UjHirFelvetele extends AppCompatActivity {
     private EditText etCsatNev;
     private EditText etCsatLink;
 
+    private boolean menuEdit;
+    private int id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +25,17 @@ public class UjHirFelvetele extends AppCompatActivity {
 
         etCsatNev = findViewById(R.id.etCsatornaNeve);
         etCsatLink = findViewById(R.id.etCsatornaLink);
+
+        if(getIntent().getStringExtra(MainActivity.CSAT_NEV) != null)
+            etCsatNev.setText(getIntent().getStringExtra(MainActivity.CSAT_NEV) );
+
+        if(getIntent().getStringExtra(MainActivity.CSAT_LINK) != null)
+            etCsatLink.setText(getIntent().getStringExtra(MainActivity.CSAT_LINK) );
+
+        if(getIntent().getBooleanExtra(MainActivity.MENU_EDIT, false))
+            menuEdit = true;
+
+        id = getIntent().getIntExtra(MainActivity.CSAT_ID, 0);
 
         findViewById(R.id.btnOk).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,6 +48,12 @@ public class UjHirFelvetele extends AppCompatActivity {
                     String link = etCsatLink.getText().toString();
                     intent.putExtra(EXTRA_CSAT_NEV, nev);
                     intent.putExtra(EXTRA_CSAT_LINK, link);
+                    if(menuEdit)
+                        intent.putExtra(MainActivity.MENU_EDIT, true);
+
+                    if(id != 0)
+                        intent.putExtra(MainActivity.CSAT_ID, id);
+
                     setResult(RESULT_OK, intent);
                 }
                 finish();

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public interface RssLinkDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(RssLink rssLink);
 
     @Query("DELETE FROM rsslink")
@@ -23,4 +23,7 @@ public interface RssLinkDao {
 
     @Query("DELETE FROM rsslink WHERE csatronanev = :csatornanev")
     void delete(String csatornanev);
+
+    @Query("UPDATE rsslink SET csatronanev=:csatornanev, csatornalink=:csatornalink WHERE id=:id")
+    void update(int id, String csatornanev, String csatornalink);
 }

@@ -35,4 +35,10 @@ public class RssLinkRepository {
             rssLinkDao.delete(csatornaNev);
         });
     }
+
+    public void update(int id, String csatornanev, String csatornalink) {
+        RssLinkDatabase.dbWriteExecutor.execute(() -> {
+            rssLinkDao.update(id, csatornanev, csatornalink);
+        });
+    }
 }

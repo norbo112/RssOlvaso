@@ -10,6 +10,7 @@ import androidx.room.DatabaseConfiguration;
 import androidx.room.InvalidationTracker;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {RssLink.class}, version = 1, exportSchema = false)
+@Database(entities = {RssLink.class}, version = 2, exportSchema = false)
 public abstract class RssLinkDatabase extends RoomDatabase {
     public abstract RssLinkDao rssLinkDao();
 
@@ -37,6 +38,7 @@ public abstract class RssLinkDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             RssLinkDatabase.class, "rsslink_database")
                             .addCallback(callback)
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

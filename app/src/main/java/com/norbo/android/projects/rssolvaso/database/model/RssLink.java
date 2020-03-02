@@ -8,7 +8,9 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class RssLink {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
     @NonNull
     @ColumnInfo(name = "csatronanev")
     private String csatornaNeve;
@@ -43,6 +45,10 @@ public class RssLink {
     public void setCsatornaLink(@NonNull String csatornaLink) {
         this.csatornaLink = csatornaLink;
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     @NonNull
     @Override

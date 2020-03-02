@@ -32,4 +32,8 @@ public class RssLinkViewModel extends AndroidViewModel {
     }
 
     public void delete(String csatornaNev) { repository.delete(csatornaNev); }
+
+    public void update(int id, String csatronaneve, String csatornalink) {
+        repository.update(id, csatronaneve, csatornalink);
+    }
 }
