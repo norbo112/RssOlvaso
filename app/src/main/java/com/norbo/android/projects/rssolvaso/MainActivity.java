@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,11 +53,24 @@ public class MainActivity extends AppCompatActivity {
 
     private RssLinkViewModel viewModel;
 
+    private ProgressDialog dialog;
+    private TextView tvcityName;
+    private TextView tvFok;
+    private TextView tvSzel;
+    private TextView tvDesc;
+    private ImageView imIcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        tvcityName = findViewById(R.id.tvCityName);
+        tvFok = findViewById(R.id.tvFok);
+        tvSzel = findViewById(R.id.tvSzel);
+        tvDesc = findViewById(R.id.tvDesc);
+        imIcon = findViewById(R.id.imIcon);
+        new WeatherActivity(this).doWeather(tvcityName, tvFok, tvSzel, tvDesc, imIcon);
 
         ListView lv = findViewById(R.id.listCsatorna);
 
@@ -180,15 +195,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.fomenu, menu);
+        //getMenuInflater().inflate(R.menu.fomenu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.menuIdojaras) {
-            //showToast("Időjárás menüpont kiválasztva");
-            startActivity(new Intent(this, WeatherActivity.class));
+            showToast("Időjárás menüpont kiválasztva");
+            //startActivity(new Intent(this, WeatherActivity.class));
         } else if(item.getItemId() == R.id.menuAbout) {
             showToast("Programinformáció kiválasztva");
         }

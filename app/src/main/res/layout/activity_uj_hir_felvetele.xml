@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#43A047"
+    android:background="#4383A0"
     android:orientation="vertical"
     android:padding="8dp"
     tools:context=".UjHirFelvetele">
@@ -22,6 +22,8 @@
         android:id="@+id/etCsatornaNeve"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#C0DAD7"
         android:ems="10"
         android:hint="Csatorna nevét ide kérem"
         android:inputType="textPersonName" />
@@ -30,6 +32,8 @@
         android:id="@+id/etCsatornaLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#C0DAD7"
         android:ems="10"
         android:hint="web linkje"
         android:inputType="textPersonName" />
@@ -38,6 +42,7 @@
         android:id="@+id/btnOk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@android:color/holo_green_light"
         android:text="@android:string/ok" />
 

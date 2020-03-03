@@ -1,9 +1,9 @@
 package com.norbo.android.projects.rssolvaso;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,47 +14,50 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.norbo.android.projects.rssolvaso.model.weather.Weather;
 
-import org.json.JSONException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class WeatherActivity extends AppCompatActivity {
-    TextView tvcityName;
-    TextView tvFok;
-    TextView tvSzel;
-    TextView tvDesc;
-    ImageView imIcon;
     ProgressDialog progressBar;
 
-    private String baseURL = "http://api.weatherbit.io/v2.0/";
+    private String baseURL = "https://api.weatherbit.io/v2.0/";
     private String iconLink = "https://www.weatherbit.io/static/img/icons/";
     private final String KEY = "9de6d03367e74f4f9a046a275ceb5741";
     private final double LAT = 47.4706;
     private final double LON = 18.81892;
     private final String LANG = "hu";
 
+    private Context context;
+
+    public WeatherActivity(Context context) {
+        this.context = context;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
-        tvcityName = findViewById(R.id.tvCityName);
-        tvFok = findViewById(R.id.tvFok);
-        tvSzel = findViewById(R.id.tvSzel);
-        tvDesc = findViewById(R.id.tvDesc);
-        imIcon = findViewById(R.id.imIcon);
+        TextView tvcityName = findViewById(R.id.tvCityName);
+        TextView tvFok = findViewById(R.id.tvFok);
+        TextView tvSzel = findViewById(R.id.tvSzel);
+        TextView tvDesc = findViewById(R.id.tvDesc);
+        ImageView imIcon = findViewById(R.id.imIcon);
 
+        doWeather(tvcityName, tvFok, tvSzel, tvDesc, imIcon);
+    }
+
+    void doWeather(TextView tvcityName, TextView tvFok, TextView tvSzel, TextView tvDesc,
+                   ImageView imIcon) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 runOnUiThread(() -> {
                     if(progressBar == null) {
-                        progressBar = new ProgressDialog(WeatherActivity.this);
+                        progressBar = new ProgressDialog(context != null ? context : WeatherActivity.this);
                         progressBar.setTitle("Betöltés...");
                     }
                     progressBar.show();
@@ -81,13 +84,6 @@ public class WeatherActivity extends AppCompatActivity {
                             tvSzel.setText(weather.getData().get(0).getWind_speed()+" m/s");
                             tvDesc.setText(weather.getData().get(0).getWeather().getDescription());
                         });
-
-//                        JSONObject object = new JSONObject(sb);
-//                        JSONArray array = object.getJSONArray("data");
-//                        //itt lenne a weather osztály;
-//                        System.out.println(array.getJSONObject(0).toString());
-//                        //itt meg a weatherben lévő ikon
-//                        System.out.println(array.getJSONObject(0).getJSONObject("weather").toString());
 
                         con.disconnect();
                     } else {
