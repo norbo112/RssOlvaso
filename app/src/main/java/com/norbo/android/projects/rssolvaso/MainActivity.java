@@ -187,7 +187,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.menuIdojaras) {
-            showToast("Időjárás menüpont kiválasztva");
+            //showToast("Időjárás menüpont kiválasztva");
+            startActivity(new Intent(this, WeatherActivity.class));
         } else if(item.getItemId() == R.id.menuAbout) {
             showToast("Programinformáció kiválasztva");
         }
