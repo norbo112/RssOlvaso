@@ -7,6 +7,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -59,18 +61,35 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvSzel;
     private TextView tvDesc;
     private ImageView imIcon;
+    private MenuItem menuItemIdojaras;
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tvcityName = findViewById(R.id.tvCityName);
-        tvFok = findViewById(R.id.tvFok);
-        tvSzel = findViewById(R.id.tvSzel);
-        tvDesc = findViewById(R.id.tvDesc);
-        imIcon = findViewById(R.id.imIcon);
-        new WeatherActivity(this).doWeather(tvcityName, tvFok, tvSzel, tvDesc, imIcon);
+        this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.custom_appbar_layout);
+        getSupportActionBar().setElevation(0);
+        View view = getSupportActionBar().getCustomView();
+        imIcon = view.findViewById(R.id.weather_logo);
+        tvDesc = view.findViewById(R.id.weather_info);
+        ImageView applogohome = view.findViewById(R.id.applogo_home);
+        applogohome.setOnClickListener((event) -> {
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        });
+        ImageView appSavedHirek = view.findViewById(R.id.viewSaveHirek);
+        appSavedHirek.setOnClickListener((event) -> {
+            startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
+        });
+        new WeatherActivity(this).doWeather(imIcon, tvDesc);
+        imIcon.setOnClickListener((event) -> {
+            new WeatherActivity(this).doWeather(imIcon, tvDesc);
+        });
 
         ListView lv = findViewById(R.id.listCsatorna);
 
@@ -195,18 +214,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //getMenuInflater().inflate(R.menu.fomenu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.menuIdojaras) {
-            showToast("Időjárás menüpont kiválasztva");
-            //startActivity(new Intent(this, WeatherActivity.class));
-        } else if(item.getItemId() == R.id.menuAbout) {
-            showToast("Programinformáció kiválasztva");
-        }
+//        if(item.getItemId() == R.id.menuIdojaras) {
+//            new WeatherActivity(this).doWeather(menuItemIdojaras);
+//            //startActivity(new Intent(this, WeatherActivity.class));
+//        }
         return super.onOptionsItemSelected(item);
     }
 }

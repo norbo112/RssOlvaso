@@ -14,6 +14,7 @@ public class RssItemViewHolder extends RecyclerView.ViewHolder {
     TextView tvPubDate;
     TextView tvDesc;
     ImageView btnGo;
+    ImageView btnSaveHir;
 
     public RssItemViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -22,5 +23,6 @@ public class RssItemViewHolder extends RecyclerView.ViewHolder {
         tvPubDate = itemView.findViewById(R.id.tvPubDate);
         tvDesc = itemView.findViewById(R.id.tvDesc);
         btnGo = itemView.findViewById(R.id.btnGo);
+        btnSaveHir = itemView.findViewById(R.id.btnSaveHir);
     }
 }

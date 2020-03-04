@@ -10,11 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.norbo.android.projects.rssolvaso.R;
+import com.norbo.android.projects.rssolvaso.database.model.HirModel;
+import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 import com.norbo.android.projects.rssolvaso.model.RssItem;
 
 import java.util.List;
@@ -23,10 +27,12 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
 
     private List<RssItem> rssItems;
     private Context context;
+    private HirSaveViewModel hirSaveViewModel;
 
-    public RssItemAdapter(Context context, List<RssItem> rssItems) {
+    public RssItemAdapter(Context context, List<RssItem> rssItems, HirSaveViewModel pHirSaveViewModel) {
         this.context = context;
         this.rssItems = rssItems;
+        this.hirSaveViewModel = pHirSaveViewModel;
     }
 
     @NonNull
@@ -43,6 +49,7 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         TextView tvPubDate = holder.tvPubDate;
         TextView tvDesc = holder.tvDesc;
         ImageView btnGo = holder.btnGo;
+        ImageView btnSaveHir = holder.btnSaveHir;
 
         RssItem rssItem = rssItems.get(position);
         tvTitle.setText(rssItem.getTitle());
@@ -61,6 +68,12 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
                 if(intent.resolveActivity(context.getPackageManager()) != null)
                     context.startActivity(intent);;
             }
+        });
+        
+        btnSaveHir.setOnClickListener((event) -> {
+            hirSaveViewModel.insert(new HirModel(rssItem.getPubDate(), rssItem.getLink(), rssItem.getTitle(),
+                    rssItem.getDescription()));
+            Toast.makeText(context, "Hir mentve", Toast.LENGTH_SHORT).show();
         });
     }
 

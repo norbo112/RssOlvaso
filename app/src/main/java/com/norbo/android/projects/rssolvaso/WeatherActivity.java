@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+import com.norbo.android.projects.rssolvaso.model.weather.WData;
 import com.norbo.android.projects.rssolvaso.model.weather.Weather;
 
 import java.io.BufferedReader;
@@ -51,7 +53,7 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     void doWeather(TextView tvcityName, TextView tvFok, TextView tvSzel, TextView tvDesc,
-                   ImageView imIcon) {
+                    ImageView imIcon) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -83,6 +85,56 @@ public class WeatherActivity extends AppCompatActivity {
                             tvFok.setText(weather.getData().get(0).getTemp()+" °C");
                             tvSzel.setText(weather.getData().get(0).getWind_speed()+" m/s");
                             tvDesc.setText(weather.getData().get(0).getWeather().getDescription());
+                        });
+
+                        con.disconnect();
+                    } else {
+                        runOnUiThread(() ->{
+                            Toast.makeText(WeatherActivity.this,
+                                    "Nincsenek meg a kért adatok", Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(() -> {
+                    progressBar.dismiss();
+                });
+            }
+        }).start();
+    }
+
+    void doWeather(ImageView imageView, TextView textView) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    if(progressBar == null) {
+                        progressBar = new ProgressDialog(context != null ? context : WeatherActivity.this);
+                        progressBar.setTitle("Betöltés...");
+                    }
+                    progressBar.show();
+                });
+                String linkplusQuery = baseURL+"current?"+
+                        "lat="+LAT+"&"+
+                        "lon="+LON+"&"+
+                        "lang="+LANG+"&"+
+                        "key="+KEY;
+                try {
+                    HttpURLConnection con = (HttpURLConnection) new URL(linkplusQuery)
+                            .openConnection();
+                    if(con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        String sb = getStringFromstream(con);
+
+                        Weather weather = new Gson().fromJson(sb, Weather.class);
+
+                        final URL url = new URL(iconLink+weather.getData().get(0).getWeather().getIcon()+".png");
+                        final Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        runOnUiThread(() -> {
+                            WData wData = weather.getData().get(0);
+                            imageView.setImageBitmap(bitmap);
+                            textView.setText(wData.getCity_name()+" "+wData.getTemp()+" °C");
                         });
 
                         con.disconnect();

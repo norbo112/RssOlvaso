@@ -6,8 +6,5 @@
         android:id="@+id/menuIdojaras"
         android:icon="@drawable/ic_wb_sunny_black_24dp"
         android:title="Időjárás"
-        app:showAsAction="ifRoom|withText" />
-    <item
-        android:id="@+id/menuAbout"
-        android:title="About" />
+        app:showAsAction="always|withText" />
 </menu>

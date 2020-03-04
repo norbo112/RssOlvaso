@@ -8,7 +8,6 @@ import com.norbo.android.projects.rssolvaso.database.dao.RssLinkDao;
 import com.norbo.android.projects.rssolvaso.database.model.RssLink;
 
 import java.util.List;
-import java.util.Map;
 
 public class RssLinkRepository {
     private RssLinkDao rssLinkDao;

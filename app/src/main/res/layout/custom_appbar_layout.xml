@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:layout_width = "match_parent"
+    android:layout_height = "wrap_content"
+    android:gravity = "center_vertical"
+    android:padding = "10dp"
+    android:paddingStart="2dp"
+    android:paddingEnd="2dp"
+    android:weightSum = "1"
+    android:background="@android:color/background_dark">
+    <LinearLayout
+        android:layout_width = "0dp"
+        android:layout_height = "match_parent"
+        android:layout_weight = "0.6">
+        <ImageView
+            android:id="@+id/applogo_home"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent"
+            android:src = "@drawable/ic_rss_feed_black_24dp" />
+        <TextView
+            android:id = "@+id/name"
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_marginLeft = "10dp"
+            android:text = "Hír olvasó"
+            android:textSize = "20sp"
+            android:textColor = "#fff"
+            android:textStyle = "bold" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width = "0dp"
+        android:layout_height = "match_parent"
+        android:layout_marginRight = "10dp"
+        android:layout_weight = "0.4"
+        android:gravity = "end">
+        <ImageView
+            android:id="@+id/weather_logo"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent"
+            android:src = "@drawable/ic_wb_sunny_black_24dp" />
+        <TextView
+            android:id="@+id/weather_info"
+            android:layout_width = "wrap_content"
+            android:layout_height = "match_parent"
+            android:textColor="#fff"/>
+        <ImageView
+            android:id="@+id/viewSaveHirek"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_pageview_black_24dp"/>
+    </LinearLayout>
+</LinearLayout>

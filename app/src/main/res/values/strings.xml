@@ -12,4 +12,5 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="empty_not_saved">Nem töltötted ki az adatokat</string>
     <string name="ujcsatorna_cim">Csatorna szerkesztése</string>
+    <string name="mentett_h_rek">Mentett hírek</string>
 </resources>
