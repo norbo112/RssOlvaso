@@ -12,7 +12,7 @@ import com.norbo.android.projects.rssolvaso.database.model.HirModel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {HirModel.class}, version = 1, exportSchema = false)
+@Database(entities = {HirModel.class}, version = 2, exportSchema = false)
 public abstract class HirDatabase extends RoomDatabase {
     public abstract HirDao hirDao();
 
@@ -26,7 +26,9 @@ public abstract class HirDatabase extends RoomDatabase {
             synchronized (HirDatabase.class) {
                 if(INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            HirDatabase.class, "hirek_database").build();
+                            HirDatabase.class, "hirek_database")
+                            .fallbackToDestructiveMigration()
+                            .build();
                 }
             }
         }

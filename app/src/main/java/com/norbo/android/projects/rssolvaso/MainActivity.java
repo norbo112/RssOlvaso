@@ -55,13 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
     private RssLinkViewModel viewModel;
 
-    private ProgressDialog dialog;
-    private TextView tvcityName;
-    private TextView tvFok;
-    private TextView tvSzel;
     private TextView tvDesc;
     private ImageView imIcon;
-    private MenuItem menuItemIdojaras;
 
     @SuppressLint("WrongConstant")
     @Override

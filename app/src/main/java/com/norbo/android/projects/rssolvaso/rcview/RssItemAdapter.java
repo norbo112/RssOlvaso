@@ -2,6 +2,7 @@ package com.norbo.android.projects.rssolvaso.rcview;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
@@ -12,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,7 +72,7 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
                     context.startActivity(intent);;
             }
         });
-        
+
         btnSaveHir.setOnClickListener((event) -> {
             hirSaveViewModel.insert(new HirModel(rssItem.getPubDate(), rssItem.getLink(), rssItem.getTitle(),
                     rssItem.getDescription()));

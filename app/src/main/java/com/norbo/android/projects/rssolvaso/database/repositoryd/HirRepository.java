@@ -1,13 +1,16 @@
 package com.norbo.android.projects.rssolvaso.database.repositoryd;
 
 import android.app.Application;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import com.norbo.android.projects.rssolvaso.database.dao.HirDao;
 import com.norbo.android.projects.rssolvaso.database.model.HirModel;
 
 import java.util.List;
+import java.util.Optional;
 
 public class HirRepository {
     private HirDao hirDao;

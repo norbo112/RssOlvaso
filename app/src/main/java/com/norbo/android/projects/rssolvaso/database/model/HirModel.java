@@ -1,18 +1,18 @@
 package com.norbo.android.projects.rssolvaso.database.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class HirModel {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
     @ColumnInfo
     private String pubdate;
     @ColumnInfo
     private String link;
+    @PrimaryKey
+    @NonNull
     @ColumnInfo
     private String hircim;
     @ColumnInfo
@@ -26,14 +26,6 @@ public class HirModel {
         this.link = link;
         this.hircim = hircim;
         this.hirdesc = hirdesc;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getPubdate() {

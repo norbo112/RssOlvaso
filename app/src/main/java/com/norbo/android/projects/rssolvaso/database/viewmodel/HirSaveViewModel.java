@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.norbo.android.projects.rssolvaso.database.model.HirModel;
 import com.norbo.android.projects.rssolvaso.database.repositoryd.HirRepository;
+import com.norbo.android.projects.rssolvaso.model.RssItem;
 
 import java.util.List;
 
