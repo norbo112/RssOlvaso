@@ -41,4 +41,10 @@ public class HirRepository {
     public LiveData<HirModel> getHirByTitle(String title) {
         return hirDao.getHir(title);
     }
+
+    public void delete(String title) {
+        HirDatabase.hirDbExecutor.execute(() ->{
+            hirDao.delete(title);
+        });
+    }
 }

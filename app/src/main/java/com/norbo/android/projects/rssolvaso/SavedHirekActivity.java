@@ -45,7 +45,7 @@ public class SavedHirekActivity extends AppCompatActivity {
 
         hirSaveViewModel = new ViewModelProvider(this).get(HirSaveViewModel.class);
         hirSaveViewModel.getHirek().observe(this, hirModels -> {
-            rc.setAdapter(new SavedHirAdapter(hirModels, getApplicationContext()));
+            rc.setAdapter(new SavedHirAdapter(hirModels, getApplicationContext(), hirSaveViewModel));
             rc.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             rc.setItemAnimator(new DefaultItemAnimator());
         });

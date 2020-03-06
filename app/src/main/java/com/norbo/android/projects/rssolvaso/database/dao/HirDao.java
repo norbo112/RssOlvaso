@@ -18,6 +18,9 @@ public interface HirDao {
     @Query("DELETE FROM hirmodel")
     void deleteAll();
 
+    @Query("DELETE FROM hirmodel WHERE hircim = :title")
+    void delete(String title);
+
     @Query("SELECT * FROM hirmodel ORDER BY pubdate")
     LiveData<List<HirModel>> getAllData();
 

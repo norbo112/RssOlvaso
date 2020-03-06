@@ -15,16 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.database.model.HirModel;
+import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 
 import java.util.List;
 
 public class SavedHirAdapter extends RecyclerView.Adapter<SavedHirViewHolder> {
     private List<HirModel> hirModels;
     private Context context;
+    private HirSaveViewModel hirSaveViewModel;
 
-    public SavedHirAdapter(List<HirModel> hirModels, Context context) {
+    public SavedHirAdapter(List<HirModel> hirModels, Context context, HirSaveViewModel hirSaveViewModel) {
         this.hirModels = hirModels;
         this.context = context;
+        this.hirSaveViewModel = hirSaveViewModel;
     }
 
     @NonNull
@@ -58,10 +61,16 @@ public class SavedHirAdapter extends RecyclerView.Adapter<SavedHirViewHolder> {
                     context.startActivity(intent);;
             }
         });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            hirSaveViewModel.delete(hirModel.getHircim());
+            return true;
+        });
     }
 
     @Override
     public int getItemCount() {
         return hirModels.size();
     }
+
 }
