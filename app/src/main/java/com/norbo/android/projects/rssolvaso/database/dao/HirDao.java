@@ -20,4 +20,7 @@ public interface HirDao {
 
     @Query("SELECT * FROM hirmodel ORDER BY pubdate")
     LiveData<List<HirModel>> getAllData();
+
+    @Query("SELECT hircim FROM hirmodel WHERE hircim LIKE :title LIMIT 1")
+    LiveData<HirModel> getHir(String title);
 }

@@ -37,4 +37,8 @@ public class HirRepository {
             hirDao.deleteAll();
         });
     }
+
+    public LiveData<HirModel> getHirByTitle(String title) {
+        return hirDao.getHir(title);
+    }
 }

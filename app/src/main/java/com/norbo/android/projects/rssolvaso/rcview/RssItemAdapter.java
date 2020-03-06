@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,10 +30,10 @@ import java.util.List;
 public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
 
     private List<RssItem> rssItems;
-    private Context context;
+    private AppCompatActivity context;
     private HirSaveViewModel hirSaveViewModel;
 
-    public RssItemAdapter(Context context, List<RssItem> rssItems, HirSaveViewModel pHirSaveViewModel) {
+    public RssItemAdapter(AppCompatActivity context, List<RssItem> rssItems, HirSaveViewModel pHirSaveViewModel) {
         this.context = context;
         this.rssItems = rssItems;
         this.hirSaveViewModel = pHirSaveViewModel;
@@ -78,10 +79,25 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
                     rssItem.getDescription()));
             Toast.makeText(context, "Hir mentve", Toast.LENGTH_SHORT).show();
         });
+
+        hirSaveViewModel.getHirByTitle(rssItem.getTitle()).observe(context,
+                hirModel -> {
+                    if(hirModel != null && hirModel.getHircim().equals(rssItem.getTitle())) {
+                        btnSaveHir.setVisibility(View.INVISIBLE);
+                    }
+                });
     }
 
     @Override
     public int getItemCount() {
         return rssItems.size();
+    }
+
+    public RssItem getRssTtem(int position) {
+        return rssItems.get(position);
+    }
+
+    public List<RssItem> getRssItems() {
+        return rssItems;
     }
 }

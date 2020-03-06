@@ -80,7 +80,7 @@ public class RssActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             rssController.dismissProgress();
-                            rv.setAdapter(new RssItemAdapter(getApplicationContext(), rssItems, hirSaveViewModel));
+                            rv.setAdapter(new RssItemAdapter(RssActivity.this, rssItems, hirSaveViewModel));
                             rv.setItemAnimator(new DefaultItemAnimator());
                             rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         }

@@ -33,4 +33,6 @@ public class HirSaveViewModel extends AndroidViewModel {
     public void deleteAll() {
         hirRepository.deleteAll();
     }
+
+    public LiveData<HirModel> getHirByTitle(String title) { return hirRepository.getHirByTitle(title); }
 }
