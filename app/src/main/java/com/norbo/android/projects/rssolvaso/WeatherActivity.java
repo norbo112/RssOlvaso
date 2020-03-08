@@ -2,14 +2,18 @@ package com.norbo.android.projects.rssolvaso;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
@@ -34,8 +38,17 @@ public class WeatherActivity extends AppCompatActivity {
 
     private Context context;
 
+    TextView tvcityName;
+    TextView tvFok;
+    TextView tvSzel;
+    TextView tvDesc;
+    ImageView imIcon;
+
     public WeatherActivity(Context context) {
         this.context = context;
+    }
+
+    public WeatherActivity() {
     }
 
     @Override
@@ -43,11 +56,17 @@ public class WeatherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
-        TextView tvcityName = findViewById(R.id.tvCityName);
-        TextView tvFok = findViewById(R.id.tvFok);
-        TextView tvSzel = findViewById(R.id.tvSzel);
-        TextView tvDesc = findViewById(R.id.tvDesc);
-        ImageView imIcon = findViewById(R.id.imIcon);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Időjárás");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setLogo(R.drawable.ic_rss_feed_black_24dp);
+
+        tvcityName = findViewById(R.id.tvCityName);
+        tvFok = findViewById(R.id.tvFok);
+        tvSzel = findViewById(R.id.tvSzel);
+        tvDesc = findViewById(R.id.tvDesc);
+        imIcon = findViewById(R.id.imIcon);
 
         doWeather(tvcityName, tvFok, tvSzel, tvDesc, imIcon);
     }
@@ -155,6 +174,55 @@ public class WeatherActivity extends AppCompatActivity {
         }).start();
     }
 
+    void doWeather(MenuItem menuItem) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    if(progressBar == null) {
+                        progressBar = new ProgressDialog(context != null ? context : WeatherActivity.this);
+                        progressBar.setTitle("Betöltés...");
+                    }
+                    progressBar.show();
+                });
+                String linkplusQuery = baseURL+"current?"+
+                        "lat="+LAT+"&"+
+                        "lon="+LON+"&"+
+                        "lang="+LANG+"&"+
+                        "key="+KEY;
+                try {
+                    HttpURLConnection con = (HttpURLConnection) new URL(linkplusQuery)
+                            .openConnection();
+                    if(con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        String sb = getStringFromstream(con);
+
+                        Weather weather = new Gson().fromJson(sb, Weather.class);
+
+                        final String icon = weather.getData().get(0).getWeather().getIcon();
+                        runOnUiThread(() -> {
+                            WData wData = weather.getData().get(0);
+                            menuItem.setTitle(wData.getCity_name()+ " "+wData.getTemp()+" °C");
+                            menuItem.setIcon(context.getResources().getIdentifier(icon, "raw", context.getPackageName()));
+                        });
+
+                        con.disconnect();
+                    } else {
+                        runOnUiThread(() ->{
+                            Toast.makeText(WeatherActivity.this,
+                                    "Nincsenek meg a kért adatok", Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(() -> {
+                    progressBar.dismiss();
+                });
+            }
+        }).start();
+    }
+
     private String getStringFromstream(HttpURLConnection con) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
         StringBuilder sb = new StringBuilder();
@@ -166,5 +234,24 @@ public class WeatherActivity extends AppCompatActivity {
         reader.close();
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.fomenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuMentett :
+                startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
+                break;
+            case R.id.menuIdojaras :
+                doWeather(tvcityName, tvFok, tvSzel, tvDesc, imIcon);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

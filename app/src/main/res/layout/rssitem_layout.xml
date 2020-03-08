@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="5dp"
+    android:background="#000000">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#4FC3F7"
+        app:cardBackgroundColor="#000000"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
         app:cardPreventCornerOverlap="false"
@@ -30,8 +31,10 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
+                android:shadowColor="#FFFFFF"
                 android:text="TextView"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
             <TextView
@@ -41,6 +44,7 @@
                 android:gravity="center"
                 android:text="TextView"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#FFFFFF"
                 android:textStyle="italic" />
 
             <TextView
@@ -52,26 +56,48 @@
                 android:scrollHorizontally="false"
                 android:singleLine="false"
                 android:text="TextView"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#FFFFFF" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="end">
-                <ImageView
+                android:layout_gravity="center|end"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
                     android:id="@+id/btnSaveHir"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:srcCompat="@drawable/ic_save_black_24dp"
-                    android:layout_marginEnd="10dp" />
-                <ImageView
+                    android:layout_margin="4dp"
+                    android:drawableLeft="@drawable/ic_save_black_24dp"
+                    android:text="Mentés"
+                    android:textColor="#D4E157"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/btnHirMegoszt"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:drawableLeft="@drawable/ic_share_black_24dp"
+                    android:text="Megosztás"
+                    android:textColor="#D4E157"
+                    android:textSize="10sp" />
+
+                <Button
                     android:id="@+id/btnGo"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:srcCompat="@drawable/ic_visibility_black_24dp" />
+                    android:layout_margin="4dp"
+                    android:drawableLeft="@drawable/ic_remove_red_eye_black_24dp"
+                    android:text="Megnéz"
+                    android:textColor="#D4E157"
+                    android:textSize="10sp" />
             </LinearLayout>
 
 

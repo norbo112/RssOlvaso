@@ -11,7 +11,6 @@ import com.norbo.android.projects.rssolvaso.database.model.RssLink;
 import com.norbo.android.projects.rssolvaso.database.repositoryd.RssLinkRepository;
 
 import java.util.List;
-import java.util.Map;
 
 public class RssLinkViewModel extends AndroidViewModel {
     private RssLinkRepository repository;

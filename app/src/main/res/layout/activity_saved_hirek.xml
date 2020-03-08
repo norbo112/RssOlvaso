@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SavedHirekActivity">
+    tools:context=".SavedHirekActivity"
+    android:background="#0B320B">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSavedHrek"
         android:layout_width="0dp"
@@ -24,5 +25,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="#fff"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

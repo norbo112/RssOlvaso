@@ -13,4 +13,7 @@
     <string name="empty_not_saved">Nem töltötted ki az adatokat</string>
     <string name="ujcsatorna_cim">Csatorna szerkesztése</string>
     <string name="mentett_h_rek">Mentett hírek</string>
+    <string name="idojaras_title">Időjárás</string>
+    <string name="import_lista">Import Lista</string>
+    <string name="export_lista">Export Lista</string>
 </resources>

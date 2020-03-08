@@ -1,14 +1,17 @@
 package com.norbo.android.projects.rssolvaso;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -32,6 +35,12 @@ public class RssActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rss);
 
         weatherActivity = new WeatherActivity(this);
+
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setTitle("Hír olvasó");
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setDisplayUseLogoEnabled(true);
+//        actionBar.setLogo(R.drawable.ic_rss_feed_black_24dp);
 
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -88,5 +97,15 @@ public class RssActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 }

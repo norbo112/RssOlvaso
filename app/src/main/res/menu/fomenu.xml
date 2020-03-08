@@ -5,6 +5,11 @@
     <item
         android:id="@+id/menuIdojaras"
         android:icon="@drawable/ic_wb_sunny_black_24dp"
-        android:title="Időjárás"
-        app:showAsAction="always|withText" />
+        android:title="@string/idojaras_title"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/menuMentett"
+        android:icon="@drawable/ic_pageview_black_24dp"
+        android:title="@string/mentett_h_rek"
+        app:showAsAction="ifRoom|withText" />
 </menu>

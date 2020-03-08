@@ -1,10 +1,14 @@
 package com.norbo.android.projects.rssolvaso;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,6 +28,12 @@ public class UjHirFelvetele extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uj_hir_felvetele);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Hír olvasó");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setLogo(R.drawable.ic_rss_feed_black_24dp);
 
         etCsatNev = findViewById(R.id.etCsatornaNeve);
         etCsatLink = findViewById(R.id.etCsatornaLink);
@@ -65,5 +75,25 @@ public class UjHirFelvetele extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.fomenu, menu);
+        MenuItem item = menu.findItem(R.id.menuIdojaras);
+        new WeatherActivity(this).doWeather(item);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuMentett :
+                startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
+                break;
+            case R.id.menuIdojaras :
+                startActivity(new Intent(getApplicationContext(), WeatherActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

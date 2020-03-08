@@ -1,6 +1,7 @@
 package com.norbo.android.projects.rssolvaso.rcview;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,8 +14,9 @@ public class RssItemViewHolder extends RecyclerView.ViewHolder {
     TextView tvTitle;
     TextView tvPubDate;
     TextView tvDesc;
-    ImageView btnGo;
-    ImageView btnSaveHir;
+    Button btnGo;
+    Button btnSaveHir;
+    Button btnHirShare;
 
     public RssItemViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -24,5 +26,6 @@ public class RssItemViewHolder extends RecyclerView.ViewHolder {
         tvDesc = itemView.findViewById(R.id.tvDesc);
         btnGo = itemView.findViewById(R.id.btnGo);
         btnSaveHir = itemView.findViewById(R.id.btnSaveHir);
+        btnHirShare = itemView.findViewById(R.id.btnHirMegoszt);
     }
 }

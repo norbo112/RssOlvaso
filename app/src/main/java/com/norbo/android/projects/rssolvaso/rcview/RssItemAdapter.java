@@ -1,23 +1,18 @@
 package com.norbo.android.projects.rssolvaso.rcview;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.norbo.android.projects.rssolvaso.R;
@@ -52,8 +47,9 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         TextView tvTitle = holder.tvTitle;
         TextView tvPubDate = holder.tvPubDate;
         TextView tvDesc = holder.tvDesc;
-        ImageView btnGo = holder.btnGo;
-        ImageView btnSaveHir = holder.btnSaveHir;
+        Button btnGo = holder.btnGo;
+        Button btnSaveHir = holder.btnSaveHir;
+        Button btnHirMegoszt = holder.btnHirShare;
 
         RssItem rssItem = rssItems.get(position);
         tvTitle.setText(rssItem.getTitle());
@@ -71,6 +67,18 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 if(intent.resolveActivity(context.getPackageManager()) != null)
                     context.startActivity(intent);;
+            }
+        });
+
+        btnHirMegoszt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, link);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                context.startActivity(shareIntent);
             }
         });
 
