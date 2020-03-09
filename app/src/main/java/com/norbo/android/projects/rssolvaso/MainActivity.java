@@ -9,8 +9,10 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -107,37 +110,7 @@ public class MainActivity extends AppCompatActivity {
         lv = findViewById(R.id.listCsatorna);
 
         btnPopupFile = findViewById(R.id.btnPopupFile);
-        btnPopupFile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-                popupMenu.inflate(R.menu.popupfile);
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getItemId() == R.id.menuExportList) {
-                            fileController = new FileController(FileController.IRAS, MainActivity.this);
-                            fileController.execute(viewModel.getAllLinks().getValue());
-                        } else if(item.getItemId() == R.id.menuImportList) {
-                            fileController = new FileController(FileController.OLVASAS, MainActivity.this);
-                            try {
-                                List<RssLink> rssLinks = fileController.execute(viewModel.getAllLinks().getValue()).get();
-                                for (RssLink r: rssLinks) {
-                                    viewModel.insert(r);
-                                }
-                            } catch (ExecutionException e) {
-                                Log.e(getClassLoader().getClass().getSimpleName(), "onMenuItemClick: exec", e);
-                            } catch (InterruptedException e) {
-                                Log.e(getClassLoader().getClass().getSimpleName(), "onMenuItemClick: inter", e);
-                            }
-
-                        }
-                        return true;
-                    }
-                });
-                popupMenu.show();
-            }
-        });
+        btnPopupFile.setOnClickListener(popupFileListener);
 
         viewModel = new ViewModelProvider(this).get(RssLinkViewModel.class);
 
@@ -164,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(MainActivity.this, UjHirFelvetele.class), REQUEST_CODE_NEW_LINK);
+                //startActivityForResult(new Intent(MainActivity.this, UjHirFelvetele.class), REQUEST_CODE_NEW_LINK);
+                showCreateLinkDialog();
             }
         });
     }
@@ -233,6 +207,35 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void showCreateLinkDialog() {
+        final View customView = LayoutInflater.from(this).inflate(R.layout.dialog_uj_hir_felvetele, null);
+        EditText etNev = customView.findViewById(R.id.etdialogNeve);
+        EditText etLink = customView.findViewById(R.id.etdialogLink);
+
+        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.MyAlertDialog))
+                .setView(customView)
+                .setPositiveButton("Felvesz", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(TextUtils.isEmpty(etNev.getText().toString()) || TextUtils.isEmpty(etLink.getText().toString())) {
+                            showToast("Üres a név vagy a link, kérlek töltsd ki");
+                        } else {
+                            RssLink rssLink = new RssLink(etNev.getText().toString(), etLink.getText().toString());
+                            viewModel.insert(rssLink);
+                            showToast("Új csatorna hozzáadva");
+                        }
+                    }
+                })
+                .setNegativeButton("Mégse", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(getClass().getSimpleName(), "onClick: nincs felvétel");
+                    }
+                })
+                .create().show();
+    }
+
     int kijeloltRssLinkPoz;
 
     @Override
@@ -285,4 +288,36 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
+    private View.OnClickListener popupFileListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
+            popupMenu.inflate(R.menu.popupfile);
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if(item.getItemId() == R.id.menuExportList) {
+                        fileController = new FileController(FileController.IRAS, MainActivity.this);
+                        fileController.execute(viewModel.getAllLinks().getValue());
+                    } else if(item.getItemId() == R.id.menuImportList) {
+                        fileController = new FileController(FileController.OLVASAS, MainActivity.this);
+                        try {
+                            List<RssLink> rssLinks = fileController.execute(viewModel.getAllLinks().getValue()).get();
+                            for (RssLink r: rssLinks) {
+                                viewModel.insert(r);
+                            }
+                        } catch (ExecutionException e) {
+                            Log.e(getClassLoader().getClass().getSimpleName(), "onMenuItemClick: exec", e);
+                        } catch (InterruptedException e) {
+                            Log.e(getClassLoader().getClass().getSimpleName(), "onMenuItemClick: inter", e);
+                        }
+
+                    }
+                    return true;
+                }
+            });
+            popupMenu.show();
+        }
+    };
 }

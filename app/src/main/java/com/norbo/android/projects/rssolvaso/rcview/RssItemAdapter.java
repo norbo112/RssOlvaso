@@ -1,6 +1,8 @@
 package com.norbo.android.projects.rssolvaso.rcview;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
@@ -8,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +23,8 @@ import com.norbo.android.projects.rssolvaso.database.model.HirModel;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 import com.norbo.android.projects.rssolvaso.model.RssItem;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
@@ -50,11 +55,13 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         Button btnGo = holder.btnGo;
         Button btnSaveHir = holder.btnSaveHir;
         Button btnHirMegoszt = holder.btnHirShare;
+        ImageView imageView = holder.imageView;
 
         RssItem rssItem = rssItems.get(position);
         tvTitle.setText(rssItem.getTitle());
         tvPubDate.setText(rssItem.getPubDate());
         tvDesc.setText(Html.fromHtml(rssItem.getDescription()));
+        imageView.setImageBitmap(rssItem.getEnclosure());
 
         final String link = rssItem.getLink();
 
@@ -88,12 +95,12 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
             Toast.makeText(context, "Hir mentve", Toast.LENGTH_SHORT).show();
         });
 
-        hirSaveViewModel.getHirByTitle(rssItem.getTitle()).observe(context,
-                hirModel -> {
-                    if(hirModel != null && hirModel.getHircim().equals(rssItem.getTitle())) {
-                        btnSaveHir.setVisibility(View.INVISIBLE);
-                    }
-                });
+//        hirSaveViewModel.getHirByTitle(rssItem.getTitle()).observe(context,
+//                hirModel -> {
+//                    if(hirModel != null && hirModel.getHircim().equals(rssItem.getTitle())) {
+//                        btnSaveHir.setVisibility(View.INVISIBLE);
+//                    }
+//                });
     }
 
     @Override

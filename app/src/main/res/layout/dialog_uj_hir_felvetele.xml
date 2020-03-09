@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#4383A0"
     android:orientation="vertical"
     android:padding="8dp"
@@ -16,10 +16,10 @@
         android:gravity="center"
         android:padding="5dp"
         android:text="Új csatorna felvétele"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <EditText
-        android:id="@+id/etCsatornaNev"
+        android:id="@+id/etdialogNeve"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -29,7 +29,7 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/etCsatornaLink"
+        android:id="@+id/etdialogLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -37,14 +37,5 @@
         android:ems="10"
         android:hint="web linkje"
         android:inputType="textPersonName" />
-
-    <Button
-        android:id="@+id/btnOk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/holo_green_light"
-        android:text="@android:string/ok" />
 
 </LinearLayout>

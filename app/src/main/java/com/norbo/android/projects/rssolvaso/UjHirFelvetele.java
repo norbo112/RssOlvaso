@@ -35,7 +35,7 @@ public class UjHirFelvetele extends AppCompatActivity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setLogo(R.drawable.ic_rss_feed_black_24dp);
 
-        etCsatNev = findViewById(R.id.etCsatornaNeve);
+        etCsatNev = findViewById(R.id.etCsatornaNev);
         etCsatLink = findViewById(R.id.etCsatornaLink);
         etTvCim = findViewById(R.id.tvCim);
 

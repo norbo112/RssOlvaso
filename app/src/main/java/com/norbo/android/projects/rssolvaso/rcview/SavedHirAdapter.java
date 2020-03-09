@@ -2,6 +2,7 @@ package com.norbo.android.projects.rssolvaso.rcview;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class SavedHirAdapter extends RecyclerView.Adapter<SavedHirViewHolder> {
         TextView tvPubDate = holder.tvPubDate;
         TextView tvDesc = holder.tvDesc;
         ImageView btnGo = holder.btnGo;
+        ImageView btnShare = holder.btnShare;
 
         HirModel hirModel = hirModels.get(position);
         tvTitle.setText(hirModel.getHircim());
@@ -59,6 +61,18 @@ public class SavedHirAdapter extends RecyclerView.Adapter<SavedHirViewHolder> {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 if(intent.resolveActivity(context.getPackageManager()) != null)
                     context.startActivity(intent);;
+            }
+        });
+
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, link);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                context.startActivity(shareIntent);
             }
         });
 

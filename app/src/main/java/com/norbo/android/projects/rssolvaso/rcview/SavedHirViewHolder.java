@@ -16,6 +16,7 @@ public class SavedHirViewHolder extends RecyclerView.ViewHolder {
     TextView tvPubDate;
     TextView tvDesc;
     ImageView btnGo;
+    ImageView btnShare;
 
     public SavedHirViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -23,5 +24,6 @@ public class SavedHirViewHolder extends RecyclerView.ViewHolder {
         tvPubDate = itemView.findViewById(R.id.tvPubDateSaved);
         tvDesc = itemView.findViewById(R.id.tvDescSaved);
         btnGo = itemView.findViewById(R.id.btnGoSaved);
+        btnShare = itemView.findViewById(R.id.btnSaveShare);
     }
 }

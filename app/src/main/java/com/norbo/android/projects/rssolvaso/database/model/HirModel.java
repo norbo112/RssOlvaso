@@ -3,6 +3,7 @@ package com.norbo.android.projects.rssolvaso.database.model;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -21,6 +22,7 @@ public class HirModel {
     public HirModel() {
     }
 
+    @Ignore
     public HirModel(String pubdate, String link, String hircim, String hirdesc) {
         this.pubdate = pubdate;
         this.link = link;

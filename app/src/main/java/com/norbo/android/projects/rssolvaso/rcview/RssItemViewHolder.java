@@ -17,6 +17,7 @@ public class RssItemViewHolder extends RecyclerView.ViewHolder {
     Button btnGo;
     Button btnSaveHir;
     Button btnHirShare;
+    ImageView imageView;
 
     public RssItemViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -27,5 +28,6 @@ public class RssItemViewHolder extends RecyclerView.ViewHolder {
         btnGo = itemView.findViewById(R.id.btnGo);
         btnSaveHir = itemView.findViewById(R.id.btnSaveHir);
         btnHirShare = itemView.findViewById(R.id.btnHirMegoszt);
+        imageView = itemView.findViewById(R.id.imageView);
     }
 }

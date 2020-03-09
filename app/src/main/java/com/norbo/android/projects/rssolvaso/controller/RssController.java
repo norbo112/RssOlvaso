@@ -3,6 +3,8 @@ package com.norbo.android.projects.rssolvaso.controller;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.ProgressBar;
 
@@ -62,6 +64,9 @@ public class RssController {
 
             NodeList nodelist = (NodeList)xPath.compile("//item").evaluate(document, XPathConstants.NODESET);
             for (int i = 0; i < nodelist.getLength(); i++) {
+                URL url1 = new URL(xPath.compile("./enclosure/@url").evaluate(nodelist.item(i), XPathConstants.STRING)
+                        .toString());
+                final Bitmap bitmap = BitmapFactory.decodeStream(url1.openConnection().getInputStream());
                 RssItem rs = new RssItem(
                         xPath.compile("./title").evaluate(nodelist.item(i), XPathConstants.STRING)
                                 .toString(),
@@ -74,7 +79,9 @@ public class RssController {
                         xPath.compile("./category").evaluate(nodelist.item(i), XPathConstants.STRING)
                                 .toString(),
                         xPath.compile("./pubDate").evaluate(nodelist.item(i), XPathConstants.STRING)
-                                .toString()
+                                .toString(),
+                        bitmap
+
                 );
                 rssitems.add(rs);
             }

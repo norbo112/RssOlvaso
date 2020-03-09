@@ -1,5 +1,7 @@
 package com.norbo.android.projects.rssolvaso.model;
 
+import android.graphics.Bitmap;
+
 public class RssItem {
     private String title;
     private String link;
@@ -7,6 +9,7 @@ public class RssItem {
     private String description;
     private String category;
     private String pubDate;
+    private Bitmap enclosure;
 
     public RssItem() {
     }
@@ -22,7 +25,15 @@ public class RssItem {
         this.pubDate = pubDate;
     }
 
-
+    public RssItem(String title, String link, String guid, String description, String category, String pubDate, Bitmap enclosure) {
+        this.title = title;
+        this.link = link;
+        this.guid = guid;
+        this.description = description;
+        this.category = category;
+        this.pubDate = pubDate;
+        this.enclosure = enclosure;
+    }
 
     public String getTitle() {
         return title;
@@ -70,5 +81,13 @@ public class RssItem {
 
     public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
+    }
+
+    public Bitmap getEnclosure() {
+        return enclosure;
+    }
+
+    public void setEnclosure(Bitmap enclosure) {
+        this.enclosure = enclosure;
     }
 }
