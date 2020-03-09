@@ -61,7 +61,11 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         tvTitle.setText(rssItem.getTitle());
         tvPubDate.setText(rssItem.getPubDate());
         tvDesc.setText(Html.fromHtml(rssItem.getDescription()));
-        imageView.setImageBitmap(rssItem.getEnclosure());
+        if(rssItem.getEnclosure() != null) {
+            imageView.setImageBitmap(rssItem.getEnclosure());
+        } else {
+            imageView.setImageResource(R.drawable.ic_rss_feed_black_24dp);
+        }
 
         final String link = rssItem.getLink();
 

@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -64,9 +65,16 @@ public class RssController {
 
             NodeList nodelist = (NodeList)xPath.compile("//item").evaluate(document, XPathConstants.NODESET);
             for (int i = 0; i < nodelist.getLength(); i++) {
-                URL url1 = new URL(xPath.compile("./enclosure/@url").evaluate(nodelist.item(i), XPathConstants.STRING)
-                        .toString());
-                final Bitmap bitmap = BitmapFactory.decodeStream(url1.openConnection().getInputStream());
+                Bitmap bitmap = null;
+                try {
+                    Object enclosureUrl = xPath.compile("./enclosure/@url").evaluate(nodelist.item(i), XPathConstants.STRING);
+                    URL url1 = new URL(enclosureUrl
+                            .toString());
+                    bitmap = BitmapFactory.decodeStream(url1.openConnection().getInputStream());
+                } catch (MalformedURLException malex) {
+                    bitmap = null;
+                }
+
                 RssItem rs = new RssItem(
                         xPath.compile("./title").evaluate(nodelist.item(i), XPathConstants.STRING)
                                 .toString(),
