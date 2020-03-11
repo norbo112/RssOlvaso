@@ -51,9 +51,9 @@ public class SavedHirekActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
-        new WeatherActivity(this).doWeather(imIcon, tvDesc);
+        new WeatherActivity(this).doWeather(imIcon, tvDesc, false);
         imIcon.setOnClickListener((event) -> {
-            new WeatherActivity(this).doWeather(imIcon, tvDesc);
+            new WeatherActivity(this).doWeather(imIcon, tvDesc, true);
         });
 
         RecyclerView rc = findViewById(R.id.rvSavedHrek);

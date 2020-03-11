@@ -56,4 +56,5 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
     implementation 'com.google.code.gson:gson:2.8.6'
     //implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
+    implementation 'com.github.codekidX:storage-chooser:2.0.4.4'
 }

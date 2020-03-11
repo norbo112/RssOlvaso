@@ -59,9 +59,9 @@ public class RssActivity extends AppCompatActivity {
         appSavedHirek.setOnClickListener((event) -> {
             startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
         });
-        weatherActivity.doWeather(imIcon, tvDesc);
+        weatherActivity.doWeather(imIcon, tvDesc, false);
         imIcon.setOnClickListener((event) -> {
-            weatherActivity.doWeather(imIcon, tvDesc);
+            weatherActivity.doWeather(imIcon, tvDesc,true);
         });
 
         final RecyclerView rv = findViewById(R.id.rvRssHir);

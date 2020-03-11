@@ -2,6 +2,7 @@ package com.norbo.android.projects.rssolvaso;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +39,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.controller.FileController;
 import com.norbo.android.projects.rssolvaso.database.model.RssLink;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.RssLinkViewModel;
@@ -48,8 +51,6 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends AppCompatActivity {
     public static final String MENU_EDIT = "Szerkesztés";
     private static final String MENU_DELETE = "Törlés";
-    private static final String MENU_EXPORT = "Export";
-    private static final String MENU_IMPORT = "Import";
 
     public static final String CSAT_NEV = "csatnev";
     public static final String CSAT_LINK = "csatlink";
@@ -63,9 +64,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvDesc;
     private ImageView imIcon;
     private ListView lv;
-    private Button btnPopupFile;
+    private ImageView btnPopupFile;
 
     private FileController fileController;
+
+    private FloatingActionButton fab;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("WrongConstant")
@@ -74,11 +77,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setTitle("Hír olvasó");
-//        actionBar.setDisplayShowHomeEnabled(true);
-//        actionBar.setDisplayUseLogoEnabled(true);
-//        actionBar.setLogo(R.drawable.ic_rss_feed_black_24dp);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -90,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.custom_appbar_layout);
         getSupportActionBar().setElevation(0);
         View view = getSupportActionBar().getCustomView();
-        imIcon = view.findViewById(R.id.weather_logo);
-        tvDesc = view.findViewById(R.id.weather_info);
+        ImageView imIcon = view.findViewById(R.id.weather_logo);
+        TextView tvDesc = view.findViewById(R.id.weather_info);
         ImageView applogohome = view.findViewById(R.id.applogo_home);
         applogohome.setOnClickListener((event) -> {
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
@@ -102,12 +100,36 @@ public class MainActivity extends AppCompatActivity {
         appSavedHirek.setOnClickListener((event) -> {
             startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
         });
-        new WeatherActivity(this).doWeather(imIcon, tvDesc);
+        new WeatherActivity(this).doWeather(imIcon, tvDesc, false);
         imIcon.setOnClickListener((event) -> {
-            new WeatherActivity(this).doWeather(imIcon, tvDesc);
+            new WeatherActivity(this).doWeather(imIcon, tvDesc, true);
         });
 
         lv = findViewById(R.id.listCsatorna);
+        fab = findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivityForResult(new Intent(MainActivity.this, UjHirFelvetele.class), REQUEST_CODE_NEW_LINK);
+                showCreateLinkDialog();
+            }
+        });
+
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem > 0) {
+                    fab.hide();
+                }else {
+                    fab.show();
+                }
+            }
+        });
 
         btnPopupFile = findViewById(R.id.btnPopupFile);
         btnPopupFile.setOnClickListener(popupFileListener);
@@ -134,13 +156,7 @@ public class MainActivity extends AppCompatActivity {
         registerForContextMenu(lv);
 
 
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //startActivityForResult(new Intent(MainActivity.this, UjHirFelvetele.class), REQUEST_CODE_NEW_LINK);
-                showCreateLinkDialog();
-            }
-        });
+
     }
 
     @Override
@@ -276,19 +292,6 @@ public class MainActivity extends AppCompatActivity {
         return lv;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.fomenu, menu);
-//        MenuItem item = menu.findItem(R.id.menuIdojaras);
-//        new WeatherActivity(this).doWeather(item);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
     private View.OnClickListener popupFileListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -304,8 +307,10 @@ public class MainActivity extends AppCompatActivity {
                         fileController = new FileController(FileController.OLVASAS, MainActivity.this);
                         try {
                             List<RssLink> rssLinks = fileController.execute(viewModel.getAllLinks().getValue()).get();
-                            for (RssLink r: rssLinks) {
-                                viewModel.insert(r);
+                            if(rssLinks != null) {
+                                for (RssLink r : rssLinks) {
+                                    viewModel.insert(r);
+                                }
                             }
                         } catch (ExecutionException e) {
                             Log.e(getClassLoader().getClass().getSimpleName(), "onMenuItemClick: exec", e);

@@ -3,7 +3,10 @@ package com.norbo.android.projects.rssolvaso.controller;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.FileUtils;
 import android.util.Log;
+
+import androidx.room.util.FileUtil;
 
 import com.norbo.android.projects.rssolvaso.MainActivity;
 import com.norbo.android.projects.rssolvaso.database.model.RssLink;
@@ -20,8 +23,10 @@ import java.util.List;
 
 public class FileController extends AsyncTask<List<RssLink>, Void, List<RssLink>> {
     private static final String FILENAME = "rsslista.obj";
+    private String path;
     public static final int IRAS = 1;
     public static final int OLVASAS = 2;
+    public boolean vanefile = true;
 
     private int fileControllerMode;
     private Context context;
@@ -31,10 +36,17 @@ public class FileController extends AsyncTask<List<RssLink>, Void, List<RssLink>
         this.context = context;
     }
 
+    public FileController(String path, int fileControllerMode, Context context) {
+        this.path = path;
+        this.fileControllerMode = fileControllerMode;
+        this.context = context;
+    }
+
     @Override
     protected List<RssLink> doInBackground(List<RssLink>... lists) {
         if(fileControllerMode == OLVASAS) {
-            return fileolvasas(FILENAME);
+            List<RssLink> links = fileolvasas(FILENAME);
+            return links;
         } else if( fileControllerMode == IRAS) {
             fileiras(FILENAME, lists[0]);
             return null;
@@ -48,6 +60,8 @@ public class FileController extends AsyncTask<List<RssLink>, Void, List<RssLink>
         if(links != null && fileControllerMode == OLVASAS) {
             ((MainActivity) context).getLv().setAdapter(new SajatListViewAdapter(context, links));
             ((MainActivity) context).showToast("Rss Lista betöltve!");
+        } else if(!vanefile){
+            ((MainActivity) context).showToast("Nem található a fájl!");
         } else {
             ((MainActivity) context).showToast("Rss Lista mentve!");
         }
@@ -62,7 +76,8 @@ public class FileController extends AsyncTask<List<RssLink>, Void, List<RssLink>
                     context.getExternalFilesDir(null),FILENAME)));
             return (List<RssLink>) objectInputStream.readObject();
         } catch (FileNotFoundException e) {
-            Log.e("FileController","fileolvasas nem található a fájl",e);
+            vanefile = false;
+            Log.e("FileController","fileolvasas FNF",e);
         } catch (IOException e) {
             Log.e("FileController","fileolvasas",e);
         } catch (ClassNotFoundException e) {
@@ -82,6 +97,7 @@ public class FileController extends AsyncTask<List<RssLink>, Void, List<RssLink>
     private void fileiras(String filename, List<RssLink> links) {
         ObjectOutputStream objectOutputStream = null;
         try {
+//            objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(path, filename)));
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(
                     context.getExternalFilesDir(null),FILENAME)));
             objectOutputStream.writeObject(links);

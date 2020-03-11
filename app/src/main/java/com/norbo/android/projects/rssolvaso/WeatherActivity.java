@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -124,17 +125,22 @@ public class WeatherActivity extends AppCompatActivity {
         }).start();
     }
 
-    void doWeather(ImageView imageView, TextView textView) {
+    public void doWeather(ImageView imageView, TextView textView, boolean clickbyikon) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                runOnUiThread(() -> {
-                    if(progressBar == null) {
-                        progressBar = new ProgressDialog(context != null ? context : WeatherActivity.this);
-                        progressBar.setTitle("Betöltés...");
-                    }
-                    progressBar.show();
-                });
+                if(clickbyikon) {
+                    runOnUiThread(() -> {
+                        if (progressBar == null) {
+                            progressBar = new ProgressDialog(context != null ? context : WeatherActivity.this);
+                            progressBar.setTitle("Betöltés...");
+                            progressBar.setMessage("Időjárás betöltése");
+                        }
+
+                        progressBar.show();
+                    });
+                }
+
                 String linkplusQuery = baseURL+"current?"+
                         "lat="+LAT+"&"+
                         "lon="+LON+"&"+
@@ -159,16 +165,19 @@ public class WeatherActivity extends AppCompatActivity {
                         con.disconnect();
                     } else {
                         runOnUiThread(() ->{
-                            Toast.makeText(WeatherActivity.this,
+                            Toast.makeText(context,
                                     "Nincsenek meg a kért adatok", Toast.LENGTH_SHORT).show();
                         });
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    runOnUiThread(() -> {
+                        Toast.makeText(context, "Hiba lépett fel", Toast.LENGTH_SHORT).show();
+                    });
+                    Log.e(getClassLoader().getClass().getSimpleName(), "run: i/o hiba", e);
                 }
 
                 runOnUiThread(() -> {
-                    progressBar.dismiss();
+                    if(clickbyikon)  progressBar.dismiss();
                 });
             }
         }).start();

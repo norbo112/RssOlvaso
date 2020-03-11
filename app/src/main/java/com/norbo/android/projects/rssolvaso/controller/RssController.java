@@ -111,6 +111,7 @@ public class RssController {
         if (progressBar == null) {
             progressBar = new ProgressDialog(context);
             progressBar.setTitle("Betöltés...");
+            progressBar.setMessage("Hírek betöltése");
         }
 
         progressBar.show();

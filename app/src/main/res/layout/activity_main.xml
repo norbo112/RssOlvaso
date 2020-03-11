@@ -42,20 +42,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
+    <ImageView
         android:id="@+id/btnPopupFile"
-        style="@android:style/Widget.Material.Button"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:background="#166116"
-        android:drawableTop="@drawable/ic_swap_vertical_circle_black_24dp"
-        android:text="..."
-        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_swap_vertical_circle_black_24dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
