@@ -155,8 +155,13 @@ public class MainActivity extends AppCompatActivity {
 
         registerForContextMenu(lv);
 
+        Intent fromShare = getIntent();
+        String action = fromShare.getAction();
+        String type = fromShare.getType();
 
-
+        if(Intent.ACTION_SEND.equals(action) && type != null) {
+            showCreateLinkDialog(fromShare);
+        }
     }
 
     @Override
@@ -228,6 +233,38 @@ public class MainActivity extends AppCompatActivity {
         final View customView = LayoutInflater.from(this).inflate(R.layout.dialog_uj_hir_felvetele, null);
         EditText etNev = customView.findViewById(R.id.etdialogNeve);
         EditText etLink = customView.findViewById(R.id.etdialogLink);
+
+        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.MyAlertDialog))
+                .setView(customView)
+                .setPositiveButton("Felvesz", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(TextUtils.isEmpty(etNev.getText().toString()) || TextUtils.isEmpty(etLink.getText().toString())) {
+                            showToast("Üres a név vagy a link, kérlek töltsd ki");
+                        } else {
+                            RssLink rssLink = new RssLink(etNev.getText().toString(), etLink.getText().toString());
+                            viewModel.insert(rssLink);
+                            showToast("Új csatorna hozzáadva");
+                        }
+                    }
+                })
+                .setNegativeButton("Mégse", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(getClass().getSimpleName(), "onClick: nincs felvétel");
+                    }
+                })
+                .create().show();
+    }
+
+    private void showCreateLinkDialog(Intent intent) {
+        final View customView = LayoutInflater.from(this).inflate(R.layout.dialog_uj_hir_felvetele, null);
+        EditText etNev = customView.findViewById(R.id.etdialogNeve);
+        EditText etLink = customView.findViewById(R.id.etdialogLink);
+        String sharedLink = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if(sharedLink != null) {
+            etLink.setText(sharedLink);
+        }
 
         new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.MyAlertDialog))
                 .setView(customView)
