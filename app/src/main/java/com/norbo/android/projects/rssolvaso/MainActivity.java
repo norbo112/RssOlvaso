@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FileController fileController;
 
-    private FloatingActionButton fab;
+    private FloatingActionButton fab, fabExport, fabNew;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("WrongConstant")
@@ -112,9 +112,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //startActivityForResult(new Intent(MainActivity.this, UjHirFelvetele.class), REQUEST_CODE_NEW_LINK);
-                showCreateLinkDialog();
+                if(fabExport.isShown() || fabNew.isShown()) {
+                    fabNew.hide();
+                    fabExport.hide();
+                } else {
+                    fabNew.show();
+                    fabExport.show();
+                }
             }
         });
+
 
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -131,8 +138,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnPopupFile = findViewById(R.id.btnPopupFile);
-        btnPopupFile.setOnClickListener(popupFileListener);
+        //btnPopupFile = findViewById(R.id.btnPopupFile);
+        fabExport = findViewById(R.id.fabExport);
+        fabExport.hide();
+        fabExport.setOnClickListener(popupFileListener);
+        fabNew = findViewById(R.id.fabNew);
+        fabNew.hide();
+        fabNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivityForResult(new Intent(MainActivity.this, UjHirFelvetele.class), REQUEST_CODE_NEW_LINK);
+                showCreateLinkDialog();
+            }
+        });
+        //btnPopupFile.setOnClickListener(popupFileListener);
 
         viewModel = new ViewModelProvider(this).get(RssLinkViewModel.class);
 
@@ -245,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
                             RssLink rssLink = new RssLink(etNev.getText().toString(), etLink.getText().toString());
                             viewModel.insert(rssLink);
                             showToast("Új csatorna hozzáadva");
+                            fabHide();
                         }
                     }
                 })
@@ -277,6 +297,8 @@ public class MainActivity extends AppCompatActivity {
                             RssLink rssLink = new RssLink(etNev.getText().toString(), etLink.getText().toString());
                             viewModel.insert(rssLink);
                             showToast("Új csatorna hozzáadva");
+
+                            fabHide();
                         }
                     }
                 })
@@ -356,10 +378,22 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     }
+
+                    if(fabExport.isShown()) {
+                        fabExport.hide();
+                        fabNew.hide();
+                    }
                     return true;
                 }
             });
             popupMenu.show();
         }
     };
+
+    private void fabHide() {
+        if(fabNew.isShown() || fabExport.isShown()) {
+            fabExport.hide();
+            fabNew.hide();
+        }
+    }
 }

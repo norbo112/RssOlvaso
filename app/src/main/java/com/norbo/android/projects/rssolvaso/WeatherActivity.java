@@ -173,7 +173,7 @@ public class WeatherActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         Toast.makeText(context, "Hiba lépett fel", Toast.LENGTH_SHORT).show();
                     });
-                    Log.e(getClassLoader().getClass().getSimpleName(), "run: i/o hiba", e);
+                    Log.e(getClass().getSimpleName(), "run: i/o hiba", e);
                 }
 
                 runOnUiThread(() -> {

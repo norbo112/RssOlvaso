@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.norbo.android.projects.rssolvaso.R;
@@ -84,12 +85,18 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         btnHirMegoszt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, link);
-                sendIntent.setType("text/plain");
-
-                Intent shareIntent = Intent.createChooser(sendIntent, null);
-                context.startActivity(shareIntent);
+//                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+//                sendIntent.putExtra(Intent.EXTRA_TEXT, link);
+//                sendIntent.setType("text/plain");
+//
+//                Intent shareIntent = Intent.createChooser(sendIntent, null);
+//                context.startActivity(shareIntent);
+                ShareCompat.IntentBuilder
+                        .from(context)
+                        .setType("text/plain")
+                        .setChooserTitle("Hír megosztása...")
+                        .setText(link)
+                        .startChooser();
             }
         });
 
