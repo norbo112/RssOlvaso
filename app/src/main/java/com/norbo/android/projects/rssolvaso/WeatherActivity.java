@@ -32,10 +32,14 @@ public class WeatherActivity extends AppCompatActivity {
 
     private String baseURL = "https://api.weatherbit.io/v2.0/";
     private String iconLink = "https://www.weatherbit.io/static/img/icons/";
-    private final String KEY = "9de6d03367e74f4f9a046a275ceb5741";
+//    private final String KEY = "9de6d03367e74f4f9a046a275ceb5741";
+    private final String KEY = "dab36f15298041359ad86856a878f82b";
     private final double LAT = 47.4706;
     private final double LON = 18.81892;
     private final String LANG = "hu";
+
+    private Double userLat;
+    private Double userLon;
 
     private Context context;
 
@@ -142,8 +146,8 @@ public class WeatherActivity extends AppCompatActivity {
                 }
 
                 String linkplusQuery = baseURL+"current?"+
-                        "lat="+LAT+"&"+
-                        "lon="+LON+"&"+
+                        "lat="+(userLat != null ? userLat : LAT)+"&"+
+                        "lon="+(userLon != null ? userLon : LON)+"&"+
                         "lang="+LANG+"&"+
                         "key="+KEY;
                 try {
@@ -168,6 +172,7 @@ public class WeatherActivity extends AppCompatActivity {
                             Toast.makeText(context,
                                     "Nincsenek meg a kért adatok", Toast.LENGTH_SHORT).show();
                         });
+                        Log.i(getClass().getSimpleName(), "Connection error: "+con.getResponseCode());
                     }
                 } catch (Exception e) {
                     runOnUiThread(() -> {
@@ -262,5 +267,13 @@ public class WeatherActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setUserLat(Double userLat) {
+        this.userLat = userLat;
+    }
+
+    public void setUserLon(Double userLon) {
+        this.userLon = userLon;
     }
 }

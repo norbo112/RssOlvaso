@@ -1,6 +1,7 @@
 package com.norbo.android.projects.rssolvaso;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -8,7 +9,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
+import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
 import com.norbo.android.projects.rssolvaso.controller.RssController;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 import com.norbo.android.projects.rssolvaso.model.RssItem;
@@ -26,29 +32,29 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class RssActivity extends AppCompatActivity {
+public class RssActivity extends AppCompatActivity implements LocationInterfaceActivity {
     private WeatherActivity weatherActivity;
     private HirSaveViewModel hirSaveViewModel;
+    private LocationManager lm;
+    ImageView imIcon;
+    TextView tvDesc;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rss);
 
         weatherActivity = new WeatherActivity(this);
-
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setTitle("Hír olvasó");
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setDisplayUseLogoEnabled(true);
-//        actionBar.setLogo(R.drawable.ic_rss_feed_black_24dp);
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_appbar_layout);
         getSupportActionBar().setElevation(0);
         View view = getSupportActionBar().getCustomView();
-        ImageView imIcon = view.findViewById(R.id.weather_logo);
-        TextView tvDesc = view.findViewById(R.id.weather_info);
+        imIcon = view.findViewById(R.id.weather_logo);
+        tvDesc = view.findViewById(R.id.weather_info);
         ImageView applogohome = view.findViewById(R.id.applogo_home);
         applogohome.setOnClickListener((event) -> {
             Intent intent = new Intent(RssActivity.this, MainActivity.class);
@@ -59,9 +65,9 @@ public class RssActivity extends AppCompatActivity {
         appSavedHirek.setOnClickListener((event) -> {
             startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
         });
-        weatherActivity.doWeather(imIcon, tvDesc, false);
+        LoactionUtil.getLastLocationAndUpdateWeatherData(RssActivity.this, lm, weatherActivity, false);
         imIcon.setOnClickListener((event) -> {
-            weatherActivity.doWeather(imIcon, tvDesc,true);
+            LoactionUtil.getLastLocationAndUpdateWeatherData(RssActivity.this, lm, weatherActivity, true);
         });
 
         final RecyclerView rv = findViewById(R.id.rvRssHir);
@@ -107,5 +113,15 @@ public class RssActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public ImageView getImIcon() {
+        return imIcon;
+    }
+
+    @Override
+    public TextView getTvDesc() {
+        return tvDesc;
     }
 }

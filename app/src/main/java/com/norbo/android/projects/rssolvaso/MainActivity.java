@@ -2,12 +2,12 @@ package com.norbo.android.projects.rssolvaso;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,13 +16,11 @@ import android.view.ContextMenu;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,11 +33,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
+import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
 import com.norbo.android.projects.rssolvaso.controller.FileController;
 import com.norbo.android.projects.rssolvaso.database.model.RssLink;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.RssLinkViewModel;
@@ -48,7 +48,7 @@ import com.norbo.android.projects.rssolvaso.model.sajatlv.SajatListViewAdapter;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationInterfaceActivity {
     public static final String MENU_EDIT = "Szerkesztés";
     private static final String MENU_DELETE = "Törlés";
 
@@ -57,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String CSAT_ID = "csatid";
 
     private static final int REQUEST_CODE_NEW_LINK = 110;
-    private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 100;
+    private static final int READ_WRITE_STORAGE = 100;
+    private static final int LOCATION_PERM = 200;
+    private static final String TAG = "MainActivity";
 
     private RssLinkViewModel viewModel;
 
@@ -68,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
     private FileController fileController;
 
+    private LocationManager lm;
+    private WeatherActivity weatherActivity;
+
     private FloatingActionButton fab, fabExport, fabNew;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -77,32 +82,37 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    READ_EXTERNAL_STORAGE_PERMISSION_CODE);
-        }
+//        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+//                Manifest.permission.READ_EXTERNAL_STORAGE,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE
+//        }, READ_WRITE_STORAGE);
+
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        }, LOCATION_PERM);
+
+        weatherActivity = new WeatherActivity(this);
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_appbar_layout);
         getSupportActionBar().setElevation(0);
         View view = getSupportActionBar().getCustomView();
-        ImageView imIcon = view.findViewById(R.id.weather_logo);
-        TextView tvDesc = view.findViewById(R.id.weather_info);
-        ImageView applogohome = view.findViewById(R.id.applogo_home);
-        applogohome.setOnClickListener((event) -> {
-            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        });
+        imIcon = view.findViewById(R.id.weather_logo);
+        tvDesc = view.findViewById(R.id.weather_info);
+
+        LoactionUtil.getLastLocationAndUpdateWeatherData(MainActivity.this, lm, weatherActivity, false);
+
         ImageView appSavedHirek = view.findViewById(R.id.viewSaveHirek);
         appSavedHirek.setOnClickListener((event) -> {
             startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
         });
-        new WeatherActivity(this).doWeather(imIcon, tvDesc, false);
+        //weatherActivity.doWeather(imIcon, tvDesc, false);
         imIcon.setOnClickListener((event) -> {
-            new WeatherActivity(this).doWeather(imIcon, tvDesc, true);
+            //weatherActivity.doWeather(imIcon, tvDesc, true);
+            LoactionUtil.getLastLocationAndUpdateWeatherData(MainActivity.this, lm, weatherActivity, true);
         });
 
         lv = findViewById(R.id.listCsatorna);
@@ -112,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //startActivityForResult(new Intent(MainActivity.this, UjHirFelvetele.class), REQUEST_CODE_NEW_LINK);
-                if(fabExport.isShown() || fabNew.isShown()) {
+                if (fabExport.isShown() || fabNew.isShown()) {
                     fabNew.hide();
                     fabExport.hide();
                 } else {
@@ -132,7 +142,11 @@ public class MainActivity extends AppCompatActivity {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem > 0) {
                     fab.hide();
-                }else {
+                    if (fabExport.isShown() || fabNew.isShown()) {
+                        fabNew.hide();
+                        fabExport.hide();
+                    }
+                } else {
                     fab.show();
                 }
             }
@@ -148,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //startActivityForResult(new Intent(MainActivity.this, UjHirFelvetele.class), REQUEST_CODE_NEW_LINK);
-                showCreateLinkDialog();
+                showCreateLinkDialog(false,0);
             }
         });
         //btnPopupFile.setOnClickListener(popupFileListener);
@@ -178,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         String action = fromShare.getAction();
         String type = fromShare.getType();
 
-        if(Intent.ACTION_SEND.equals(action) && type != null) {
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
             showCreateLinkDialog(fromShare);
         }
     }
@@ -186,9 +200,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == READ_EXTERNAL_STORAGE_PERMISSION_CODE) {
+        if(requestCode == READ_WRITE_STORAGE) {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.i(getClass().getSimpleName(), "onRequestPermissionsResult: permission granted!");
+            }
+        } else if(requestCode == LOCATION_PERM) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                //TODO itt máskell...
             }
         }
     }
@@ -248,22 +267,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void showCreateLinkDialog() {
+    private void showCreateLinkDialog(boolean edit, int position) {
         final View customView = LayoutInflater.from(this).inflate(R.layout.dialog_uj_hir_felvetele, null);
         EditText etNev = customView.findViewById(R.id.etdialogNeve);
         EditText etLink = customView.findViewById(R.id.etdialogLink);
+        Integer csatId = null;
+        if(edit) {
+            RssLink link = viewModel.getAllLinks().getValue().get(position);
+            csatId = link.getId();
+            etNev.setText(link.getCsatornaNeve());
+            etLink.setText(link.getCsatornaLink());
+        }
 
+        Integer finalCsatId = csatId;
         new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.MyAlertDialog))
                 .setView(customView)
-                .setPositiveButton("Felvesz", new DialogInterface.OnClickListener() {
+                .setPositiveButton((edit ? "szerkeszt" : "felvesz"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(TextUtils.isEmpty(etNev.getText().toString()) || TextUtils.isEmpty(etLink.getText().toString())) {
                             showToast("Üres a név vagy a link, kérlek töltsd ki");
                         } else {
                             RssLink rssLink = new RssLink(etNev.getText().toString(), etLink.getText().toString());
-                            viewModel.insert(rssLink);
-                            showToast("Új csatorna hozzáadva");
+                            if(edit && finalCsatId != null) {
+                                viewModel.update(finalCsatId, etNev.getText().toString(), etLink.getText().toString());
+                            } else {
+                                viewModel.insert(rssLink);
+                            }
+                            showToast("Új csatorna "+(edit ? "Szerkesztve":"Hozzáadva"));
                             fabHide();
                         }
                     }
@@ -333,12 +364,13 @@ public class MainActivity extends AppCompatActivity {
         String title = item.getTitle().toString();
         switch (title) {
             case MENU_EDIT:
-                Intent intent = new Intent(this, UjHirFelvetele.class);
-                intent.putExtra(MENU_EDIT ,true);
-                intent.putExtra(CSAT_NEV, viewModel.getAllLinks().getValue().get(kijeloltRssLinkPoz).getCsatornaNeve());
-                intent.putExtra(CSAT_LINK, viewModel.getAllLinks().getValue().get(kijeloltRssLinkPoz).getCsatornaLink());
-                intent.putExtra(CSAT_ID, viewModel.getAllLinks().getValue().get(kijeloltRssLinkPoz).getId());
-                startActivityForResult(intent, REQUEST_CODE_NEW_LINK);
+//                Intent intent = new Intent(this, UjHirFelvetele.class);
+//                intent.putExtra(MENU_EDIT ,true);
+//                intent.putExtra(CSAT_NEV, viewModel.getAllLinks().getValue().get(kijeloltRssLinkPoz).getCsatornaNeve());
+//                intent.putExtra(CSAT_LINK, viewModel.getAllLinks().getValue().get(kijeloltRssLinkPoz).getCsatornaLink());
+//                intent.putExtra(CSAT_ID, viewModel.getAllLinks().getValue().get(kijeloltRssLinkPoz).getId());
+//                startActivityForResult(intent, REQUEST_CODE_NEW_LINK);
+                showCreateLinkDialog(true, kijeloltRssLinkPoz);
                 break;
             case MENU_DELETE:
                 showAlertDialog(kijeloltRssLinkPoz);
@@ -349,6 +381,16 @@ public class MainActivity extends AppCompatActivity {
 
     public ListView getLv() {
         return lv;
+    }
+
+    @Override
+    public TextView getTvDesc() {
+        return tvDesc;
+    }
+
+    @Override
+    public ImageView getImIcon() {
+        return imIcon;
     }
 
     private View.OnClickListener popupFileListener = new View.OnClickListener() {
@@ -396,4 +438,36 @@ public class MainActivity extends AppCompatActivity {
             fabNew.hide();
         }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        if(lm != null) {
+//            lm.removeUpdates(this);
+//        }
+    }
+
+//    @Override
+//    public void onLocationChanged(Location location) {
+//        if(location != null) {
+//            weatherActivity.setUserLat(location.getLatitude());
+//            weatherActivity.setUserLon(location.getLongitude());
+//            weatherActivity.doWeather(imIcon, tvDesc, false);
+//        }
+//    }
+//
+//    @Override
+//    public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//    }
+//
+//    @Override
+//    public void onProviderEnabled(String provider) {
+//    }
+//
+//    @Override
+//    public void onProviderDisabled(String provider) {
+//        weatherActivity.setUserLon(null);
+//        weatherActivity.setUserLat(null);
+//    }
 }
