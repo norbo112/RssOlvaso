@@ -33,7 +33,8 @@ public class LoactionUtil {
         if(lastKnownLocation != null) {
             weatherActivity.setUserLat(lastKnownLocation.getLatitude());
             weatherActivity.setUserLon(lastKnownLocation.getLongitude());
-            Log.i(TAG, "getLastLocationAndUpdateWeatherData: not null: "+lastKnownLocation.getLatitude()+" : "+lastKnownLocation.getLongitude());
+            Log.i(TAG, "getLastLocationAndUpdateWeatherData: not null: "
+                    +lastKnownLocation.getLatitude()+" : "+lastKnownLocation.getLongitude());
         }
 
         weatherActivity.doWeather(main.getImIcon(), main.getTvDesc(), clicked);

@@ -126,4 +126,14 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
     public List<RssItem> getRssItems() {
         return rssItems;
     }
+
+    public void clear() {
+        rssItems.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<RssItem> items) {
+        rssItems.addAll(items);
+        notifyDataSetChanged();
+    }
 }
