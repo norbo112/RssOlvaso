@@ -78,9 +78,9 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
         appSavedHirek.setOnClickListener((event) -> {
             startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
         });
-        LoactionUtil.getLastLocationAndUpdateWeatherData(RssActivity.this, lm, weatherActivity, false);
+        LoactionUtil.updateLocationWithFusedLPC(RssActivity.this, weatherActivity, false);
         imIcon.setOnClickListener((event) -> {
-            LoactionUtil.getLastLocationAndUpdateWeatherData(RssActivity.this, lm, weatherActivity, true);
+            LoactionUtil.updateLocationWithFusedLPC(RssActivity.this, weatherActivity, true);
         });
 
         rv = findViewById(R.id.rvRssHir);

@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         }, LOCATION_PERM);
 
         weatherActivity = new WeatherActivity(this);
-        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         imIcon = view.findViewById(R.id.weather_logo);
         tvDesc = view.findViewById(R.id.weather_info);
 
-        LoactionUtil.getLastLocationAndUpdateWeatherData(MainActivity.this, lm, weatherActivity, false);
+        LoactionUtil.updateLocationWithFusedLPC(MainActivity.this, weatherActivity, false);
 
         ImageView appSavedHirek = view.findViewById(R.id.viewSaveHirek);
         appSavedHirek.setOnClickListener((event) -> {
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         //weatherActivity.doWeather(imIcon, tvDesc, false);
         imIcon.setOnClickListener((event) -> {
             //weatherActivity.doWeather(imIcon, tvDesc, true);
-            LoactionUtil.getLastLocationAndUpdateWeatherData(MainActivity.this, lm, weatherActivity, true);
+            LoactionUtil.updateLocationWithFusedLPC(MainActivity.this, weatherActivity, true);
         });
 
         lv = findViewById(R.id.listCsatorna);
@@ -359,17 +359,12 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         String title = item.getTitle().toString();
         switch (title) {
             case MENU_EDIT:
-//                Intent intent = new Intent(this, UjHirFelvetele.class);
-//                intent.putExtra(MENU_EDIT ,true);
-//                intent.putExtra(CSAT_NEV, viewModel.getAllLinks().getValue().get(kijeloltRssLinkPoz).getCsatornaNeve());
-//                intent.putExtra(CSAT_LINK, viewModel.getAllLinks().getValue().get(kijeloltRssLinkPoz).getCsatornaLink());
-//                intent.putExtra(CSAT_ID, viewModel.getAllLinks().getValue().get(kijeloltRssLinkPoz).getId());
-//                startActivityForResult(intent, REQUEST_CODE_NEW_LINK);
                 showCreateLinkDialog(true, kijeloltRssLinkPoz);
                 break;
             case MENU_DELETE:
@@ -438,36 +433,4 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
             fabNew.hide();
         }
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        if(lm != null) {
-//            lm.removeUpdates(this);
-//        }
-    }
-
-//    @Override
-//    public void onLocationChanged(Location location) {
-//        if(location != null) {
-//            weatherActivity.setUserLat(location.getLatitude());
-//            weatherActivity.setUserLon(location.getLongitude());
-//            weatherActivity.doWeather(imIcon, tvDesc, false);
-//        }
-//    }
-//
-//    @Override
-//    public void onStatusChanged(String provider, int status, Bundle extras) {
-//
-//    }
-//
-//    @Override
-//    public void onProviderEnabled(String provider) {
-//    }
-//
-//    @Override
-//    public void onProviderDisabled(String provider) {
-//        weatherActivity.setUserLon(null);
-//        weatherActivity.setUserLat(null);
-//    }
 }

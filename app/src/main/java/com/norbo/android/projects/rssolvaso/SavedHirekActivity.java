@@ -59,11 +59,11 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
-        LoactionUtil.getLastLocationAndUpdateWeatherData(SavedHirekActivity.this,
-                locationManager, weatherActivity, false);
+        LoactionUtil.updateLocationWithFusedLPC(SavedHirekActivity.this,
+                weatherActivity, false);
         imIcon.setOnClickListener((event) -> {
-            LoactionUtil.getLastLocationAndUpdateWeatherData(SavedHirekActivity.this,
-                    locationManager, weatherActivity, true);
+            LoactionUtil.updateLocationWithFusedLPC(SavedHirekActivity.this,
+                    weatherActivity, true);
         });
         RecyclerView rc = findViewById(R.id.rvSavedHrek);
 
