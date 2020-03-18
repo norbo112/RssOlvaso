@@ -1,6 +1,5 @@
 package com.norbo.android.projects.rssolvaso;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,24 +13,22 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
-import com.norbo.android.projects.rssolvaso.database.model.HirModel;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 import com.norbo.android.projects.rssolvaso.rcview.SavedHirAdapter;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
-
 public class SavedHirekActivity extends AppCompatActivity implements LocationInterfaceActivity {
     private HirSaveViewModel hirSaveViewModel;
-    private WeatherActivity weatherActivity;
+    private DoWeatherImpl doWeatherImpl;
     private LocationManager locationManager;
     ImageView imIcon;
     TextView tvDesc;
@@ -42,7 +39,7 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_hirek);
 
-        weatherActivity = new WeatherActivity(this);
+        doWeatherImpl = new DoWeatherImpl(this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -60,10 +57,10 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
             startActivity(intent);
         });
         LoactionUtil.updateLocationWithFusedLPC(SavedHirekActivity.this,
-                weatherActivity, false);
+                doWeatherImpl, false);
         imIcon.setOnClickListener((event) -> {
             LoactionUtil.updateLocationWithFusedLPC(SavedHirekActivity.this,
-                    weatherActivity, true);
+                    doWeatherImpl, true);
         });
         RecyclerView rc = findViewById(R.id.rvSavedHrek);
 
@@ -72,6 +69,24 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
             rc.setAdapter(new SavedHirAdapter(hirModels, getApplicationContext(), hirSaveViewModel));
             rc.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             rc.setItemAnimator(new DefaultItemAnimator());
+        });
+
+        EditText searchText = findViewById(R.id.searchText);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ((SavedHirAdapter)rc.getAdapter()).getFilter().filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
     }
 

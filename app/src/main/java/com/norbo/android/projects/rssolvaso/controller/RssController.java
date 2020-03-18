@@ -1,12 +1,13 @@
 package com.norbo.android.projects.rssolvaso.controller;
 
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.Log;
-import android.widget.ProgressBar;
+
+import androidx.annotation.RequiresApi;
 
 import com.norbo.android.projects.rssolvaso.model.RssItem;
 
@@ -22,6 +23,7 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class RssController {
         this.context = context;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public List<RssItem> getRssItems(String url) {
         List<RssItem> rssitems = new ArrayList<>();
         try {
@@ -49,10 +52,10 @@ public class RssController {
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                     + "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36");
 
-            String line = null;
+            String line;
             StringBuilder sb = new StringBuilder();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
             while((line = br.readLine()) != null) {
                 sb.append(line);
             }
@@ -65,7 +68,7 @@ public class RssController {
 
             NodeList nodelist = (NodeList)xPath.compile("//item").evaluate(document, XPathConstants.NODESET);
             for (int i = 0; i < nodelist.getLength(); i++) {
-                Bitmap bitmap = null;
+                Bitmap bitmap;
                 try {
                     Object enclosureUrl = xPath.compile("./enclosure/@url").evaluate(nodelist.item(i), XPathConstants.STRING);
                     URL url1 = new URL(enclosureUrl

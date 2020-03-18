@@ -1,8 +1,6 @@
 package com.norbo.android.projects.rssolvaso.rcview;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
@@ -10,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,13 +24,14 @@ import com.norbo.android.projects.rssolvaso.database.model.HirModel;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 import com.norbo.android.projects.rssolvaso.model.RssItem;
 
-import java.io.IOException;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
-public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
+public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> implements Filterable {
 
     private List<RssItem> rssItems;
+    private List<RssItem> rssItemsFilter;
+    private CimFilter cimFilter;
     private AppCompatActivity context;
     private HirSaveViewModel hirSaveViewModel;
 
@@ -38,6 +39,7 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         this.context = context;
         this.rssItems = rssItems;
         this.hirSaveViewModel = pHirSaveViewModel;
+        this.rssItemsFilter = rssItems;
     }
 
     @NonNull
@@ -85,12 +87,6 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
         btnHirMegoszt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent sendIntent = new Intent(Intent.ACTION_SEND);
-//                sendIntent.putExtra(Intent.EXTRA_TEXT, link);
-//                sendIntent.setType("text/plain");
-//
-//                Intent shareIntent = Intent.createChooser(sendIntent, null);
-//                context.startActivity(shareIntent);
                 ShareCompat.IntentBuilder
                         .from(context)
                         .setType("text/plain")
@@ -105,13 +101,6 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
                     rssItem.getDescription()));
             Toast.makeText(context, "Hir mentve", Toast.LENGTH_SHORT).show();
         });
-
-//        hirSaveViewModel.getHirByTitle(rssItem.getTitle()).observe(context,
-//                hirModel -> {
-//                    if(hirModel != null && hirModel.getHircim().equals(rssItem.getTitle())) {
-//                        btnSaveHir.setVisibility(View.INVISIBLE);
-//                    }
-//                });
     }
 
     @Override
@@ -135,5 +124,40 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> {
     public void addAll(List<RssItem> items) {
         rssItems.addAll(items);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public Filter getFilter() {
+        if(cimFilter == null) {
+            cimFilter = new CimFilter();
+        }
+        return cimFilter;
+    }
+
+    private class CimFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            if(constraint != null && constraint.length() > 0) {
+                List<RssItem> filterList = new ArrayList<>();
+                for(RssItem rssItem: rssItemsFilter) {
+                    if(rssItem.getTitle().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        filterList.add(rssItem);
+                    }
+                }
+                results.count = filterList.size();
+                results.values = filterList;
+            } else {
+                results.count = rssItemsFilter.size();
+                results.values = rssItemsFilter;
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            rssItems = (List<RssItem>) results.values;
+            notifyDataSetChanged();
+        }
     }
 }

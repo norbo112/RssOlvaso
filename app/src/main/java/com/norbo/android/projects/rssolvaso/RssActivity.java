@@ -13,18 +13,19 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
 import com.norbo.android.projects.rssolvaso.controller.RssController;
@@ -35,7 +36,7 @@ import com.norbo.android.projects.rssolvaso.rcview.RssItemAdapter;
 import java.util.List;
 
 public class RssActivity extends AppCompatActivity implements LocationInterfaceActivity {
-    private WeatherActivity weatherActivity;
+    private DoWeatherImpl doWeatherImpl;
     private HirSaveViewModel hirSaveViewModel;
     private LocationManager lm;
     private RssController rssController;
@@ -56,7 +57,7 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rss);
 
-        weatherActivity = new WeatherActivity(this);
+        doWeatherImpl = new DoWeatherImpl(this);
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -78,9 +79,9 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
         appSavedHirek.setOnClickListener((event) -> {
             startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
         });
-        LoactionUtil.updateLocationWithFusedLPC(RssActivity.this, weatherActivity, false);
+        LoactionUtil.updateLocationWithFusedLPC(RssActivity.this, doWeatherImpl, false);
         imIcon.setOnClickListener((event) -> {
-            LoactionUtil.updateLocationWithFusedLPC(RssActivity.this, weatherActivity, true);
+            LoactionUtil.updateLocationWithFusedLPC(RssActivity.this, doWeatherImpl, true);
         });
 
         rv = findViewById(R.id.rvRssHir);
@@ -108,6 +109,26 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
         new Thread(hirekBetoltese).start();
         rootView = findViewById(R.id.rootView);
         scrollUpFab = findViewById(R.id.scrollUpFab);
+
+        EditText searchText = findViewById(R.id.rssa_search);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(rv.getAdapter() != null) {
+                    ((RssItemAdapter) rv.getAdapter()).getFilter().filter(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void setRecycleScrollUp() {
@@ -134,6 +155,7 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
     }
 
     final Runnable hirekBetoltese = new Runnable() {
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public void run() {
             runOnUiThread(new Runnable() {
@@ -161,6 +183,7 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
     };
 
     final Runnable swipeHirekBetoltese = new Runnable() {
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public void run() {
             final List<RssItem> rssItems = rssController.getRssItems(link);

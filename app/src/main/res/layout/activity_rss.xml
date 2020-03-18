@@ -8,18 +8,6 @@
     android:background="#0B320B"
     android:padding="5dp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/scrollUpFab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:clickable="true"
-        android:visibility="invisible"
-        app:backgroundTint="#A63949AB"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_keyboard_arrow_up_black_24dp" />
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="0dp"
@@ -33,6 +21,39 @@
             android:id="@+id/rvRssHir"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <EditText
+        android:id="@+id/rssa_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:layout_marginBottom="2dp"
+        android:background="#92388E3C"
+        android:drawableEnd="@drawable/ic_search_green"
+        android:ems="10"
+        android:hint="Keresett cím"
+        android:inputType="textPersonName"
+        android:padding="7dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constrainedWidth="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scrollUpFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:backgroundTint="#A63949AB"
+        app:layout_constraintBottom_toTopOf="@+id/rssa_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_keyboard_arrow_up_black_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

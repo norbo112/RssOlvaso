@@ -3,7 +3,6 @@ package com.norbo.android.projects.rssolvaso;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     private FileController fileController;
 
     private LocationManager lm;
-    private WeatherActivity weatherActivity;
+    private DoWeatherImpl doWeatherImpl;
 
     private FloatingActionButton fab, fabExport, fabNew;
 
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
                 Manifest.permission.ACCESS_FINE_LOCATION
         }, LOCATION_PERM);
 
-        weatherActivity = new WeatherActivity(this);
+        doWeatherImpl = new DoWeatherImpl(this);
 //        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -103,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         imIcon = view.findViewById(R.id.weather_logo);
         tvDesc = view.findViewById(R.id.weather_info);
 
-        LoactionUtil.updateLocationWithFusedLPC(MainActivity.this, weatherActivity, false);
+        LoactionUtil.updateLocationWithFusedLPC(MainActivity.this, doWeatherImpl, false);
 
         ImageView appSavedHirek = view.findViewById(R.id.viewSaveHirek);
         appSavedHirek.setOnClickListener((event) -> {
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         //weatherActivity.doWeather(imIcon, tvDesc, false);
         imIcon.setOnClickListener((event) -> {
             //weatherActivity.doWeather(imIcon, tvDesc, true);
-            LoactionUtil.updateLocationWithFusedLPC(MainActivity.this, weatherActivity, true);
+            LoactionUtil.updateLocationWithFusedLPC(MainActivity.this, doWeatherImpl, true);
         });
 
         lv = findViewById(R.id.listCsatorna);

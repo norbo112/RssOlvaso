@@ -17,7 +17,7 @@ import com.norbo.android.projects.rssolvaso.model.weather.Weather;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class WeatherActivity implements WeatherInterface {
+public class DoWeatherImpl implements WeatherInterface {
     private ProgressDialog progressBar;
 
     private String baseURL = "https://api.weatherbit.io/v2.0/";
@@ -33,7 +33,7 @@ public class WeatherActivity implements WeatherInterface {
 
     private Activity context;
 
-    public WeatherActivity(Activity context) {
+    public DoWeatherImpl(Activity context) {
         this.context = context;
     }
 

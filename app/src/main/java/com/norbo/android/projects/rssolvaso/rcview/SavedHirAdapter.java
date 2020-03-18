@@ -8,6 +8,8 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,17 +20,21 @@ import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.database.model.HirModel;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SavedHirAdapter extends RecyclerView.Adapter<SavedHirViewHolder> {
+public class SavedHirAdapter extends RecyclerView.Adapter<SavedHirViewHolder> implements Filterable {
     private List<HirModel> hirModels;
+    private List<HirModel> hirModelsFiltered;
     private Context context;
     private HirSaveViewModel hirSaveViewModel;
+    private ValueFilter filter;
 
     public SavedHirAdapter(List<HirModel> hirModels, Context context, HirSaveViewModel hirSaveViewModel) {
         this.hirModels = hirModels;
         this.context = context;
         this.hirSaveViewModel = hirSaveViewModel;
+        this.hirModelsFiltered = hirModels;
     }
 
     @NonNull
@@ -87,4 +93,38 @@ public class SavedHirAdapter extends RecyclerView.Adapter<SavedHirViewHolder> {
         return hirModels.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        if(filter == null) {
+            filter = new ValueFilter();
+        }
+        return filter;
+    }
+
+    private class ValueFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            if(constraint != null && constraint.length() > 0) {
+                List<HirModel> filterList = new ArrayList<>();
+                for(HirModel model: hirModelsFiltered) {
+                    if(model.getHircim().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        filterList.add(model);
+                    }
+                }
+                results.count = filterList.size();
+                results.values = filterList;
+            } else {
+                results.count = hirModelsFiltered.size();
+                results.values = hirModelsFiltered;
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            hirModels = (List<HirModel>) results.values;
+            notifyDataSetChanged();
+        }
+    }
 }

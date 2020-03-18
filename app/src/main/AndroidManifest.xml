@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SavedHirekActivity" android:parentActivityName=".MainActivity"/>
-        <activity android:name=".WeatherActivity" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".DoWeatherImpl" android:parentActivityName=".MainActivity"/>
         <activity android:name=".UjHirFelvetele" android:parentActivityName=".MainActivity"/>
         <activity android:name=".RssActivity" android:parentActivityName=".MainActivity"/>
 
