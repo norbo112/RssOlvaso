@@ -1,5 +1,6 @@
 package com.norbo.android.projects.rssolvaso;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
@@ -32,6 +34,8 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
     private LocationManager locationManager;
     ImageView imIcon;
     TextView tvDesc;
+    RecyclerView rc;
+    FloatingActionButton scrollUpFab;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -62,13 +66,17 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
             LoactionUtil.updateLocationWithFusedLPC(SavedHirekActivity.this,
                     doWeatherImpl, true);
         });
-        RecyclerView rc = findViewById(R.id.rvSavedHrek);
+
+        rc = findViewById(R.id.rvSavedHrek);
+        scrollUpFab = findViewById(R.id.savedTotopFAB);
 
         hirSaveViewModel = new ViewModelProvider(this).get(HirSaveViewModel.class);
         hirSaveViewModel.getHirek().observe(this, hirModels -> {
             rc.setAdapter(new SavedHirAdapter(hirModels, getApplicationContext(), hirSaveViewModel));
             rc.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             rc.setItemAnimator(new DefaultItemAnimator());
+
+            setRecycleScrollUp();
         });
 
         EditText searchText = findViewById(R.id.searchText);
@@ -86,6 +94,28 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+    }
+
+    private void setRecycleScrollUp() {
+        int lastItemPoz = ((LinearLayoutManager) rc.getLayoutManager()).findFirstVisibleItemPosition();;
+        rc.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                final int visiblePoz = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                if(visiblePoz > lastItemPoz) {
+                    scrollUpFab.show();
+                    scrollUpFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            recyclerView.getLayoutManager()
+                                    .scrollToPosition(0);
+                            scrollUpFab.hide();
+                        }
+                    });
+                }
             }
         });
     }
