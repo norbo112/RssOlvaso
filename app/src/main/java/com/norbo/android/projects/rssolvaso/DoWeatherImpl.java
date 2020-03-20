@@ -46,7 +46,7 @@ public class DoWeatherImpl implements WeatherInterface {
                     context.runOnUiThread(() -> {
                         if (progressBar == null) {
                             progressBar = new ProgressDialog(context);
-                            progressBar.setTitle("Betöltés...");
+//                            progressBar.setTitle("Betöltés...");
                             progressBar.setMessage("Időjárás betöltése");
                         }
 
