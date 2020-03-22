@@ -11,36 +11,28 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/app_bar">
+        android:id="@+id/app_bar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:contentScrim="#071C07"
+            app:expandedTitleMarginStart="15dp"
+            app:expandedTitleMarginEnd="0dp"
+            app:expandedTitleGravity="start|bottom"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@id/toolbar"
             android:id="@+id/collapsinglayout">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ImageView
+                android:id="@+id/weather_logo_cl"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="136dp"
+                android:src="@drawable/ic_wb_sunny_black_24dp"
                 app:layout_collapseMode="parallax"
-                android:orientation="horizontal"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:fitsSystemWindows="true">
-
-                <ImageView
-                    android:id="@+id/weather_logo_cl"
-                    android:layout_width="0dp"
-                    android:layout_height="136dp"
-                    android:src="@drawable/ic_wb_sunny_black_24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_marginTop="?attr/actionBarSize"/>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -67,9 +59,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:src="@drawable/ic_add_black_24dp"
-        app:backgroundTint="#3F51B5"
+        app:backgroundTint="#1B5E20"
+        app:backgroundTintMode="screen"
         app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"/>
+        app:layout_anchorGravity="bottom|end" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -47,8 +49,8 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
     ImageView imIcon;
     TextView tvDesc;
 
-    private View rootView;
     private FloatingActionButton scrollUpFab;
+    private RssItemAdapter rssItemAdapter;
 
     String link;
     RecyclerView rv;
@@ -89,28 +91,7 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
         });
 
         new Thread(hirekBetoltese).start();
-        rootView = findViewById(R.id.rootView);
         scrollUpFab = findViewById(R.id.scrollUpFab);
-
-        EditText searchText = findViewById(R.id.rssa_search);
-        searchText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(rv.getAdapter() != null) {
-                    ((RssItemAdapter) rv.getAdapter()).getFilter().filter(s.toString());
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
     private void setRecycleScrollUp() {
@@ -153,7 +134,8 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
                     @Override
                     public void run() {
                         rssController.dismissProgress();
-                        rv.setAdapter(new RssItemAdapter(RssActivity.this, rssItems, hirSaveViewModel));
+                        rssItemAdapter = new RssItemAdapter(RssActivity.this, rssItems, hirSaveViewModel);
+                        rv.setAdapter(rssItemAdapter);
                         rv.setItemAnimator(new DefaultItemAnimator());
                         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
@@ -175,9 +157,8 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);
-                        RssItemAdapter itemAdapter = (RssItemAdapter) rv.getAdapter();
-                        itemAdapter.clear();
-                        itemAdapter.addAll(rssItems);
+                        rssItemAdapter.clear();
+                        rssItemAdapter.addAll(rssItems);
                     }
                 });
             }
@@ -187,6 +168,21 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.fomenu, menu);
+        MenuItem searchViewItem = menu.findItem(R.id.app_bar_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                rssItemAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 

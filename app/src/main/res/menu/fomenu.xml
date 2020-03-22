@@ -3,6 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/app_bar_search"
+        android:contentDescription="Keresés címekben"
+        android:icon="@drawable/ic_search_green"
+        android:title="Keresás"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/menu_ujhir"
+        android:icon="@drawable/ic_add_black_24dp"
+        android:title="Csatorna felvétele"
+        app:showAsAction="collapseActionView" />
+    <item
         android:id="@+id/menu_export"
         android:icon="@drawable/ic_cloud_download"
         android:title="@string/export_lista" />
@@ -13,6 +25,5 @@
     <item
         android:id="@+id/menu_saved"
         android:icon="@drawable/ic_pageview_black_24dp"
-        android:title="@string/mentett_h_rek"
-        app:showAsAction="ifRoom|withText" />
+        android:title="@string/mentett_h_rek" />
 </menu>

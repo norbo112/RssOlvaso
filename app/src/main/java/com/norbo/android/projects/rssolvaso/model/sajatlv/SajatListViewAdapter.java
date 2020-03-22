@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,11 +15,14 @@ import androidx.annotation.Nullable;
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.database.model.RssLink;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SajatListViewAdapter extends ArrayAdapter<RssLink> {
+public class SajatListViewAdapter extends ArrayAdapter<RssLink> implements Filterable {
     private List<RssLink> rssLinks;
+    private List<RssLink> rssLinksFilter;
     private Context context;
+    private CimFilter cimFilter;
 
     private static class ViewHolder {
         TextView textViewNev;
@@ -28,6 +33,7 @@ public class SajatListViewAdapter extends ArrayAdapter<RssLink> {
         super(context, R.layout.rss_lv_item, links);
         this.rssLinks = links;
         this.context = context;
+        this.rssLinksFilter = links;
     }
 
     @NonNull
@@ -52,5 +58,60 @@ public class SajatListViewAdapter extends ArrayAdapter<RssLink> {
         viewHolder.textViewLink.setText(links.getCsatornaLink());
 
         return convertView;
+    }
+
+    @Override
+    public int getCount() {
+        return rssLinks.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Nullable
+    @Override
+    public RssLink getItem(int position) {
+        return rssLinks.get(position);
+    }
+
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        if(cimFilter == null)
+            cimFilter = new CimFilter();
+        return cimFilter;
+    }
+
+    private class CimFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            if(constraint != null && constraint.length() > 0) {
+                List<RssLink> filterList = new ArrayList<>();
+                for(RssLink rssItem: rssLinksFilter) {
+                    if(rssItem.getCsatornaNeve().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        filterList.add(rssItem);
+                    }
+                }
+                results.count = filterList.size();
+                results.values = filterList;
+            } else {
+                results.count = rssLinksFilter.size();
+                results.values = rssLinksFilter;
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            if (results.count == 0) {
+                notifyDataSetInvalidated();
+            } else {
+                rssLinks = (List<RssLink>) results.values;
+                notifyDataSetChanged();
+            }
+        }
     }
 }

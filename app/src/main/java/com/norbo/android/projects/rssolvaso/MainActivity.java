@@ -10,10 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.location.Location;
 import android.location.LocationManager;
-import android.net.InetAddresses;
-import android.net.wifi.SupplicantState;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,7 +27,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,10 +37,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
@@ -59,10 +56,8 @@ import com.norbo.android.projects.rssolvaso.model.weather.Weather;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 public class MainActivity extends AppCompatActivity implements LocationInterfaceActivity {
@@ -79,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     private static final String TAG = "MainActivity";
 
     private RssLinkViewModel viewModel;
+    private SajatListViewAdapter listViewAdapter;
 
     private TextView tvDesc;
     private ImageView imIcon;
@@ -136,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCreateLinkDialog(false,0);
+                showCreateLinkDialog(null,false,0);
             }
         });
 
@@ -145,7 +141,8 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         viewModel.getAllLinks().observe(this, new Observer<List<RssLink>>() {
             @Override
             public void onChanged(List<RssLink> rssLinks) {
-                lv.setAdapter(new SajatListViewAdapter(MainActivity.this, rssLinks));
+                listViewAdapter = new SajatListViewAdapter(MainActivity.this, rssLinks);
+                lv.setAdapter(listViewAdapter);
             }
         });
 
@@ -153,8 +150,11 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), RssActivity.class);
-                intent.putExtra("cim", viewModel.getAllLinks().getValue().get(position).getCsatornaNeve());
-                intent.putExtra("link", viewModel.getAllLinks().getValue().get(position).getCsatornaLink());
+                final RssLink item = listViewAdapter.getItem(position);
+                intent.putExtra("cim", item.getCsatornaNeve());
+                intent.putExtra("link", item.getCsatornaLink());
+//                intent.putExtra("cim", viewModel.getAllLinks().getValue().get(position).getCsatornaNeve());
+//                intent.putExtra("link", viewModel.getAllLinks().getValue().get(position).getCsatornaLink());
                 startActivity(intent);
             }
         });
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         String type = fromShare.getType();
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
-            showCreateLinkDialog(fromShare);
+            showCreateLinkDialog(fromShare, false, 0);
         }
     }
 
@@ -192,19 +192,22 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
 
     private Bitmap getWeatherBitmap(Weather weather) {
         WData wData = weather.getData().get(0);
-
+        Paint paint = new Paint();
         Bitmap imageBitmap = weather.getWicon().copy(Bitmap.Config.ARGB_8888, true);
         Bitmap newBitmap = Bitmap.createBitmap(imageBitmap.getWidth()+200, imageBitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(newBitmap);
-        canvas.drawBitmap(imageBitmap, 0, 0, null);
-        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.parseColor("#004B26"));
+        canvas.drawRect(0,0, imIcon.getWidth(), imIcon.getHeight(), paint);
+        canvas.drawBitmap(imageBitmap, 0, 0, paint);
+
         paint.setColor(Color.WHITE);
         paint.setTextSize(22);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawText(wData.getTemp()+" °C / "+wData.getApp_temp()+" °C", 120, 30, paint);
         paint.setTextSize(18);
         canvas.drawText(wData.getWeather().getDescription(), 135,55,paint);
-        paint.setTextSize(18);
+        paint.setTextSize(14);
         canvas.drawText(wData.getCity_name(), 165,80,paint);
         return newBitmap;
     }
@@ -257,8 +260,11 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     }
 
     private void showAlertDialog(int poz) {
-        int csatornaid = viewModel.getAllLinks().getValue().get(poz).getId();
-        String csatronanev = viewModel.getAllLinks().getValue().get(poz).getCsatornaNeve();
+//        int csatornaid = viewModel.getAllLinks().getValue().get(poz).getId();
+//        String csatronanev = viewModel.getAllLinks().getValue().get(poz).getCsatornaNeve();
+        int csatornaid = listViewAdapter.getItem(poz).getId();
+        String csatronanev = listViewAdapter.getItem(poz).getCsatornaNeve();
+
         new AlertDialog.Builder(this)
                 .setMessage("Biztos törölni akarod?")
                 .setTitle(csatronanev+" törlése")
@@ -279,10 +285,16 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void showCreateLinkDialog(boolean edit, int position) {
+    private void showCreateLinkDialog(Intent intent, boolean edit, int position) {
         final View customView = LayoutInflater.from(this).inflate(R.layout.dialog_uj_hir_felvetele, null);
         EditText etNev = customView.findViewById(R.id.etdialogNeve);
         EditText etLink = customView.findViewById(R.id.etdialogLink);
+
+        String sharedLink = intent != null ? intent.getStringExtra(Intent.EXTRA_TEXT) : null;
+        if(sharedLink != null) {
+            etLink.setText(sharedLink);
+        }
+
         Integer csatId = null;
         if(edit) {
             RssLink link = viewModel.getAllLinks().getValue().get(position);
@@ -307,41 +319,6 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
                                 viewModel.insert(rssLink);
                             }
                             showToast("Új csatorna "+(edit ? "Szerkesztve":"Hozzáadva"));
-                            fabHide();
-                        }
-                    }
-                })
-                .setNegativeButton("Mégse", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.i(getClass().getSimpleName(), "onClick: nincs felvétel");
-                    }
-                })
-                .create().show();
-    }
-
-    private void showCreateLinkDialog(Intent intent) {
-        final View customView = LayoutInflater.from(this).inflate(R.layout.dialog_uj_hir_felvetele, null);
-        EditText etNev = customView.findViewById(R.id.etdialogNeve);
-        EditText etLink = customView.findViewById(R.id.etdialogLink);
-        String sharedLink = intent.getStringExtra(Intent.EXTRA_TEXT);
-        if(sharedLink != null) {
-            etLink.setText(sharedLink);
-        }
-
-        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.MyAlertDialog))
-                .setView(customView)
-                .setPositiveButton("Felvesz", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(TextUtils.isEmpty(etNev.getText().toString()) || TextUtils.isEmpty(etLink.getText().toString())) {
-                            showToast("Üres a név vagy a link, kérlek töltsd ki");
-                        } else {
-                            RssLink rssLink = new RssLink(etNev.getText().toString(), etLink.getText().toString());
-                            viewModel.insert(rssLink);
-                            showToast("Új csatorna hozzáadva");
-
-                            fabHide();
                         }
                     }
                 })
@@ -357,6 +334,21 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.fomenu, menu);
+        MenuItem searchViewItem = menu.findItem(R.id.app_bar_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ((SajatListViewAdapter)lv.getAdapter()).getFilter().filter(newText);
+                return false;
+            }
+        });
         return true;
     }
 
@@ -388,6 +380,13 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
                 }
                 break;
             }
+            case R.id.menu_ujhir :
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    showCreateLinkDialog(null,false,0);
+                } else {
+                    showToast("Nem támogatott funkc.");
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -415,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         String title = item.getTitle().toString();
         switch (title) {
             case MENU_EDIT:
-                showCreateLinkDialog(true, kijeloltRssLinkPoz);
+                showCreateLinkDialog(null,true, kijeloltRssLinkPoz);
                 break;
             case MENU_DELETE:
                 showAlertDialog(kijeloltRssLinkPoz);
