@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
+import com.norbo.android.projects.rssolvaso.acutils.weather.DoWeatherImpl;
 import com.norbo.android.projects.rssolvaso.controller.RssController;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 import com.norbo.android.projects.rssolvaso.model.RssItem;
@@ -55,40 +57,20 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rss);
+        setContentView(R.layout.rss_activity_start);
+
+        Toolbar toolbar = findViewById(R.id.rss_toolbar);
+        toolbar.setTitle(getIntent().getStringExtra("cim"));
+        toolbar.setLogo(R.drawable.ic_rss_feed_black_24dp);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         doWeatherImpl = new DoWeatherImpl(this);
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_appbar_layout);
-        getSupportActionBar().setElevation(0);
-
-        View view = getSupportActionBar().getCustomView();
-        TextView name = view.findViewById(R.id.name);
-        imIcon = view.findViewById(R.id.weather_logo);
-        tvDesc = view.findViewById(R.id.weather_info);
-        ImageView applogohome = view.findViewById(R.id.applogo_home);
-        applogohome.setOnClickListener((event) -> {
-            Intent intent = new Intent(RssActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        });
-        ImageView appSavedHirek = view.findViewById(R.id.viewSaveHirek);
-        appSavedHirek.setOnClickListener((event) -> {
-            startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
-        });
-        LoactionUtil.updateLocationWithFusedLPC(RssActivity.this, doWeatherImpl, false);
-        imIcon.setOnClickListener((event) -> {
-            LoactionUtil.updateLocationWithFusedLPC(RssActivity.this, doWeatherImpl, true);
-        });
-
         rv = findViewById(R.id.rvRssHir);
         link = getIntent().getStringExtra("link");
-
-//        TextView tvCsatornaCim = findViewById(R.id.tvCsatornaCim);
-        name.setText(getIntent().getStringExtra("cim"));
 
         rssController = new RssController(this);
         hirSaveViewModel = new ViewModelProvider(this).get(HirSaveViewModel.class);
@@ -204,11 +186,18 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.fomenu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_saved : {
+                startActivity(new Intent(this, SavedHirekActivity.class));
+                break;
+            }
+        }
         return super.onOptionsItemSelected(item);
     }
 

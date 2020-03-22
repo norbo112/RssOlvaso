@@ -5,6 +5,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.norbo.android.projects.rssolvaso.model.weather.Weather;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +20,7 @@ public interface WeatherInterface {
      * @param clickbyikon
      */
     void doWeather(ImageView imageView, TextView textView, boolean clickbyikon);
+    Weather getWeather(boolean clickbyikon);
 
     void setUserLat(Double userLat);
     void setUserLon(Double userLon);

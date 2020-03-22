@@ -1,4 +1,4 @@
-package com.norbo.android.projects.rssolvaso;
+package com.norbo.android.projects.rssolvaso.acutils.weather;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -10,10 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.norbo.android.projects.rssolvaso.acutils.weather.WeatherInterface;
 import com.norbo.android.projects.rssolvaso.model.weather.WData;
 import com.norbo.android.projects.rssolvaso.model.weather.Weather;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -95,6 +95,55 @@ public class DoWeatherImpl implements WeatherInterface {
                 });
             }
         }).start();
+    }
+
+    @Override
+    public Weather getWeather(boolean clickbyikon) {
+        if(clickbyikon) {
+            context.runOnUiThread(() -> {
+                if (progressBar == null) {
+                    progressBar = new ProgressDialog(context);
+                    progressBar.setMessage("Időjárás betöltése");
+                }
+
+                progressBar.show();
+            });
+        }
+
+        String linkplusQuery = baseURL+"current?"+
+                "lat="+(userLat != null ? userLat : LAT)+"&"+
+                "lon="+(userLon != null ? userLon : LON)+"&"+
+                "lang="+LANG+"&"+
+                "key="+KEY;
+        Weather weather = null;
+        HttpURLConnection con = null;
+        try {
+            con = (HttpURLConnection) new URL(linkplusQuery)
+                    .openConnection();
+            if(con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                String sb = getStringFromstream(con);
+
+                weather = new Gson().fromJson(sb, Weather.class);
+
+                final URL url = new URL(iconLink+weather.getData().get(0).getWeather().getIcon()+".png");
+                final Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                weather.setWicon(bitmap);
+
+                con.disconnect();
+            } else {
+                Log.i(getClass().getSimpleName(), "Connection error: "+con.getResponseCode());
+            }
+        } catch (Exception e) {
+            Log.e(getClass().getSimpleName(), "run: i/o hiba", e);
+        } finally {
+            if(con != null) con.disconnect();
+        }
+
+        context.runOnUiThread(() -> {
+            if(clickbyikon)  progressBar.dismiss();
+        });
+
+        return weather;
     }
 
     @Override

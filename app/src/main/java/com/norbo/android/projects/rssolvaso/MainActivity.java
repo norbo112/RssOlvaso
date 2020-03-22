@@ -6,7 +6,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.location.Location;
 import android.location.LocationManager;
+import android.net.InetAddresses;
+import android.net.wifi.SupplicantState;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,10 +22,10 @@ import android.view.ContextMenu;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,22 +37,33 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
+import com.norbo.android.projects.rssolvaso.acutils.weather.DoWeatherImpl;
+import com.norbo.android.projects.rssolvaso.acutils.weather.WeatherInterface;
 import com.norbo.android.projects.rssolvaso.controller.FileController;
 import com.norbo.android.projects.rssolvaso.database.model.RssLink;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.RssLinkViewModel;
 import com.norbo.android.projects.rssolvaso.model.sajatlv.SajatListViewAdapter;
+import com.norbo.android.projects.rssolvaso.model.weather.WData;
+import com.norbo.android.projects.rssolvaso.model.weather.Weather;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 public class MainActivity extends AppCompatActivity implements LocationInterfaceActivity {
     public static final String MENU_EDIT = "Szerkesztés";
@@ -65,12 +83,14 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     private TextView tvDesc;
     private ImageView imIcon;
     private ListView lv;
-    private ImageView btnPopupFile;
+//    private ImageView btnPopupFile;
 
     private FileController fileController;
 
     private LocationManager lm;
     private DoWeatherImpl doWeatherImpl;
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(5);
+    private CompletableFuture<Weather> weatherFuture = null;
 
     private FloatingActionButton fab, fabExport, fabNew;
 
@@ -91,80 +111,34 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
                 Manifest.permission.ACCESS_FINE_LOCATION
         }, LOCATION_PERM);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Hír olvasó");
+        toolbar.setLogo(R.drawable.ic_rss_feed_black_24dp);
+        setSupportActionBar(toolbar);
+
+        imIcon = findViewById(R.id.weather_logo_cl);
         doWeatherImpl = new DoWeatherImpl(this);
-//        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        doWeatherImage(doWeatherImpl, false);
 
-        this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_appbar_layout);
-        getSupportActionBar().setElevation(0);
-        View view = getSupportActionBar().getCustomView();
-        imIcon = view.findViewById(R.id.weather_logo);
-        tvDesc = view.findViewById(R.id.weather_info);
-
-        LoactionUtil.updateLocationWithFusedLPC(MainActivity.this, doWeatherImpl, false);
-
-        ImageView appSavedHirek = view.findViewById(R.id.viewSaveHirek);
-        appSavedHirek.setOnClickListener((event) -> {
-            startActivity(new Intent(getApplicationContext(), SavedHirekActivity.class));
-        });
-        //weatherActivity.doWeather(imIcon, tvDesc, false);
-        imIcon.setOnClickListener((event) -> {
-            //weatherActivity.doWeather(imIcon, tvDesc, true);
-            LoactionUtil.updateLocationWithFusedLPC(MainActivity.this, doWeatherImpl, true);
+        imIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doWeatherImage(doWeatherImpl, true);
+            }
         });
 
         lv = findViewById(R.id.listCsatorna);
-        fab = findViewById(R.id.fab);
 
+        lv.setNestedScrollingEnabled(true);
+        lv.startNestedScroll(View.OVER_SCROLL_ALWAYS);
+
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivityForResult(new Intent(MainActivity.this, UjHirFelvetele.class), REQUEST_CODE_NEW_LINK);
-                if (fabExport.isShown() || fabNew.isShown()) {
-                    fabNew.hide();
-                    fabExport.hide();
-                } else {
-                    fabNew.show();
-                    fabExport.show();
-                }
-            }
-        });
-
-
-        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem > 0) {
-                    fab.hide();
-                    if (fabExport.isShown() || fabNew.isShown()) {
-                        fabNew.hide();
-                        fabExport.hide();
-                    }
-                } else {
-                    fab.show();
-                }
-            }
-        });
-
-        //btnPopupFile = findViewById(R.id.btnPopupFile);
-        fabExport = findViewById(R.id.fabExport);
-        fabExport.hide();
-        fabExport.setOnClickListener(popupFileListener);
-        fabNew = findViewById(R.id.fabNew);
-        fabNew.hide();
-        fabNew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //startActivityForResult(new Intent(MainActivity.this, UjHirFelvetele.class), REQUEST_CODE_NEW_LINK);
                 showCreateLinkDialog(false,0);
             }
         });
-        //btnPopupFile.setOnClickListener(popupFileListener);
 
         viewModel = new ViewModelProvider(this).get(RssLinkViewModel.class);
 
@@ -194,6 +168,45 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             showCreateLinkDialog(fromShare);
         }
+    }
+
+    private void doWeatherImage(WeatherInterface weatherInterface, boolean clickbyikon) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            weatherFuture = CompletableFuture.supplyAsync(new Supplier<Weather>() {
+                @Override
+                public Weather get() {
+                    return LoactionUtil.getLocatedWeather(MainActivity.this, doWeatherImpl, clickbyikon);
+                }
+            }, executorService);
+
+            if(weatherFuture != null) {
+                weatherFuture.thenAccept((weather) -> {
+                    runOnUiThread(() -> {
+                        Bitmap newBitmap = getWeatherBitmap(weather);
+                        imIcon.setImageBitmap(newBitmap);
+                    });
+                });
+            }
+        }
+    }
+
+    private Bitmap getWeatherBitmap(Weather weather) {
+        WData wData = weather.getData().get(0);
+
+        Bitmap imageBitmap = weather.getWicon().copy(Bitmap.Config.ARGB_8888, true);
+        Bitmap newBitmap = Bitmap.createBitmap(imageBitmap.getWidth()+200, imageBitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(newBitmap);
+        canvas.drawBitmap(imageBitmap, 0, 0, null);
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(22);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawText(wData.getTemp()+" °C / "+wData.getApp_temp()+" °C", 120, 30, paint);
+        paint.setTextSize(18);
+        canvas.drawText(wData.getWeather().getDescription(), 135,55,paint);
+        paint.setTextSize(18);
+        canvas.drawText(wData.getCity_name(), 165,80,paint);
+        return newBitmap;
     }
 
     @Override
@@ -341,6 +354,44 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
                 .create().show();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.fomenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_saved : {
+                startActivity(new Intent(this, SavedHirekActivity.class));
+                break;
+            }
+            case R.id.menu_export : {
+                fileController = new FileController(FileController.IRAS, MainActivity.this);
+                fileController.execute(viewModel.getAllLinks().getValue());
+                break;
+            }
+            case R.id.menu_import : {
+                fileController = new FileController(FileController.OLVASAS, MainActivity.this);
+                try {
+                    List<RssLink> rssLinks = fileController.execute(viewModel.getAllLinks().getValue()).get();
+                    if(rssLinks != null) {
+                        for (RssLink r : rssLinks) {
+                            viewModel.insert(r);
+                        }
+                    }
+                } catch (ExecutionException e) {
+                    Log.e(getClassLoader().getClass().getSimpleName(), "onMenuItemClick: exec", e);
+                } catch (InterruptedException e) {
+                    Log.e(getClassLoader().getClass().getSimpleName(), "onMenuItemClick: inter", e);
+                }
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     int kijeloltRssLinkPoz;
 
     @Override
@@ -386,45 +437,6 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     public ImageView getImIcon() {
         return imIcon;
     }
-
-    private View.OnClickListener popupFileListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-            popupMenu.inflate(R.menu.popupfile);
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    if(item.getItemId() == R.id.menuExportList) {
-                        fileController = new FileController(FileController.IRAS, MainActivity.this);
-                        fileController.execute(viewModel.getAllLinks().getValue());
-                    } else if(item.getItemId() == R.id.menuImportList) {
-                        fileController = new FileController(FileController.OLVASAS, MainActivity.this);
-                        try {
-                            List<RssLink> rssLinks = fileController.execute(viewModel.getAllLinks().getValue()).get();
-                            if(rssLinks != null) {
-                                for (RssLink r : rssLinks) {
-                                    viewModel.insert(r);
-                                }
-                            }
-                        } catch (ExecutionException e) {
-                            Log.e(getClassLoader().getClass().getSimpleName(), "onMenuItemClick: exec", e);
-                        } catch (InterruptedException e) {
-                            Log.e(getClassLoader().getClass().getSimpleName(), "onMenuItemClick: inter", e);
-                        }
-
-                    }
-
-                    if(fabExport.isShown()) {
-                        fabExport.hide();
-                        fabNew.hide();
-                    }
-                    return true;
-                }
-            });
-            popupMenu.show();
-        }
-    };
 
     private void fabHide() {
         if(fabNew.isShown() || fabExport.isShown()) {

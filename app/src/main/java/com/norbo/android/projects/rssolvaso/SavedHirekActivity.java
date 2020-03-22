@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,7 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
+import com.norbo.android.projects.rssolvaso.acutils.weather.DoWeatherImpl;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 import com.norbo.android.projects.rssolvaso.rcview.SavedHirAdapter;
 
@@ -41,31 +43,16 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_saved_hirek);
+        setContentView(R.layout.saved_hirek_home);
+
+        Toolbar toolbar = findViewById(R.id.toolbar2);
+        toolbar.setTitle("Mentett hírek");
+        toolbar.setLogo(R.drawable.ic_rss_feed_black_24dp);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         doWeatherImpl = new DoWeatherImpl(this);
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_appbar_layout);
-        getSupportActionBar().setElevation(0);
-        View view = getSupportActionBar().getCustomView();
-        imIcon = view.findViewById(R.id.weather_logo);
-        tvDesc = view.findViewById(R.id.weather_info);
-        ImageView applogohome = view.findViewById(R.id.applogo_home);
-
-        applogohome.setOnClickListener((event) -> {
-            Intent intent = new Intent(SavedHirekActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        });
-        LoactionUtil.updateLocationWithFusedLPC(SavedHirekActivity.this,
-                doWeatherImpl, false);
-        imIcon.setOnClickListener((event) -> {
-            LoactionUtil.updateLocationWithFusedLPC(SavedHirekActivity.this,
-                    doWeatherImpl, true);
-        });
 
         rc = findViewById(R.id.rvSavedHrek);
         scrollUpFab = findViewById(R.id.savedTotopFAB);
@@ -128,5 +115,11 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
     @Override
     public TextView getTvDesc() {
         return tvDesc;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.fomenu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

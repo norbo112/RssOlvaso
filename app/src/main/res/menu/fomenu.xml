@@ -3,12 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menuIdojaras"
-        android:icon="@drawable/ic_wb_sunny_black_24dp"
-        android:title="@string/idojaras_title"
-        app:showAsAction="ifRoom|withText" />
+        android:id="@+id/menu_export"
+        android:icon="@drawable/ic_cloud_download"
+        android:title="@string/export_lista" />
     <item
-        android:id="@+id/menuMentett"
+        android:id="@+id/menu_import"
+        android:icon="@drawable/ic_cloud_upload"
+        android:title="@string/import_lista" />
+    <item
+        android:id="@+id/menu_saved"
         android:icon="@drawable/ic_pageview_black_24dp"
         android:title="@string/mentett_h_rek"
         app:showAsAction="ifRoom|withText" />

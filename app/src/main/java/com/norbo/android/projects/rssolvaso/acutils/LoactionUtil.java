@@ -14,7 +14,9 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.norbo.android.projects.rssolvaso.MainActivity;
 import com.norbo.android.projects.rssolvaso.acutils.weather.WeatherInterface;
+import com.norbo.android.projects.rssolvaso.model.weather.Weather;
 
 public class LoactionUtil {
     private static final int LOCATION_PERM = 5001;
@@ -81,5 +83,31 @@ public class LoactionUtil {
         });
 
         weatherActivity.doWeather(main.getImIcon(), main.getTvDesc(), clicked);
+    }
+
+    public static Weather getLocatedWeather(LocationInterfaceActivity main, WeatherInterface weatherActivity, boolean clicked) {
+        if (ActivityCompat.checkSelfPermission((Activity) main, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission((Activity) main, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) main, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            }, LOCATION_PERM);
+            Log.i(TAG, "updateLocationWithFusedLPC: permission not granted");
+            return null;
+        }
+
+        FusedLocationProviderClient fusedLocClient = LocationServices.getFusedLocationProviderClient((Activity) main);
+
+        fusedLocClient.getLastLocation().addOnSuccessListener((Activity) main, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null) {
+                    weatherActivity.setUserLat(location.getLatitude());
+                    weatherActivity.setUserLon(location.getLongitude());
+                }
+            }
+        });
+
+        return weatherActivity.getWeather(clicked);
     }
 }
