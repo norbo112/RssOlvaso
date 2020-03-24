@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
+import com.norbo.android.projects.rssolvaso.acutils.MainUtil;
 import com.norbo.android.projects.rssolvaso.acutils.weather.DoWeatherImpl;
 import com.norbo.android.projects.rssolvaso.controller.RssController;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
@@ -40,9 +41,8 @@ import com.norbo.android.projects.rssolvaso.rcview.RssItemAdapter;
 import java.util.List;
 
 public class RssActivity extends AppCompatActivity implements LocationInterfaceActivity {
-    private DoWeatherImpl doWeatherImpl;
+//    private DoWeatherImpl doWeatherImpl;
     private HirSaveViewModel hirSaveViewModel;
-    private LocationManager lm;
     private RssController rssController;
     private SwipeRefreshLayout swipeRefreshLayout;
     private int lastItemPoz;
@@ -68,8 +68,7 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
         if(getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        doWeatherImpl = new DoWeatherImpl(this);
-        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        doWeatherImpl = new DoWeatherImpl(this);
 
         rv = findViewById(R.id.rvRssHir);
         link = getIntent().getStringExtra("link");
@@ -183,6 +182,7 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
                 return false;
             }
         });
+        MainUtil.removeunnecessaryMenuItems(menu);
         return super.onCreateOptionsMenu(menu);
     }
 

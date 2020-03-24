@@ -29,11 +29,15 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
+import com.norbo.android.projects.rssolvaso.acutils.LongClickTorlesre;
+import com.norbo.android.projects.rssolvaso.acutils.MainUtil;
 import com.norbo.android.projects.rssolvaso.acutils.weather.DoWeatherImpl;
+import com.norbo.android.projects.rssolvaso.database.model.HirModel;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 import com.norbo.android.projects.rssolvaso.rcview.SavedHirAdapter;
 
-public class SavedHirekActivity extends AppCompatActivity implements LocationInterfaceActivity {
+public class SavedHirekActivity extends AppCompatActivity implements LocationInterfaceActivity,
+        LongClickTorlesre {
     private HirSaveViewModel hirSaveViewModel;
     private DoWeatherImpl doWeatherImpl;
     private LocationManager locationManager;
@@ -65,9 +69,10 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
             rc.setAdapter(new SavedHirAdapter(hirModels, getApplicationContext(), hirSaveViewModel));
             rc.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             rc.setItemAnimator(new DefaultItemAnimator());
-
+            ((SavedHirAdapter)rc.getAdapter()).setLongClickTorlesre(this);
             setRecycleScrollUp();
         });
+
     }
 
     private void setRecycleScrollUp() {
@@ -120,6 +125,13 @@ public class SavedHirekActivity extends AppCompatActivity implements LocationInt
                 return false;
             }
         });
+        MainUtil.removeunnecessaryMenuItems(menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void longClickTorol(HirModel model) {
+        SavedHirAdapter hirAdapter = (SavedHirAdapter)rc.getAdapter();
+        SavedHirAdapter.torol(SavedHirekActivity.this, model, hirAdapter.getHirSaveViewModel());
     }
 }

@@ -1,8 +1,9 @@
 package com.norbo.android.projects.rssolvaso.rcview;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.norbo.android.projects.rssolvaso.R;
+import com.norbo.android.projects.rssolvaso.acutils.LongClickTorlesre;
 import com.norbo.android.projects.rssolvaso.database.model.HirModel;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 
@@ -29,6 +31,7 @@ public class SavedHirAdapter extends RecyclerView.Adapter<SavedHirViewHolder> im
     private Context context;
     private HirSaveViewModel hirSaveViewModel;
     private ValueFilter filter;
+    private LongClickTorlesre longClickTorlesre;
 
     public SavedHirAdapter(List<HirModel> hirModels, Context context, HirSaveViewModel hirSaveViewModel) {
         this.hirModels = hirModels;
@@ -83,9 +86,21 @@ public class SavedHirAdapter extends RecyclerView.Adapter<SavedHirViewHolder> im
         });
 
         holder.itemView.setOnLongClickListener(v -> {
-            hirSaveViewModel.delete(hirModel.getHircim());
-            return true;
+            longClickTorlesre.longClickTorol(hirModel);
+//            hirSaveViewModel.delete(hirModel.getHircim());
+//            torol(hirModel);
+            return false;
         });
+    }
+
+    public void setLongClickTorlesre(LongClickTorlesre longClickTorlesre) {
+        this.longClickTorlesre = longClickTorlesre;
+    }
+
+    public HirModel getModelByPos(int pos) { return hirModels.get(pos); }
+
+    public HirSaveViewModel getHirSaveViewModel() {
+        return hirSaveViewModel;
     }
 
     @Override
@@ -126,5 +141,23 @@ public class SavedHirAdapter extends RecyclerView.Adapter<SavedHirViewHolder> im
             hirModels = (List<HirModel>) results.values;
             notifyDataSetChanged();
         }
+    }
+
+    public static void torol(Context context, HirModel hirModel, HirSaveViewModel hirSaveViewModel) {
+        new AlertDialog.Builder(context)
+                .setTitle("Törlés")
+                .setMessage(hirModel.getPubdate()+" hírt biztosan törlöd?!")
+                .setPositiveButton("Igen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        hirSaveViewModel.delete(hirModel.getHircim());
+                    }
+                })
+                .setNegativeButton("Nem", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //nem törölted
+                    }
+                }).create().show();
     }
 }

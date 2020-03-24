@@ -3,13 +3,18 @@ package com.norbo.android.projects.rssolvaso;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,6 +49,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.acutils.LoactionUtil;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
+import com.norbo.android.projects.rssolvaso.acutils.graphicutils.DrawIdojaraToImage;
 import com.norbo.android.projects.rssolvaso.acutils.weather.DoWeatherImpl;
 import com.norbo.android.projects.rssolvaso.acutils.weather.WeatherInterface;
 import com.norbo.android.projects.rssolvaso.controller.FileController;
@@ -63,9 +69,6 @@ import java.util.function.Supplier;
 public class MainActivity extends AppCompatActivity implements LocationInterfaceActivity {
     public static final String MENU_EDIT = "Szerkesztés";
     private static final String MENU_DELETE = "Törlés";
-
-    public static final String CSAT_NEV = "csatnev";
-    public static final String CSAT_LINK = "csatlink";
     public static final String CSAT_ID = "csatid";
 
     private static final int REQUEST_CODE_NEW_LINK = 110;
@@ -76,19 +79,17 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     private RssLinkViewModel viewModel;
     private SajatListViewAdapter listViewAdapter;
 
-    private TextView tvDesc;
+    private FloatingActionButton fab;
     private ImageView imIcon;
     private ListView lv;
-//    private ImageView btnPopupFile;
 
     private FileController fileController;
-
-    private LocationManager lm;
     private DoWeatherImpl doWeatherImpl;
+
     private static final ExecutorService executorService = Executors.newFixedThreadPool(5);
     private CompletableFuture<Weather> weatherFuture = null;
 
-    private FloatingActionButton fab, fabExport, fabNew;
+    private DrawIdojaraToImage drawIdojaraToImage;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("WrongConstant")
@@ -171,6 +172,8 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     }
 
     private void doWeatherImage(WeatherInterface weatherInterface, boolean clickbyikon) {
+        drawIdojaraToImage = new DrawIdojaraToImage(getApplicationContext(),
+                BitmapFactory.decodeResource(getResources(), R.mipmap.magyarzaszlo));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             weatherFuture = CompletableFuture.supplyAsync(new Supplier<Weather>() {
                 @Override
@@ -182,34 +185,12 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
             if(weatherFuture != null) {
                 weatherFuture.thenAccept((weather) -> {
                     runOnUiThread(() -> {
-                        Bitmap newBitmap = getWeatherBitmap(weather);
+                        Bitmap newBitmap = drawIdojaraToImage.drawWeather(weather);
                         imIcon.setImageBitmap(newBitmap);
                     });
                 });
             }
         }
-    }
-
-    private Bitmap getWeatherBitmap(Weather weather) {
-        WData wData = weather.getData().get(0);
-        Paint paint = new Paint();
-        Bitmap imageBitmap = weather.getWicon().copy(Bitmap.Config.ARGB_8888, true);
-        Bitmap newBitmap = Bitmap.createBitmap(imageBitmap.getWidth()+200, imageBitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(newBitmap);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.parseColor("#004B26"));
-        canvas.drawRect(0,0, imIcon.getWidth(), imIcon.getHeight(), paint);
-        canvas.drawBitmap(imageBitmap, 0, 0, paint);
-
-        paint.setColor(Color.WHITE);
-        paint.setTextSize(22);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawText(wData.getTemp()+" °C / "+wData.getApp_temp()+" °C", 120, 30, paint);
-        paint.setTextSize(18);
-        canvas.drawText(wData.getWeather().getDescription(), 135,55,paint);
-        paint.setTextSize(14);
-        canvas.drawText(wData.getCity_name(), 165,80,paint);
-        return newBitmap;
     }
 
     @Override
@@ -260,8 +241,6 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     }
 
     private void showAlertDialog(int poz) {
-//        int csatornaid = viewModel.getAllLinks().getValue().get(poz).getId();
-//        String csatronanev = viewModel.getAllLinks().getValue().get(poz).getCsatornaNeve();
         int csatornaid = listViewAdapter.getItem(poz).getId();
         String csatronanev = listViewAdapter.getItem(poz).getCsatornaNeve();
 
@@ -429,18 +408,11 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
 
     @Override
     public TextView getTvDesc() {
-        return tvDesc;
+        return null;
     }
 
     @Override
     public ImageView getImIcon() {
         return imIcon;
-    }
-
-    private void fabHide() {
-        if(fabNew.isShown() || fabExport.isShown()) {
-            fabExport.hide();
-            fabNew.hide();
-        }
     }
 }
