@@ -18,6 +18,9 @@ public interface RssLinkDao {
     @Query("DELETE FROM rsslink")
     void deleteAll();
 
+    @Query("SELECT COUNT(*) FROM rsslink")
+    int count();
+
     @Query("SELECT * FROM rsslink ORDER BY csatronanev")
     LiveData<List<RssLink>> getAllLinks();
 

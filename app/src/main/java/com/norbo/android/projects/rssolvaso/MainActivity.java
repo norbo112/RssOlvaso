@@ -3,19 +3,11 @@ package com.norbo.android.projects.rssolvaso;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,6 +15,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,7 +49,6 @@ import com.norbo.android.projects.rssolvaso.controller.FileController;
 import com.norbo.android.projects.rssolvaso.database.model.RssLink;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.RssLinkViewModel;
 import com.norbo.android.projects.rssolvaso.model.sajatlv.SajatListViewAdapter;
-import com.norbo.android.projects.rssolvaso.model.weather.WData;
 import com.norbo.android.projects.rssolvaso.model.weather.Weather;
 
 import java.util.List;
@@ -90,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     private CompletableFuture<Weather> weatherFuture = null;
 
     private DrawIdojaraToImage drawIdojaraToImage;
+    private Bitmap magyarZaszloBitmap;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("WrongConstant")
@@ -115,12 +108,15 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
 
         imIcon = findViewById(R.id.weather_logo_cl);
         doWeatherImpl = new DoWeatherImpl(this);
-        doWeatherImage(doWeatherImpl, false);
+        magyarZaszloBitmap =
+                BitmapFactory.decodeResource(getResources(), R.mipmap.magyarzaszlo);
+
+        doWeatherImage(doWeatherImpl, magyarZaszloBitmap,false);
 
         imIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doWeatherImage(doWeatherImpl, true);
+                doWeatherImage(doWeatherImpl, magyarZaszloBitmap, true);
             }
         });
 
@@ -154,8 +150,6 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
                 final RssLink item = listViewAdapter.getItem(position);
                 intent.putExtra("cim", item.getCsatornaNeve());
                 intent.putExtra("link", item.getCsatornaLink());
-//                intent.putExtra("cim", viewModel.getAllLinks().getValue().get(position).getCsatornaNeve());
-//                intent.putExtra("link", viewModel.getAllLinks().getValue().get(position).getCsatornaLink());
                 startActivity(intent);
             }
         });
@@ -171,9 +165,8 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         }
     }
 
-    private void doWeatherImage(WeatherInterface weatherInterface, boolean clickbyikon) {
-        drawIdojaraToImage = new DrawIdojaraToImage(getApplicationContext(),
-                BitmapFactory.decodeResource(getResources(), R.mipmap.magyarzaszlo));
+    private void doWeatherImage(WeatherInterface weatherInterface, Bitmap bitmap, boolean clickbyikon) {
+        drawIdojaraToImage = new DrawIdojaraToImage(getApplicationContext(), bitmap);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             weatherFuture = CompletableFuture.supplyAsync(new Supplier<Weather>() {
                 @Override
@@ -400,6 +393,18 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
                 break;
         }
         return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            doWeatherImage(doWeatherImpl,
+                    BitmapFactory.decodeResource(getResources(), R.mipmap.iss), true);
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            doWeatherImage(doWeatherImpl,
+                    BitmapFactory.decodeResource(getResources(), R.mipmap.magyarzaszlo), true);
+        }
+        return true;
     }
 
     public ListView getLv() {

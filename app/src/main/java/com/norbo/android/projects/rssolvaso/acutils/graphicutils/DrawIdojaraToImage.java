@@ -21,20 +21,24 @@ public class DrawIdojaraToImage {
     }
 
     public Bitmap drawWeather(Weather weather) {
-        WData wData = weather.getData().get(0);
         int padding = 200;
-        Paint textPaint = new Paint(Paint.LINEAR_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.BLACK);
 
-        Bitmap imageBitmap = weather.getWicon().copy(Bitmap.Config.ARGB_8888, true);
-        imageBitmap = Bitmap.createScaledBitmap(imageBitmap, 250,250, false);
         Bitmap origIamgeBitmap = srcBitmap.copy(Bitmap.Config.ARGB_8888, true);
         Bitmap newBitmap = Bitmap.createBitmap(origIamgeBitmap.getWidth(), origIamgeBitmap.getHeight(), Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(newBitmap);
-
         canvas.drawBitmap(origIamgeBitmap, 0, 0, null);
-        drawWeatherToBitmap(wData, padding, textPaint, imageBitmap, canvas);
+
+        if(weather != null) {
+            Paint textPaint = new Paint(Paint.LINEAR_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+            textPaint.setColor(Color.BLACK);
+
+            Bitmap imageBitmap = weather.getWicon().copy(Bitmap.Config.ARGB_8888, true);
+            imageBitmap = Bitmap.createScaledBitmap(imageBitmap, 250,250, false);
+            drawWeatherToBitmap(weather.getData().get(0), padding, textPaint, imageBitmap, canvas);
+        } else {
+            drawTextToBitmap("Sajnos nincs információm az időjárásról", canvas);
+        }
 
         return newBitmap;
     }
@@ -54,6 +58,13 @@ public class DrawIdojaraToImage {
         textPaint.setTextSize(pxFromDp(context, 20));
         textPaint.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
         canvas.drawText(", "+wData.getWeather().getDescription(), textBounds.width()+imagex+55,pxFromDp(context, 130)+120,textPaint);
+    }
+
+    private void drawTextToBitmap(String text, Canvas canvas) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        paint.setColor(Color.RED);
+        paint.setTextSize(pxFromDp(context, 20));
+        canvas.drawText(text, 250, pxFromDp(context, 140), paint);
     }
 
     private static float pxFromDp(final Context context, final float dp) {

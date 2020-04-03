@@ -11,6 +11,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.norbo.android.projects.rssolvaso.database.dao.RssLinkDao;
 import com.norbo.android.projects.rssolvaso.database.model.RssLink;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -46,8 +48,9 @@ public abstract class RssLinkDatabase extends RoomDatabase {
 
             dbWriteExecutor.execute(() -> {
 
-                /*RssLinkDao dao = INSTANCE.rssLinkDao();
-                dao.deleteAll();
+                RssLinkDao dao = INSTANCE.rssLinkDao();
+
+                if(dao.count() > 0) return;
 
                 Map<String, String> urlmap = new HashMap<>();
 
@@ -67,7 +70,7 @@ public abstract class RssLinkDatabase extends RoomDatabase {
                 for (Map.Entry<String, String> entry : urlmap.entrySet()) {
                     RssLink item = new RssLink(entry.getKey(), entry.getValue());
                     dao.insert(item);
-                }*/
+                }
             });
         }
     };
