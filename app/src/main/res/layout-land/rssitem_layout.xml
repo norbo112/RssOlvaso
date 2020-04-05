@@ -85,45 +85,47 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:gravity="left"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle">
 
                 <Button
                     android:id="@+id/btnSaveHir"
                     style="@android:style/Widget.Holo.Button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
                     android:drawableLeft="@drawable/ic_save_black_24dp"
+                    android:text="Mentés"
                     android:textColor="#D4E157"
-                    android:textSize="10sp" />
+                    android:textSize="14sp" />
 
                 <Button
                     android:id="@+id/btnHirMegoszt"
                     style="@android:style/Widget.Holo.Button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
                     android:drawableLeft="@drawable/ic_share_black_24dp"
+                    android:text="Megosztás"
                     android:textColor="#D4E157"
-                    android:textSize="10sp" />
+                    android:textSize="14sp" />
 
                 <Button
                     android:id="@+id/btnGo"
                     style="@android:style/Widget.Holo.Button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
                     android:drawableLeft="@drawable/ic_remove_red_eye_black_24dp"
+                    android:text="Megnéz"
                     android:textColor="#D4E157"
-                    android:textSize="10sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

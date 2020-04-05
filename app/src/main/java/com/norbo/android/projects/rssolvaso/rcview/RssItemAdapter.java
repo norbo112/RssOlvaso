@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -19,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ablanco.zoomy.Zoomy;
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.database.model.HirModel;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
@@ -69,6 +73,10 @@ public class RssItemAdapter extends RecyclerView.Adapter<RssItemViewHolder> impl
         } else {
             imageView.setImageResource(R.drawable.ic_wallpaper_black_24dp);
         }
+
+        Zoomy.Builder builder = new Zoomy.Builder(context)
+                .target(imageView);
+        builder.register();
 
         final String link = rssItem.getLink();
 
