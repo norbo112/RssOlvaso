@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -165,8 +166,9 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void doWeatherImage(WeatherInterface weatherInterface, Bitmap bitmap, boolean clickbyikon) {
-        drawIdojaraToImage = new DrawIdojaraToImage(getApplicationContext(), bitmap);
+        drawIdojaraToImage = new DrawIdojaraToImage(this, bitmap);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             weatherFuture = CompletableFuture.supplyAsync(new Supplier<Weather>() {
                 @Override
@@ -183,6 +185,19 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
                     });
                 });
             }
+        } else {
+            new AsyncTask<Void, Void, Weather>() {
+                @Override
+                protected Weather doInBackground(Void... voids) {
+                    return LoactionUtil.getLocatedWeather(MainActivity.this, doWeatherImpl, clickbyikon);
+                }
+
+                @Override
+                protected void onPostExecute(Weather weather) {
+                    Bitmap newBitmap = drawIdojaraToImage.drawWeather(weather);
+                    imIcon.setImageBitmap(newBitmap);
+                }
+            }.execute();
         }
     }
 

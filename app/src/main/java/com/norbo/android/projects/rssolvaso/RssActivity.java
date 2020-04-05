@@ -91,7 +91,6 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                System.out.println(":::::::: scrolllistener");
                 final int visiblePoz = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
                 if(visiblePoz > lastItemPoz) {
                     scrollUpFab.show();
