@@ -1,6 +1,8 @@
 package com.norbo.android.projects.rssolvaso;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,6 +27,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.norbo.android.projects.rssolvaso.acutils.LocationInterfaceActivity;
 import com.norbo.android.projects.rssolvaso.acutils.MainUtil;
+import com.norbo.android.projects.rssolvaso.acutils.system.ScreenReciever;
 import com.norbo.android.projects.rssolvaso.controller.RssController;
 import com.norbo.android.projects.rssolvaso.database.viewmodel.HirSaveViewModel;
 import com.norbo.android.projects.rssolvaso.model.RssItem;
@@ -46,6 +49,7 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
 
     String link;
     RecyclerView rv;
+    private BroadcastReceiver screenOnOff;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -83,6 +87,25 @@ public class RssActivity extends AppCompatActivity implements LocationInterfaceA
 
         new Thread(hirekBetoltese).start();
         scrollUpFab = findViewById(R.id.scrollUpFab);
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);;
+        screenOnOff = new ScreenReciever();
+        registerReceiver(screenOnOff, filter);
+    }
+
+    @Override
+    protected void onResume() {
+        if(!ScreenReciever.wasScreenOn) {
+            new Thread(hirekBetoltese).start();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(screenOnOff);
+        super.onDestroy();
     }
 
     private void setRecycleScrollUp() {

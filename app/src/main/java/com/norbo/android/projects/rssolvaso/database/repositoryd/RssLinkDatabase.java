@@ -61,9 +61,9 @@ public abstract class RssLinkDatabase extends RoomDatabase {
                 urlmap.put("Sport", "https://www.origo.hu/contentpartner/rss/sport/origo.xml");
                 urlmap.put("Tudomány", "https://www.origo.hu/contentpartner/rss/tudomany/origo.xml");
                 urlmap.put("Technika", "https://www.origo.hu/contentpartner/rss/techbazis/origo.xml");
-                urlmap.put("HVG-Világ", "http://hvg.hu/rss/vilag");
-                urlmap.put("HVG-Gazdaság", "http://hvg.hu/rss/gazdasag");
-                urlmap.put("HVG-Itthon", "http://hvg.hu/rss/itthon");
+                urlmap.put("HVG-Világ", "https://hvg.hu/rss/vilag");
+                urlmap.put("HVG-Gazdaság", "https://hvg.hu/rss/gazdasag");
+                urlmap.put("HVG-Itthon", "https://hvg.hu/rss/itthon");
                 urlmap.put("Index 24 Óra", "https://index.hu/24ora/rss/");
                 urlmap.put("NewYork Times: Europe", "https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml");
 
