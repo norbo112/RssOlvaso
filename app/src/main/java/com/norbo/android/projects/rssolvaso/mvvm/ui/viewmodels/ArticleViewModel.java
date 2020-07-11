@@ -21,6 +21,7 @@ public class ArticleViewModel extends ViewModel {
     private RssService rssService;
     private ExecutorService executorService;
     private MutableLiveData<List<Article>> articles;
+    private MutableLiveData<String> loadingMessage;
 
     @ViewModelInject
     public ArticleViewModel(@Assisted SavedStateHandle savedStateHandle,
@@ -29,6 +30,7 @@ public class ArticleViewModel extends ViewModel {
         this.handle = savedStateHandle;
         this.rssService = rssService;
         this.executorService = executorService;
+        this.loadingMessage = new MutableLiveData<>(null);
     }
 
     public MutableLiveData<List<Article>> getArticles() {
@@ -37,10 +39,16 @@ public class ArticleViewModel extends ViewModel {
         return articles;
     }
 
+    public MutableLiveData<String> getLoadingMessage() {
+        return loadingMessage;
+    }
+
     public void getArticlesByLink(String link) {
+        loadingMessage.postValue("Cikkek betöltése");
         executorService.execute(() -> {
             List<Article> list = rssService.getArticles(link);
             articles.postValue(list);
+            loadingMessage.postValue(null);
         });
     }
 }

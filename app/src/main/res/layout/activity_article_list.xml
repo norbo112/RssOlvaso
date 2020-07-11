@@ -7,18 +7,18 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".mvvm.ui.NewRssReader">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list"
-            android:name="com.norbo.android.projects.rssolvaso.mvvm.ui.LinkFragment"
+            android:id="@+id/articlelist"
+            android:name="com.norbo.android.projects.rssolvaso.mvvm.ui.ArticleFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".mvvm.ui.LinkFragment"
-            tools:listitem="@layout/new_rss_reader_link_list_item"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            tools:listitem="@layout/new_rss_reader_article_item"
+            android:layout_gravity="center"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
