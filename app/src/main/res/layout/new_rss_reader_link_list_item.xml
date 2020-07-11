@@ -9,7 +9,7 @@
             type="com.norbo.android.projects.rssolvaso.mvvm.data.model.Link" />
         <variable
             name="action"
-            type="com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.MyLinkRecyclerViewAdapter" />
+            type="com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.MyLinkRecyclerViewAdapter.Action" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
