@@ -54,13 +54,13 @@ public abstract class RssLinkDatabase extends RoomDatabase {
 
                 Map<String, String> urlmap = new HashMap<>();
 
-                urlmap.put("Itthon", "https://www.origo.hu/contentpartner/rss/itthon/origo.xml");
-                urlmap.put("Nagyvilág", "https://www.origo.hu/contentpartner/rss/nagyvilag/origo.xml");
-                urlmap.put("Gazdaság", "https://www.origo.hu/contentpartner/rss/uzletinegyed/origo.xml");
-                urlmap.put("Filmklub", "https://www.origo.hu/contentpartner/rss/filmklub/origo.xml");
-                urlmap.put("Sport", "https://www.origo.hu/contentpartner/rss/sport/origo.xml");
-                urlmap.put("Tudomány", "https://www.origo.hu/contentpartner/rss/tudomany/origo.xml");
-                urlmap.put("Technika", "https://www.origo.hu/contentpartner/rss/techbazis/origo.xml");
+                urlmap.put("Origo Itthon", "https://www.origo.hu/contentpartner/rss/itthon/origo.xml");
+                urlmap.put("Origo Nagyvilág", "https://www.origo.hu/contentpartner/rss/nagyvilag/origo.xml");
+                urlmap.put("Origo Gazdaság", "https://www.origo.hu/contentpartner/rss/uzletinegyed/origo.xml");
+                urlmap.put("Origo Filmklub", "https://www.origo.hu/contentpartner/rss/filmklub/origo.xml");
+                urlmap.put("Origo Sport", "https://www.origo.hu/contentpartner/rss/sport/origo.xml");
+                urlmap.put("Origo Tudomány", "https://www.origo.hu/contentpartner/rss/tudomany/origo.xml");
+                urlmap.put("Origo Technika", "https://www.origo.hu/contentpartner/rss/techbazis/origo.xml");
                 urlmap.put("HVG-Világ", "https://hvg.hu/rss/vilag");
                 urlmap.put("HVG-Gazdaság", "https://hvg.hu/rss/gazdasag");
                 urlmap.put("HVG-Itthon", "https://hvg.hu/rss/itthon");

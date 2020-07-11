@@ -14,7 +14,6 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.norbo.android.projects.rssolvaso.MainActivity;
 import com.norbo.android.projects.rssolvaso.acutils.weather.WeatherInterface;
 import com.norbo.android.projects.rssolvaso.model.weather.Weather;
 
