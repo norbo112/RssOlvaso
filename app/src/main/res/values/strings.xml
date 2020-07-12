@@ -14,4 +14,5 @@
     <string name="link_add_csatlink_hint">Csatorna linkje</string>
     <string name="link_title_add">Új csatorna felvétele</string>
     <string name="link_title_set">Csatorna szerkesztése</string>
+    <string name="menu_saved_article">Mentett hírek</string>
 </resources>

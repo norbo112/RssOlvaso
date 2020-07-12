@@ -1,9 +1,14 @@
-package com.norbo.android.projects.rssolvaso.mvvm.data.model;
+package com.norbo.android.projects.rssolvaso.mvvm.db.entities;
 
-import java.io.Serializable;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.util.Objects;
 
-public class Article implements Serializable {
+@Entity
+public class ArticleEntity {
+    @PrimaryKey(autoGenerate = true)
     private Integer id;
     private String title;
     private String link;
@@ -13,10 +18,11 @@ public class Article implements Serializable {
     private String pubDate;
     private String imageUrl;
 
-    public Article() {
+    public ArticleEntity() {
     }
 
-    public Article(String title, String link, String guid, String description, String category, String pubDate, String imageUrl) {
+    @Ignore
+    public ArticleEntity(String title, String link, String guid, String description, String category, String pubDate, String imageUrl) {
         this.title = title;
         this.link = link;
         this.guid = guid;
@@ -26,15 +32,12 @@ public class Article implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public Article(Integer id, String title, String link, String guid, String description, String category, String pubDate, String imageUrl) {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
-        this.title = title;
-        this.link = link;
-        this.guid = guid;
-        this.description = description;
-        this.category = category;
-        this.pubDate = pubDate;
-        this.imageUrl = imageUrl;
     }
 
     public String getTitle() {
@@ -97,18 +100,33 @@ public class Article implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return Objects.equals(title, article.title) &&
-                Objects.equals(link, article.link) &&
-                Objects.equals(guid, article.guid) &&
-                Objects.equals(description, article.description) &&
-                Objects.equals(category, article.category) &&
-                Objects.equals(pubDate, article.pubDate) &&
-                Objects.equals(imageUrl, article.imageUrl);
+        ArticleEntity that = (ArticleEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(link, that.link) &&
+                Objects.equals(guid, that.guid) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(category, that.category) &&
+                Objects.equals(pubDate, that.pubDate) &&
+                Objects.equals(imageUrl, that.imageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, link, guid, description, category, pubDate, imageUrl);
+        return Objects.hash(id, title, link, guid, description, category, pubDate, imageUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "ArticleEntity{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", link='" + link + '\'' +
+                ", guid='" + guid + '\'' +
+                ", description='" + description + '\'' +
+                ", category='" + category + '\'' +
+                ", pubDate='" + pubDate + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }

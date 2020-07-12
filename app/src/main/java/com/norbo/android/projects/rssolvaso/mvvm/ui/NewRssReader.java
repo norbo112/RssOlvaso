@@ -2,7 +2,10 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,6 +58,18 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
                 linkViewModel.insertLink(link);
             }
         }));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //TODO item selected from menu
+        return super.onOptionsItemSelected(item);
     }
 
     private void setuptActionBar(String title) {
