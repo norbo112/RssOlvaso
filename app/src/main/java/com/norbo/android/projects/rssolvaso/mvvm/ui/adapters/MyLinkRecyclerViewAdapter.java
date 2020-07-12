@@ -75,7 +75,7 @@ public class MyLinkRecyclerViewAdapter extends RecyclerView.Adapter<MyLinkRecycl
 
         @SuppressLint("RestrictedApi")
         public void linkLongClicked(Link link, View currentView) {
-            PopupMenu popupMenu = new PopupMenu(context, currentView, Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK);
+            PopupMenu popupMenu = new PopupMenu(context, currentView);
             popupMenu.inflate(R.menu.linksetting);
             popupMenu.setOnMenuItemClickListener(item -> {
                 if (item.getItemId() == R.id.link_menu_edit) {
