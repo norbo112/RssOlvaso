@@ -2,11 +2,14 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -100,5 +103,15 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
                 linkViewModel.update(link1);
             }
         });
+    }
+
+    @Override
+    public void deleteLink(Link link) {
+        new AlertDialog.Builder(NewRssReader.this)
+                .setTitle(link.getNev() + " törlése")
+                .setMessage("Biztosan törlöd?")
+                .setPositiveButton("igen", (dialog, which) -> linkViewModel.delete(link))
+                .setNegativeButton("nem", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 }

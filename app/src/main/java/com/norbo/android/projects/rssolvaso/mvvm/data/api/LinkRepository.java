@@ -11,4 +11,6 @@ public interface LinkRepository {
     void loadData(List<LinkEntity> links);
     void insert(LinkEntity linkEntity);
     void update(LinkEntity linkEntity);
+
+    void delete(LinkEntity linkEntity);
 }
