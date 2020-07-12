@@ -68,7 +68,9 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //TODO item selected from menu
+        if (item.getItemId() == R.id.menu_saved_articles) {
+            startActivity(new Intent(this, ArticleSavedActivity.class));
+        }
         return super.onOptionsItemSelected(item);
     }
 

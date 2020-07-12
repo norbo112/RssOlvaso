@@ -80,6 +80,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/article_view_btn_label"
+                app:cornerRadius="10dp"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:textColor="#fff"
+                android:onClick="@{() -> action.saveArticle(article)}"
+                />
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"

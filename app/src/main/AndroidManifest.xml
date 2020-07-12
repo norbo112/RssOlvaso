@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".mvvm.ui.ArticleActivity" android:parentActivityName=".mvvm.ui.NewRssReader"/>
+        <activity android:name=".mvvm.ui.ArticleSavedActivity" android:parentActivityName=".mvvm.ui.NewRssReader"/>
     </application>
 
 </manifest>

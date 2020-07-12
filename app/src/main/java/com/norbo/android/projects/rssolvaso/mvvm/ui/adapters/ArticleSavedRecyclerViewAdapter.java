@@ -21,10 +21,12 @@ public class ArticleSavedRecyclerViewAdapter extends RecyclerView.Adapter<Articl
 
     private final List<Article> mValues;
     private final Context context;
+    private ArticleRecyclerViewAdapter.ArticleView articleView;
 
     public ArticleSavedRecyclerViewAdapter(Context context, List<Article> items) {
         this.mValues = items;
         this.context = context;
+        this.articleView = (ArticleRecyclerViewAdapter.ArticleView) context;
     }
 
     @Override
@@ -75,5 +77,8 @@ public class ArticleSavedRecyclerViewAdapter extends RecyclerView.Adapter<Articl
     }
 
     public class Actioner {
+        void viewArticle(Article article) {
+            articleView.viewArticle(article);
+        }
     }
 }

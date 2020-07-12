@@ -3,7 +3,11 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +19,7 @@ import com.norbo.android.projects.rssolvaso.databinding.ActivityArticleListBindi
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapterFactory;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleSavedViewModel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
 import java.util.List;
@@ -24,9 +29,10 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ArticleActivity extends AppCompatActivity implements ArticleRecyclerViewAdapter.ArticleView {
+public class ArticleActivity extends AppCompatActivity implements ArticleRecyclerViewAdapter.ArticleView, ArticleRecyclerViewAdapter.ArticleSave {
     private ActivityArticleListBinding binding;
     private ArticleViewModel articleViewModel;
+    private ArticleSavedViewModel articleSavedViewModel;
 
     @Inject
     ArticleRecyclerViewAdapterFactory factory;
@@ -40,6 +46,8 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
         setuptActionBar(getIntent().getStringExtra("article_title"));
 
         articleViewModel = new ViewModelProvider(this).get(ArticleViewModel.class);
+        articleSavedViewModel = new ViewModelProvider(this).get(ArticleSavedViewModel.class);
+
         articleViewModel.getLoadingMessage().observe(this, message -> {
             if(message != null)
                 Snackbar.make(binding.coordinator, message, BaseTransientBottomBar.LENGTH_SHORT).show();
@@ -67,11 +75,31 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_saved_articles) {
+            startActivity(new Intent(this, ArticleSavedActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void viewArticle(Article article) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(article.getLink()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if(intent.resolveActivity(getPackageManager()) != null)
             startActivity(intent);
+    }
+
+    @Override
+    public void saveArticle(Article article) {
+        articleSavedViewModel.insert(article);
+        Toast.makeText(this, article.getTitle()+" hír elmentve!", Toast.LENGTH_SHORT).show();
     }
 }

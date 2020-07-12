@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.norbo.android.projects.rssolvaso.databinding.ActivityArticleListBinding;
+import com.norbo.android.projects.rssolvaso.databinding.ActivityArticleSavedListBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapterFactory;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleSavedRecyclerViewAdapterFactory;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
 import java.util.List;
@@ -24,16 +26,16 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ArticleSavedActivity extends AppCompatActivity implements ArticleRecyclerViewAdapter.ArticleView {
-    private ActivityArticleListBinding binding;
+    private ActivityArticleSavedListBinding binding;
     private ArticleViewModel articleViewModel;
 
     @Inject
-    ArticleRecyclerViewAdapterFactory factory;
+    ArticleSavedRecyclerViewAdapterFactory factory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityArticleListBinding.inflate(getLayoutInflater());
+        binding = ActivityArticleSavedListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setuptActionBar("Mentett hírek");
