@@ -88,6 +88,8 @@
                 android:onClick="@{() -> action.saveArticle(article)}"
                 android:text="@string/article_view_btn_save_label"
                 android:textColor="#fff"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
                 app:cornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/materialButton"

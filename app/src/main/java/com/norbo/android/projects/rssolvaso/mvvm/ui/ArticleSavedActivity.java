@@ -1,5 +1,6 @@
 package com.norbo.android.projects.rssolvaso.mvvm.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,10 +44,17 @@ public class ArticleSavedActivity extends AppCompatActivity implements ArticleRe
 
         articleSavedViewModel.getArticleLiveData().observe(this, articles -> {
             if(articles != null) {
+                setSavedTitle(articles);
                 initRecyclerView(articles);
             }
         });
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setSavedTitle(List<Article> articles) {
+        if(articles.isEmpty()) binding.articleSavedTitle.setText("Nincsenek mentett hírek");
+        else binding.articleSavedTitle.setText(articles.size()+" db hír mentve");
     }
 
     private void initRecyclerView(List<Article> articles) {

@@ -16,4 +16,5 @@
     <string name="link_title_set">Csatorna szerkesztése</string>
     <string name="menu_saved_article">Mentett hírek</string>
     <string name="article_view_btn_save_label">Ment</string>
+    <string name="dummy_title">Dummy Title</string>
 </resources>
