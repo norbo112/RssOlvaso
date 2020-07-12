@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mvvm.ui.ArticleActivity"/>
+        <activity android:name=".mvvm.ui.ArticleActivity" android:parentActivityName=".mvvm.ui.NewRssReader"/>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.norbo.android.projects.rssolvaso.mvvm.ui.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -16,10 +17,12 @@ public class MyLinkRecyclerViewAdapter extends RecyclerView.Adapter<MyLinkRecycl
 
     private final List<Link> mValues;
     private LinkClickedListener linkClickedListener;
+    private LinkUpdateListener linkUpdateListener;
 
-    public MyLinkRecyclerViewAdapter(LinkClickedListener listener, List<Link> items) {
+    public MyLinkRecyclerViewAdapter(Context context, List<Link> items) {
         mValues = items;
-        linkClickedListener = listener;
+        linkClickedListener = (LinkClickedListener) context;
+        linkUpdateListener = (LinkUpdateListener) context;
     }
 
     @Override
@@ -60,10 +63,10 @@ public class MyLinkRecyclerViewAdapter extends RecyclerView.Adapter<MyLinkRecycl
 
     public class Action {
         public void linkClicked(Link link) {
-            linkClickedListener.link(link.getLink(), null);
+            linkClickedListener.link(link.getLink(), link.getNev());
         }
         public void linkLongClicked(Link link) {
-            linkClickedListener.link(link.getLink(), link);
+            linkUpdateListener.linkUpdate(link);
         }
     }
 }

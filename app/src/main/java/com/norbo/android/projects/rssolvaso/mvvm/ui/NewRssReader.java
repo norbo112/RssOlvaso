@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.databinding.ActivityNewRssReaderBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Link;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.LinkClickedListener;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.LinkUpdateListener;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.MyLinkRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.DefaultLinks;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.actions.LinkAction;
@@ -23,7 +25,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class NewRssReader extends AppCompatActivity implements LinkClickedListener {
+public class NewRssReader extends AppCompatActivity implements LinkClickedListener, LinkUpdateListener {
     private LinkViewModel linkViewModel;
     private ArticleViewModel articleViewModel;
 
@@ -37,6 +39,8 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
         super.onCreate(savedInstanceState);
         binding = ActivityNewRssReaderBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setuptActionBar("Hír olvasó");
 
         linkViewModel = new ViewModelProvider(this).get(LinkViewModel.class);
         linkViewModel.insertLinks(DefaultLinks.generateDefaultLinks());
@@ -53,23 +57,31 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
         }));
     }
 
+    private void setuptActionBar(String title) {
+        setSupportActionBar(binding.toolbar);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
+    }
+
     private void initRecyclerView(List<Link> links) {
         binding.list.setLayoutManager(new LinearLayoutManager(this));
         binding.list.setAdapter(new MyLinkRecyclerViewAdapter(this, links));
     }
 
     @Override
-    public void link(String url, Link link) {
-        if(link == null) {
-            Intent intent = new Intent(this, ArticleActivity.class);
-            intent.putExtra("article_url", url);
-            startActivity(intent);
-        } else {
-            linkAction.showDialog(LinkAction.ACTION_EDIT, link, (mode, link1) -> {
-                if (mode == LinkAction.ACTION_EDIT) {
-                    linkViewModel.update(link1);
-                }
-            });
-        }
+    public void link(String url, String csatnev) {
+        Intent intent = new Intent(this, ArticleActivity.class);
+        intent.putExtra("article_title", csatnev);
+        intent.putExtra("article_url", url);
+        startActivity(intent);
+    }
+
+    @Override
+    public void linkUpdate(Link link) {
+        linkAction.showDialog(LinkAction.ACTION_EDIT, link, (mode, link1) -> {
+            if (mode == LinkAction.ACTION_EDIT) {
+                linkViewModel.update(link1);
+            }
+        });
     }
 }

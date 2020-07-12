@@ -1,14 +1,8 @@
 package com.norbo.android.projects.rssolvaso.mvvm.ui;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,7 +17,6 @@ import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerView
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapterFactory;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -44,6 +37,8 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
         binding = ActivityArticleListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setuptActionBar(getIntent().getStringExtra("article_title"));
+
         articleViewModel = new ViewModelProvider(this).get(ArticleViewModel.class);
         articleViewModel.getLoadingMessage().observe(this, message -> {
             if(message != null)
@@ -61,6 +56,14 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
     private void initRecyclerView(List<Article> articles) {
         binding.articlelist.setLayoutManager(new LinearLayoutManager(this));
         binding.articlelist.setAdapter(factory.create(articles));
+    }
+
+    private void setuptActionBar(String title) {
+        setSupportActionBar(binding.toolbar);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(title);
+        }
     }
 
     @Override
