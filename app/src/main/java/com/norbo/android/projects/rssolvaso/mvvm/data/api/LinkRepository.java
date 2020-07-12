@@ -9,4 +9,5 @@ import java.util.List;
 public interface LinkRepository {
     LiveData<List<LinkEntity>> getData();
     void loadData(List<LinkEntity> links);
+    void insert(LinkEntity linkEntity);
 }

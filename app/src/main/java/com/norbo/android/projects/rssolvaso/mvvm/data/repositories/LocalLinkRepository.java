@@ -3,7 +3,6 @@ package com.norbo.android.projects.rssolvaso.mvvm.data.repositories;
 import androidx.lifecycle.LiveData;
 
 import com.norbo.android.projects.rssolvaso.mvvm.data.api.LinkRepository;
-import com.norbo.android.projects.rssolvaso.mvvm.data.model.Link;
 import com.norbo.android.projects.rssolvaso.mvvm.db.LinkDatabase;
 import com.norbo.android.projects.rssolvaso.mvvm.db.daos.LinkDao;
 import com.norbo.android.projects.rssolvaso.mvvm.db.entities.LinkEntity;
@@ -35,5 +34,10 @@ public class LocalLinkRepository implements LinkRepository {
         executorService.execute(() -> {
             if(linkDao.count() == 0) linkDao.insert(links);
         });
+    }
+
+    @Override
+    public void insert(LinkEntity linkEntity) {
+        executorService.execute(() -> linkDao.insert(linkEntity));
     }
 }

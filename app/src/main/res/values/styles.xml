@@ -9,17 +9,10 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="OwnTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="Theme.MaterialComponents.DayNight" />
-    <style name="MyAlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
-        <item name="android:background">@color/blackoverlay</item>
-    </style>
-
-    <color name="blackoverlay">#72000000</color>
 </resources>

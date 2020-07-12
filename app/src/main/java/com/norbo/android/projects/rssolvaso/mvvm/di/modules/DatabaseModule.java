@@ -4,6 +4,10 @@ import android.app.Application;
 
 import androidx.room.Room;
 
+import com.norbo.android.projects.rssolvaso.mvvm.data.api.LinkRepository;
+import com.norbo.android.projects.rssolvaso.mvvm.data.api.RssService;
+import com.norbo.android.projects.rssolvaso.mvvm.data.repositories.LocalLinkRepository;
+import com.norbo.android.projects.rssolvaso.mvvm.data.services.RssServiceImpl;
 import com.norbo.android.projects.rssolvaso.mvvm.db.LinkDatabase;
 
 import java.util.concurrent.ExecutorService;
@@ -29,5 +33,11 @@ public class DatabaseModule {
     @Singleton
     ExecutorService executor() {
         return Executors.newFixedThreadPool(5);
+    }
+
+    @Provides
+    @Singleton
+    LinkRepository linkRepository(LinkDatabase linkDatabase, ExecutorService executorService) {
+        return new LocalLinkRepository(linkDatabase, executorService);
     }
 }

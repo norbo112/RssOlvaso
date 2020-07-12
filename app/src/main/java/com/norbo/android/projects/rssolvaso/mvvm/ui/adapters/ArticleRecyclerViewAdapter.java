@@ -20,10 +20,16 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
 
     private final List<Article> mValues;
     private final Context context;
+    private final ArticleView articleView;
+
+    public interface ArticleView {
+        void viewArticle(Article article);
+    }
 
     public ArticleRecyclerViewAdapter(Context context, List<Article> items) {
         this.mValues = items;
         this.context = context;
+        this.articleView = (ArticleView) context;
     }
 
     @Override
@@ -54,6 +60,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
         void bind(Article currentArticle) {
             binding.setArticle(currentArticle);
             init(currentArticle);
+            binding.setAction(new Actioner());
             binding.executePendingBindings();
         }
 
@@ -69,6 +76,12 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
             } else {
                 binding.imageView.setImageResource(android.R.drawable.dialog_holo_light_frame);
             }
+        }
+    }
+
+    public class Actioner {
+        public void viewArticle(Article article) {
+            articleView.viewArticle(article);
         }
     }
 }

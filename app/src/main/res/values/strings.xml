@@ -8,4 +8,6 @@
     <string name="idojaras_title">Időjárás</string>
     <string name="import_lista">Import Lista</string>
     <string name="export_lista">Export Lista</string>
+    <string name="article_view_btn_label">Megnéz</string>
+    <string name="article_image_content_desc">Cikkhez tartozó kép</string>
 </resources>

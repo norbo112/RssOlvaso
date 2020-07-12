@@ -7,6 +7,9 @@
         <variable
             name="article"
             type="com.norbo.android.projects.rssolvaso.mvvm.data.model.Article" />
+        <variable
+            name="action"
+            type="com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapter.Actioner" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,16 +35,17 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_height="150dp"
-                android:layout_width="match_parent" />
+                android:layout_width="match_parent"
+                android:contentDescription="@string/article_image_content_desc" />
         </androidx.cardview.widget.CardView>
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="7dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.461"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card_image">
 
@@ -55,16 +59,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{article.description}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/holo_blue_dark"/>
+                android:background="@android:color/holo_blue_dark" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{article.pubDate}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"/>
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
         </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/article_view_btn_label"
+                app:cornerRadius="10dp"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:textColor="#fff"
+                android:onClick="@{() -> action.viewArticle(article)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

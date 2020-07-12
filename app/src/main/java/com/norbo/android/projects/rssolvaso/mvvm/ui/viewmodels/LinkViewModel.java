@@ -40,4 +40,8 @@ public class LinkViewModel extends ViewModel {
                 .map(link -> new LinkEntity(link.getNev(), link.getLink()))
                 .collect(Collectors.toList()));
     }
+
+    public void insertLink(Link link) {
+        repository.insert(new LinkEntity(link.getNev(), link.getLink()));
+    }
 }

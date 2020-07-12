@@ -6,9 +6,6 @@ import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
 
 import java.util.List;
 
-import javax.inject.Singleton;
-
-@Singleton
 public class ArticleRecyclerViewAdapterFactory {
     private Context context;
 

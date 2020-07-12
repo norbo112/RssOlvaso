@@ -3,6 +3,7 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.databinding.ActivityArticleListBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapterFactory;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
@@ -29,7 +31,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ArticleActivity extends AppCompatActivity {
+public class ArticleActivity extends AppCompatActivity implements ArticleRecyclerViewAdapter.ArticleView {
     private ActivityArticleListBinding binding;
     private ArticleViewModel articleViewModel;
 
@@ -59,5 +61,14 @@ public class ArticleActivity extends AppCompatActivity {
     private void initRecyclerView(List<Article> articles) {
         binding.articlelist.setLayoutManager(new LinearLayoutManager(this));
         binding.articlelist.setAdapter(factory.create(articles));
+    }
+
+    @Override
+    public void viewArticle(Article article) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(article.getLink()));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if(intent.resolveActivity(getPackageManager()) != null)
+            startActivity(intent);
     }
 }

@@ -12,8 +12,6 @@ import com.norbo.android.projects.rssolvaso.mvvm.db.entities.LinkEntity;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 @Dao
 public interface LinkDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
