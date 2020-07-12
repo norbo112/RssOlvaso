@@ -10,12 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.norbo.android.projects.rssolvaso.databinding.ActivityArticleListBinding;
 import com.norbo.android.projects.rssolvaso.databinding.ActivityArticleSavedListBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapter;
-import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapterFactory;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleSavedRecyclerViewAdapterFactory;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleSavedViewModel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
 import java.util.List;
@@ -27,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class ArticleSavedActivity extends AppCompatActivity implements ArticleRecyclerViewAdapter.ArticleView {
     private ActivityArticleSavedListBinding binding;
-    private ArticleViewModel articleViewModel;
+    private ArticleSavedViewModel articleSavedViewModel;
 
     @Inject
     ArticleSavedRecyclerViewAdapterFactory factory;
@@ -40,13 +39,9 @@ public class ArticleSavedActivity extends AppCompatActivity implements ArticleRe
 
         setuptActionBar("Mentett hírek");
 
-        articleViewModel = new ViewModelProvider(this).get(ArticleViewModel.class);
-        articleViewModel.getLoadingMessage().observe(this, message -> {
-            if(message != null)
-                Snackbar.make(binding.coordinator, message, BaseTransientBottomBar.LENGTH_SHORT).show();
-        });
-        articleViewModel.getArticlesByLink(getIntent().getStringExtra("article_url"));
-        articleViewModel.getArticles().observe(this, articles -> {
+        articleSavedViewModel = new ViewModelProvider(this).get(ArticleSavedViewModel.class);
+
+        articleSavedViewModel.getArticleLiveData().observe(this, articles -> {
             if(articles != null) {
                 initRecyclerView(articles);
             }

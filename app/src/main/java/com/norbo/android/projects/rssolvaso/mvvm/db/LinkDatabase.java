@@ -22,13 +22,13 @@ public abstract class LinkDatabase extends RoomDatabase {
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE IF NOT EXISTS articleentity (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "title TEXT NOT NULL,"+
-                    "link TEXT NOT NULL," +
-                    "guid TEXT NOT NULL," +
-                    "description TEXT NOT NULL," +
-                    "category TEXT NOT NULL,"+
-                    "pubDate TEXT NOT NULL,"+
-                    "imageUrl TEXT NOT NULL" +
+                    "title TEXT ,"+
+                    "link TEXT ," +
+                    "guid TEXT ," +
+                    "description TEXT ," +
+                    "category TEXT ,"+
+                    "pubDate TEXT ,"+
+                    "imageUrl TEXT " +
                     ")");
         }
     };

@@ -77,7 +77,7 @@ public class ArticleSavedRecyclerViewAdapter extends RecyclerView.Adapter<Articl
     }
 
     public class Actioner {
-        void viewArticle(Article article) {
+        public void viewArticle(Article article) {
             articleView.viewArticle(article);
         }
     }
