@@ -20,6 +20,13 @@ public class LinkEntity {
         this.link = link;
     }
 
+    @Ignore
+    public LinkEntity(Integer id, String nev, String link) {
+        this.id = id;
+        this.nev = nev;
+        this.link = link;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -10,4 +10,8 @@
     <string name="export_lista">Export Lista</string>
     <string name="article_view_btn_label">Megnéz</string>
     <string name="article_image_content_desc">Cikkhez tartozó kép</string>
+    <string name="link_add_csatnev_hint">Csatorna címe</string>
+    <string name="link_add_csatlink_hint">Csatorna linkje</string>
+    <string name="link_title_add">Új csatorna felvétele</string>
+    <string name="link_title_set">Csatorna szerkesztése</string>
 </resources>

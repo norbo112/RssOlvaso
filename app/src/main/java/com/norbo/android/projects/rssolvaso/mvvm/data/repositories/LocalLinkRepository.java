@@ -40,4 +40,9 @@ public class LocalLinkRepository implements LinkRepository {
     public void insert(LinkEntity linkEntity) {
         executorService.execute(() -> linkDao.insert(linkEntity));
     }
+
+    @Override
+    public void update(LinkEntity linkEntity) {
+        executorService.execute(() -> linkDao.update(linkEntity));
+    }
 }

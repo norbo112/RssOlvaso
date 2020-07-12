@@ -50,13 +50,20 @@ public class MyLinkRecyclerViewAdapter extends RecyclerView.Adapter<MyLinkRecycl
         void bind(Link currentLink) {
             binding.setLink(currentLink);
             binding.setAction(new Action());
+            binding.alllinear.setOnLongClickListener(v -> {
+                new Action().linkLongClicked(currentLink);
+                return true;
+            });
             binding.executePendingBindings();
         }
     }
 
     public class Action {
         public void linkClicked(Link link) {
-            linkClickedListener.link(link.getLink());
+            linkClickedListener.link(link.getLink(), null);
+        }
+        public void linkLongClicked(Link link) {
+            linkClickedListener.link(link.getLink(), link);
         }
     }
 }

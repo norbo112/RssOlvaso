@@ -44,4 +44,8 @@ public class LinkViewModel extends ViewModel {
     public void insertLink(Link link) {
         repository.insert(new LinkEntity(link.getNev(), link.getLink()));
     }
+
+    public void update(Link link) {
+        repository.update(new LinkEntity(link.getId(), link.getNev(), link.getLink()));
+    }
 }

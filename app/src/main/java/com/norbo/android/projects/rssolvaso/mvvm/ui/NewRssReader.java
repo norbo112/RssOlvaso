@@ -1,27 +1,21 @@
 package com.norbo.android.projects.rssolvaso.mvvm.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 
-import com.norbo.android.projects.rssolvaso.R;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.norbo.android.projects.rssolvaso.databinding.ActivityNewRssReaderBinding;
-import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Link;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.LinkClickedListener;
-import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.LinkListAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.MyLinkRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.DefaultLinks;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.actions.LinkAction;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.LinkViewModel;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,6 +28,9 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
     private ArticleViewModel articleViewModel;
 
     ActivityNewRssReaderBinding binding;
+
+    @Inject
+    LinkAction linkAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +45,12 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
                 initRecyclerView(links);
             }
         });
+
+        binding.fab.setOnClickListener(v -> linkAction.showDialog(LinkAction.ACTION_ADD, null, (mode, link) -> {
+            if(mode == LinkAction.ACTION_ADD) {
+                linkViewModel.insertLink(link);
+            }
+        }));
     }
 
     private void initRecyclerView(List<Link> links) {
@@ -56,17 +59,17 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
     }
 
     @Override
-    public void link(String url) {
-        Intent intent = new Intent(this, ArticleActivity.class);
-        intent.putExtra("article_url", url);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(getSupportFragmentManager().getBackStackEntryCount() == 0)
-            super.onBackPressed();
-        else
-            getSupportFragmentManager().popBackStack();
+    public void link(String url, Link link) {
+        if(link == null) {
+            Intent intent = new Intent(this, ArticleActivity.class);
+            intent.putExtra("article_url", url);
+            startActivity(intent);
+        } else {
+            linkAction.showDialog(LinkAction.ACTION_EDIT, link, (mode, link1) -> {
+                if (mode == LinkAction.ACTION_EDIT) {
+                    linkViewModel.update(link1);
+                }
+            });
+        }
     }
 }
