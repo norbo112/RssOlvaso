@@ -80,5 +80,9 @@ public class ArticleSavedRecyclerViewAdapter extends RecyclerView.Adapter<Articl
         public void viewArticle(Article article) {
             articleView.viewArticle(article);
         }
+
+        public void shareArticle(Article article) {
+            articleView.shareArticle(article);
+        }
     }
 }

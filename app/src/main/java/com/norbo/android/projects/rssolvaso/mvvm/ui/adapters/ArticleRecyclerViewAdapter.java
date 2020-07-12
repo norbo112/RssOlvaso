@@ -25,6 +25,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
 
     public interface ArticleView {
         void viewArticle(Article article);
+        void shareArticle(Article article);
     }
 
     public interface ArticleSave {
@@ -88,6 +89,10 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
     public class Actioner {
         public void viewArticle(Article article) {
             articleView.viewArticle(article);
+        }
+
+        public void shareArticle(Article article) {
+            articleView.shareArticle(article);
         }
 
         public void saveArticle(Article article) {

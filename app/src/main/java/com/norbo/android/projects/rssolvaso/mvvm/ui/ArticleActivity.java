@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -95,6 +96,16 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if(intent.resolveActivity(getPackageManager()) != null)
             startActivity(intent);
+    }
+
+    @Override
+    public void shareArticle(Article article) {
+        ShareCompat.IntentBuilder
+                .from(this)
+                .setType("text/plain")
+                .setChooserTitle("Hír megosztása...")
+                .setText(article.getLink())
+                .startChooser();
     }
 
     @Override

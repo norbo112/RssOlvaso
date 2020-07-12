@@ -85,6 +85,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/holo_blue_dark"
+                android:onClick="@{() -> action.shareArticle(article)}"
+                android:text="@string/rss_article_btn_share_label"
+                android:textColor="#fff"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                app:cornerRadius="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/save"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/holo_blue_dark"
                 android:onClick="@{() -> action.viewArticle(article)}"
                 android:text="@string/article_view_btn_label"
                 android:textColor="#fff"
