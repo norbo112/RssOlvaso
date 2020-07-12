@@ -10,8 +10,8 @@ public class DefaultLinks {
         List<Link> links = new ArrayList<>();
 
         links.add(new Link("Origo Itthon", "https://www.origo.hu/contentpartner/rss/itthon/origo.xml"));
-        links.add(new Link("Origo Nagyvilág", "https://www.origo.hu/contentpartner/rss/nagyvilag/origo.xml");
-        links.add(new Link("Origo Gazdaság", "https://www.origo.hu/contentpartner/rss/uzletinegyed/origo.xml");
+        links.add(new Link("Origo Nagyvilág", "https://www.origo.hu/contentpartner/rss/nagyvilag/origo.xml"));
+        links.add(new Link("Origo Gazdaság", "https://www.origo.hu/contentpartner/rss/uzletinegyed/origo.xml"));
         links.add(new Link("Origo Filmklub", "https://www.origo.hu/contentpartner/rss/filmklub/origo.xml"));
         links.add(new Link("Origo Sport", "https://www.origo.hu/contentpartner/rss/sport/origo.xml"));
         links.add(new Link("Origo Tudomány", "https://www.origo.hu/contentpartner/rss/tudomany/origo.xml"));
