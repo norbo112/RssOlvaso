@@ -7,4 +7,9 @@
         android:icon="@drawable/ic_save"
         android:title="@string/menu_saved_article"
         app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/menu_load_links"
+        android:icon="@drawable/ic_file"
+        android:title="@string/menu_links_load_label"
+        app:showAsAction="ifRoom|withText" />
 </menu>

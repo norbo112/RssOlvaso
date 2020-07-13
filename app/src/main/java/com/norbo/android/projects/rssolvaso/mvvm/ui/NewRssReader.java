@@ -2,17 +2,19 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.gson.JsonSyntaxException;
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.databinding.ActivityNewRssReaderBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Link;
@@ -20,10 +22,11 @@ import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.LinkClickedListener
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.LinkUpdateListener;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.MyLinkRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.DefaultLinks;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.LinksFileController;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.actions.LinkAction;
-import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.LinkViewModel;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,13 +35,16 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class NewRssReader extends AppCompatActivity implements LinkClickedListener, LinkUpdateListener {
+    private static final String TAG = "NewRssReader";
     private LinkViewModel linkViewModel;
-    private ArticleViewModel articleViewModel;
 
     ActivityNewRssReaderBinding binding;
 
     @Inject
     LinkAction linkAction;
+
+    @Inject
+    LinksFileController fileController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,8 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_saved_articles) {
             startActivity(new Intent(this, ArticleSavedActivity.class));
+        } else if(item.getItemId() == R.id.menu_load_links) {
+            fileController.showFileChooser(this);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -113,5 +121,13 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
                 .setPositiveButton("igen", (dialog, which) -> linkViewModel.delete(link))
                 .setNegativeButton("nem", (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == LinksFileController.FILE_LOAD_RCODE && resultCode == RESULT_OK) {
+            fileController.loadLinks(data, linkViewModel);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
