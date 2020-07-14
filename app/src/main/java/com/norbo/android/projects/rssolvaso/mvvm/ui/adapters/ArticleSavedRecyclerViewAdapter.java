@@ -75,6 +75,7 @@ public class ArticleSavedRecyclerViewAdapter extends RecyclerView.Adapter<Articl
                 binding.imageView.setImageResource(android.R.drawable.dialog_holo_light_frame);
             }
 
+            //TODO átalakítandó, kell egy Article osztály amit a megjelenítéshez használok csak
             binding.articleDescription.setText(Html.fromHtml(article.getDescription(), Html.FROM_HTML_MODE_LEGACY));
         }
     }
