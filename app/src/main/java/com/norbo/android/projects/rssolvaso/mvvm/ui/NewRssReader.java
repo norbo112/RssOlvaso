@@ -126,8 +126,19 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == LinksFileController.FILE_LOAD_RCODE && resultCode == RESULT_OK) {
-            fileController.loadLinks(data, linkViewModel);
+            loadlinks(data);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void loadlinks(Intent data) {
+        List<Link> links = fileController.loadLinks(data);
+        if (links.isEmpty()) {
+            Toast.makeText(this, "Adatok betöltése sikertelen volt :(", Toast.LENGTH_SHORT).show();
+        } else {
+            linkViewModel.insert(links);
+            Log.i(TAG, "onActivityResult: Adatok betöltve");
+            Toast.makeText(this, "Adatok betöltve", Toast.LENGTH_SHORT).show();
+        }
     }
 }

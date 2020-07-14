@@ -3,33 +3,23 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.preference.PreferenceManager;
-import android.provider.OpenableColumns;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Link;
-import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.LinkViewModel;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +27,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.qualifiers.ActivityContext;
-import okio.Utf8;
 
 @ActivityContext
 public class LinksFileController {
@@ -62,7 +51,7 @@ public class LinksFileController {
         activity.startActivityForResult(filechooser, FILE_LOAD_RCODE);
     }
 
-    public List<Link> linksFromFile(Uri data) throws JsonSyntaxException, FileNotFoundException {
+    private List<Link> linksFromFile(Uri data) throws JsonSyntaxException, FileNotFoundException {
         if(data == null) {
             throw new IllegalArgumentException("Data is null");
         }
@@ -85,17 +74,10 @@ public class LinksFileController {
         return sb.toString();
     }
 
-    public void loadLinks(@Nullable Intent data, LinkViewModel linkViewModel) {
-        List<Link> links = null;
+    public List<Link> loadLinks(@Nullable Intent data) {
+        List<Link> links = new ArrayList<>();
         try {
-            links = linksFromFile(data.getData());
-            if (links.isEmpty()) {
-                Toast.makeText(context, "Adatok betöltése sikertelen volt :(", Toast.LENGTH_SHORT).show();
-            } else {
-                linkViewModel.insert(links);
-                Log.i(TAG, "onActivityResult: Adatok betöltve");
-                Toast.makeText(context, "Adatok betöltve", Toast.LENGTH_SHORT).show();
-            }
+            return linksFromFile(data.getData());
         } catch (FileNotFoundException e) {
             Log.e(TAG, "onActivityResult: notFound", e);
             Toast.makeText(context, "Adatok betöltése sikertelen volt :(", Toast.LENGTH_SHORT).show();
@@ -103,5 +85,7 @@ public class LinksFileController {
             Log.e(TAG, "onActivityResult: JSON Syntax", e);
             Toast.makeText(context, "Adatok betöltése sikertelen volt :(", Toast.LENGTH_SHORT).show();
         }
+
+        return links;
     }
 }
