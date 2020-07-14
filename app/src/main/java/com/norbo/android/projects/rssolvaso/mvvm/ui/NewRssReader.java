@@ -22,9 +22,11 @@ import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.LinkUpdateListener;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.MyLinkRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.DefaultLinks;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.LinksFileController;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.LinksFileSaveController;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.actions.LinkAction;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.LinkViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -43,6 +45,9 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
 
     @Inject
     LinksFileController fileController;
+
+    @Inject
+    LinksFileSaveController fileSaveController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,8 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
             startActivity(new Intent(this, ArticleSavedActivity.class));
         } else if(item.getItemId() == R.id.menu_load_links) {
             fileController.showFileChooser(this);
+        } else if(item.getItemId() == R.id.menu_savelink) {
+            fileSaveController.showDirectoryChooser(this);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -125,6 +132,8 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == LinksFileController.FILE_LOAD_RCODE && resultCode == RESULT_OK) {
             loadlinks(data);
+        } else if(requestCode == LinksFileSaveController.DIRECTORY_CHOOSE && resultCode == RESULT_OK) {
+            fileSaveController.saveLinks(linkViewModel.getLinksLiveData().getValue(), data);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

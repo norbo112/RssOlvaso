@@ -32,6 +32,7 @@ import dagger.hilt.android.qualifiers.ActivityContext;
 public class LinksFileController {
     private static final String TAG = "LinksFileController";
     public static final int FILE_LOAD_RCODE = 100;
+    public static final int DIRECTORY_CHOOSE = 200;
     private Context context;
 
     @Inject
