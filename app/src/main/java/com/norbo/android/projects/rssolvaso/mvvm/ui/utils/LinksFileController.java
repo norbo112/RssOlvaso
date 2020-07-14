@@ -80,10 +80,8 @@ public class LinksFileController {
             return linksFromFile(data.getData());
         } catch (FileNotFoundException e) {
             Log.e(TAG, "onActivityResult: notFound", e);
-            Toast.makeText(context, "Adatok betöltése sikertelen volt :(", Toast.LENGTH_SHORT).show();
         } catch (JsonSyntaxException e) {
             Log.e(TAG, "onActivityResult: JSON Syntax", e);
-            Toast.makeText(context, "Adatok betöltése sikertelen volt :(", Toast.LENGTH_SHORT).show();
         }
 
         return links;
