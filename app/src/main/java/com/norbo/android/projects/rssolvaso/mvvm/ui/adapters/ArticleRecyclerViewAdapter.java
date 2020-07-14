@@ -2,6 +2,7 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -83,6 +84,8 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
             } else {
                 binding.imageView.setImageResource(android.R.drawable.dialog_holo_light_frame);
             }
+
+            binding.articleDescription.setText(Html.fromHtml(article.getDescription(), Html.FROM_HTML_MODE_LEGACY));
         }
     }
 
