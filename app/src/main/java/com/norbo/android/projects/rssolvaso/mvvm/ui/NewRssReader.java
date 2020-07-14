@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.gson.JsonSyntaxException;
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.databinding.ActivityNewRssReaderBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Link;
@@ -26,7 +25,6 @@ import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.LinksFileController;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.actions.LinkAction;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.LinkViewModel;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -132,7 +130,7 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
     }
 
     private void loadlinks(Intent data) {
-        List<Link> links = fileController.loadLinks(data);
+        List<Link> links = fileController.getLinks(data);
         if (links.isEmpty()) {
             Toast.makeText(this, "Adatok betöltése sikertelen volt :(", Toast.LENGTH_SHORT).show();
         } else {

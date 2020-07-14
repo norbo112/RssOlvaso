@@ -74,7 +74,7 @@ public class LinksFileController {
         return sb.toString();
     }
 
-    public List<Link> loadLinks(@Nullable Intent data) {
+    public List<Link> getLinks(@Nullable Intent data) {
         List<Link> links = new ArrayList<>();
         try {
             return linksFromFile(data.getData());
