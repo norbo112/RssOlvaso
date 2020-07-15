@@ -51,8 +51,10 @@ public class ArticleViewModel extends ViewModel {
             List<Article> list = null;
             try {
                 list = rssService.getArticles(link);
-            } catch (XMLExeption | AdatOlvasasExeption xmlExeption) {
+            } catch (XMLExeption xmlExeption) {
                 loadingMessage.postValue(xmlExeption.getMessage());
+            } catch (AdatOlvasasExeption adatOlvasasExeption) {
+                loadingMessage.postValue("Adatolvasás: "+adatOlvasasExeption.getMessage());
             }
 
             articles.postValue(list);

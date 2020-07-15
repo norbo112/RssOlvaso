@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,6 +36,8 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
     private ArticleViewModel articleViewModel;
     private ArticleSavedViewModel articleSavedViewModel;
 
+    private String articleLink;
+
     @Inject
     ArticleRecyclerViewAdapterFactory factory;
 
@@ -45,23 +48,33 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
         setContentView(binding.getRoot());
 
         setuptActionBar(getIntent().getStringExtra("article_title"));
+        articleLink = getIntent().getStringExtra("article_url");
 
         articleViewModel = new ViewModelProvider(this).get(ArticleViewModel.class);
         articleSavedViewModel = new ViewModelProvider(this).get(ArticleSavedViewModel.class);
 
         articleViewModel.getLoadingMessage().observe(this, message -> {
             if(message != null) {
-                Snackbar.make(binding.coordinator, message, BaseTransientBottomBar.LENGTH_SHORT).show();
+                makeMySnackBar(message);
                 articleViewModel.snackBarShoved();
             }
         });
-        articleViewModel.getArticlesByLink(getIntent().getStringExtra("article_url"));
+        articleViewModel.getArticlesByLink(articleLink);
         articleViewModel.getArticles().observe(this, articles -> {
             if(articles != null) {
                 initRecyclerView(articles);
             }
         });
 
+    }
+
+    private void makeMySnackBar(String message) {
+        if(message.startsWith("Adatolvasás: ")) {
+            Snackbar.make(binding.coordinator, message, BaseTransientBottomBar.LENGTH_SHORT)
+                    .setAction("újra", actionBarRetry).show();
+        } else {
+            Snackbar.make(binding.coordinator, message, BaseTransientBottomBar.LENGTH_SHORT).show();
+        }
     }
 
     private void initRecyclerView(List<Article> articles) {
@@ -76,6 +89,10 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
             getSupportActionBar().setTitle(title);
         }
     }
+
+    private View.OnClickListener actionBarRetry = v -> {
+        articleViewModel.getArticlesByLink(articleLink);
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
