@@ -2,12 +2,22 @@
     <string name="app_name">RssOlvaso</string>
     <string name="csatorna_valaszt_cim">Csatorna kiválasztása</string>
     <string name="title_activity_main2">Main2Activity</string>
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="empty_not_saved">Nem töltötted ki az adatokat</string>
     <string name="ujcsatorna_cim">Csatorna szerkesztése</string>
     <string name="mentett_h_rek">Mentett hírek</string>
     <string name="idojaras_title">Időjárás</string>
     <string name="import_lista">Import Lista</string>
     <string name="export_lista">Export Lista</string>
+    <string name="article_view_btn_label">Megnéz</string>
+    <string name="article_image_content_desc">Cikkhez tartozó kép</string>
+    <string name="link_add_csatnev_hint">Csatorna címe</string>
+    <string name="link_add_csatlink_hint">Csatorna linkje</string>
+    <string name="link_title_add">Új csatorna felvétele</string>
+    <string name="link_title_set">Csatorna szerkesztése</string>
+    <string name="menu_saved_article">Mentett hírek</string>
+    <string name="article_view_btn_save_label">Ment</string>
+    <string name="dummy_title">Dummy Title</string>
+    <string name="rss_article_btn_share_label">Megosztás</string>
+    <string name="menu_links_load_label">Linkek betöltése</string>
+    <string name="menu_save_links_label">Linkek mentése</string>
 </resources>
