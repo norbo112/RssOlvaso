@@ -50,8 +50,10 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
         articleSavedViewModel = new ViewModelProvider(this).get(ArticleSavedViewModel.class);
 
         articleViewModel.getLoadingMessage().observe(this, message -> {
-            if(message != null)
+            if(message != null) {
                 Snackbar.make(binding.coordinator, message, BaseTransientBottomBar.LENGTH_SHORT).show();
+                articleViewModel.snackBarShoved();
+            }
         });
         articleViewModel.getArticlesByLink(getIntent().getStringExtra("article_url"));
         articleViewModel.getArticles().observe(this, articles -> {

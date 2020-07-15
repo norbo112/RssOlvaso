@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.norbo.android.projects.rssolvaso.mvvm.data.api.RssService;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
+import com.norbo.android.projects.rssolvaso.mvvm.data.services.AdatOlvasasExeption;
+import com.norbo.android.projects.rssolvaso.mvvm.data.services.XMLExeption;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +48,18 @@ public class ArticleViewModel extends ViewModel {
     public void getArticlesByLink(String link) {
         loadingMessage.postValue("Cikkek betöltése");
         executorService.execute(() -> {
-            List<Article> list = rssService.getArticles(link);
+            List<Article> list = null;
+            try {
+                list = rssService.getArticles(link);
+            } catch (XMLExeption | AdatOlvasasExeption xmlExeption) {
+                loadingMessage.postValue(xmlExeption.getMessage());
+            }
+
             articles.postValue(list);
-            loadingMessage.postValue(null);
         });
+    }
+
+    public void snackBarShoved() {
+        loadingMessage.setValue(null);
     }
 }

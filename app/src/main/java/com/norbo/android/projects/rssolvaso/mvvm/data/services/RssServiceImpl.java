@@ -38,7 +38,7 @@ public class RssServiceImpl implements RssService {
     }
 
     @Override
-    public List<Article> getArticles(String url) {
+    public List<Article> getArticles(String url) throws XMLExeption, AdatOlvasasExeption {
         List<Article> list = new ArrayList<>();
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
@@ -74,14 +74,10 @@ public class RssServiceImpl implements RssService {
                         xPath.compile("./enclosure/@url").evaluate(nodelist.item(i), XPathConstants.STRING)
                                 .toString()));
             }
-        } catch (SAXException ex) {
-            Log.e(TAG, "fetchFeed: SAX", ex);
+        } catch (SAXException | ParserConfigurationException | XPathExpressionException ex) {
+            throw new XMLExeption("Hír forrásból eredő hiba történt", ex);
         } catch (IOException ex) {
-            Log.e(TAG, "fetchFeed: IO", ex);
-        } catch (XPathExpressionException ex) {
-            Log.e(TAG, "fetchFeed: XPath", ex);
-        } catch (ParserConfigurationException ex) {
-            Log.e(TAG, "fetchFeed: ParserConfig", ex);
+            throw new AdatOlvasasExeption("Hiba az adatok olvasása közben", ex);
         }
 
         return list;
