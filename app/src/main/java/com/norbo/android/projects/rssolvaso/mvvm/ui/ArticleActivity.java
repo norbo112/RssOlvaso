@@ -70,7 +70,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
 
     private void makeMySnackBar(String message) {
         if(message.startsWith("Adatolvasás: ")) {
-            Snackbar.make(binding.coordinator, message, BaseTransientBottomBar.LENGTH_SHORT)
+            Snackbar.make(binding.coordinator, message, BaseTransientBottomBar.LENGTH_INDEFINITE)
                     .setAction("újra", actionBarRetry).show();
         } else {
             Snackbar.make(binding.coordinator, message, BaseTransientBottomBar.LENGTH_SHORT).show();

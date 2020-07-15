@@ -40,8 +40,10 @@ public class RssServiceImpl implements RssService {
     @Override
     public List<Article> getArticles(String url) throws XMLExeption, AdatOlvasasExeption {
         List<Article> list = new ArrayList<>();
+        HttpURLConnection con = null;
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+            con = (HttpURLConnection) new URL(url).openConnection();
+            con.setReadTimeout(5000);
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                     + "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36");
 
@@ -78,6 +80,8 @@ public class RssServiceImpl implements RssService {
             throw new XMLExeption("Hír forrásból eredő hiba történt", ex);
         } catch (IOException ex) {
             throw new AdatOlvasasExeption("Hiba az adatok olvasása közben", ex);
+        } finally {
+            if(con != null) con.disconnect();
         }
 
         return list;
