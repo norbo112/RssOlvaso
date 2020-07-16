@@ -20,6 +20,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:label="Link mentése">
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/*"/>
+            </intent-filter>
         </activity>
         <activity android:name=".mvvm.ui.ArticleActivity" android:parentActivityName=".mvvm.ui.NewRssReader"/>
         <activity android:name=".mvvm.ui.ArticleSavedActivity" android:parentActivityName=".mvvm.ui.NewRssReader"/>
