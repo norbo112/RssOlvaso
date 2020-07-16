@@ -20,6 +20,7 @@ import com.norbo.android.projects.rssolvaso.mvvm.data.model.Link;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.LinkClickedListener;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.LinkUpdateListener;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.MyLinkRecyclerViewAdapter;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.BevitelHibaEllenor;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.DefaultLinks;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.LinksFileController;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.LinksFileSaveController;
@@ -49,6 +50,9 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
     @Inject
     LinksFileSaveController fileSaveController;
 
+    @Inject
+    BevitelHibaEllenor ellenor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +74,20 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
                 linkViewModel.insertLink(link);
             }
         }));
+
+        fromSharedLinkInsert();
+    }
+
+    private void fromSharedLinkInsert() {
+        Intent shared = getIntent();
+        if(shared != null && shared.getStringExtra(Intent.EXTRA_TEXT) != null) {
+            linkAction.showDialog(LinkAction.ACTION_ADD, new Link("", shared.getStringExtra(Intent.EXTRA_TEXT)), (mode, link) -> {
+                if(ellenor.linkIsPassed(link))
+                    linkViewModel.insertLink(link);
+                else
+                    Toast.makeText(this, "Kérlek töltsd ki a mezőket, különben nem tudom hozzáadni a linket", Toast.LENGTH_SHORT).show();
+            });
+        }
     }
 
     @Override
