@@ -28,6 +28,7 @@ import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -73,8 +74,10 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
         //csak teszt-------------------
         articleViewModel.setMapMutableLiveData(articleLink);
         articleViewModel.getMapMutableLiveData().observe(this, channelListMap -> {
-            for (Map.Entry<Channel, List<Article>> entry: channelListMap.entrySet()) {
-                Log.i(TAG, "onCreate: Channel entry: "+entry.getKey()+" Article size: "+entry.getValue().size());
+            if(channelListMap != null && channelListMap.size() > 0) {
+                for (Map.Entry<Channel, List<Article>> entry: channelListMap.entrySet()) {
+                    Log.i(TAG, "onCreate: Channel entry: " + entry.getKey() + " Article size: " + entry.getValue().size());
+                }
             }
         });
         // ----------teszt vége
