@@ -97,6 +97,8 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+        menu.removeItem(R.id.menu_savelink);
+        menu.removeItem(R.id.menu_load_links);
         return super.onCreateOptionsMenu(menu);
     }
 

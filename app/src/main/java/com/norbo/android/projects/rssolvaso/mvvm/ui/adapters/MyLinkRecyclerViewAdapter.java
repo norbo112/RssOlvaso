@@ -2,7 +2,6 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,7 @@ public class MyLinkRecyclerViewAdapter extends RecyclerView.Adapter<MyLinkRecycl
 
     public class Action {
         public void linkClicked(Link link) {
-            linkClickedListener.link(link.getLink(), link.getNev());
+            linkClickedListener.linkViewArticle(link.getLink(), link.getNev());
         }
 
         @SuppressLint("RestrictedApi")

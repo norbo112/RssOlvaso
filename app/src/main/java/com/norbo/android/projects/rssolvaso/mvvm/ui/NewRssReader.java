@@ -102,7 +102,7 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
     }
 
     @Override
-    public void link(String url, String csatnev) {
+    public void linkViewArticle(String url, String csatnev) {
         Intent intent = new Intent(this, ArticleActivity.class);
         intent.putExtra("article_title", csatnev);
         intent.putExtra("article_url", url);
