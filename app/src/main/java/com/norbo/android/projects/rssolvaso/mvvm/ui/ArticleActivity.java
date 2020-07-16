@@ -3,6 +3,7 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +20,14 @@ import com.google.android.material.snackbar.Snackbar;
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.databinding.ActivityArticleListBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
+import com.norbo.android.projects.rssolvaso.mvvm.data.model.Channel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapterFactory;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleSavedViewModel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -32,6 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ArticleActivity extends AppCompatActivity implements ArticleRecyclerViewAdapter.ArticleView, ArticleRecyclerViewAdapter.ArticleSave {
+    private static final String TAG = "ArticleActivity";
     private ActivityArticleListBinding binding;
     private ArticleViewModel articleViewModel;
     private ArticleSavedViewModel articleSavedViewModel;
@@ -66,6 +70,14 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
             }
         });
 
+        //csak teszt-------------------
+        articleViewModel.setMapMutableLiveData(articleLink);
+        articleViewModel.getMapMutableLiveData().observe(this, channelListMap -> {
+            for (Map.Entry<Channel, List<Article>> entry: channelListMap.entrySet()) {
+                Log.i(TAG, "onCreate: Channel entry: "+entry.getKey()+" Article size: "+entry.getValue().size());
+            }
+        });
+        // ----------teszt vége
     }
 
     private void makeMySnackBar(String message) {

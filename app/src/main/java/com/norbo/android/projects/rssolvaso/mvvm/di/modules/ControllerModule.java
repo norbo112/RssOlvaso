@@ -3,6 +3,7 @@ package com.norbo.android.projects.rssolvaso.mvvm.di.modules;
 import android.content.Context;
 
 import com.norbo.android.projects.rssolvaso.mvvm.data.api.RssService;
+import com.norbo.android.projects.rssolvaso.mvvm.data.api.RssServiceWithChannels;
 import com.norbo.android.projects.rssolvaso.mvvm.data.services.RssServiceImpl;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapterFactory;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleSavedRecyclerViewAdapter;
@@ -32,4 +33,7 @@ public class ControllerModule {
     RssService rssService() {
         return new RssServiceImpl();
     }
+
+    @Provides
+    RssServiceWithChannels rssServiceWithChannels() { return new RssServiceImpl(); }
 }
