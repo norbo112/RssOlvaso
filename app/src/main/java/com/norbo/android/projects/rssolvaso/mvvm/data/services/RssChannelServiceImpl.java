@@ -3,7 +3,6 @@ package com.norbo.android.projects.rssolvaso.mvvm.data.services;
 import android.util.Log;
 
 import com.norbo.android.projects.rssolvaso.mvvm.data.api.RssChannelService;
-import com.norbo.android.projects.rssolvaso.mvvm.data.api.RssService;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Channel;
 
@@ -35,16 +34,16 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-public class RssServiceImpl implements RssService {
+public class RssChannelServiceImpl implements RssChannelService {
     private static final String TAG = "RssServiceImpl";
 
     @Inject
-    public RssServiceImpl() {
+    public RssChannelServiceImpl() {
     }
 
     @Override
-    public List<Article> getArticles(String url) throws XMLExeption, AdatOlvasasExeption {
-        List<Article> articles = new ArrayList<>();
+    public Channel geteChannelInfo(String url) throws XMLExeption, AdatOlvasasExeption{
+        Channel channel = new Channel();
         HttpURLConnection con = null;
         try {
             con = (HttpURLConnection) new URL(url).openConnection();
@@ -62,24 +61,13 @@ public class RssServiceImpl implements RssService {
             Document document = doc.parse(new InputSource(new StringReader(srcString)));
 
             XPath xPath = XPathFactory.newInstance().newXPath();
-            NodeList nodelist = (NodeList) xPath.compile("//item").evaluate(document, XPathConstants.NODESET);
-            for (int i = 0; i < nodelist.getLength(); i++) {
-                articles.add(new Article(
-                        xPath.compile("./title").evaluate(nodelist.item(i), XPathConstants.STRING)
-                                .toString(),
-                        xPath.compile("./link").evaluate(nodelist.item(i), XPathConstants.STRING)
-                                .toString(),
-                        xPath.compile("./guid").evaluate(nodelist.item(i), XPathConstants.STRING)
-                                .toString(),
-                        xPath.compile("./description").evaluate(nodelist.item(i), XPathConstants.STRING)
-                                .toString(),
-                        xPath.compile("./category").evaluate(nodelist.item(i), XPathConstants.STRING)
-                                .toString(),
-                        xPath.compile("./pubDate").evaluate(nodelist.item(i), XPathConstants.STRING)
-                                .toString(),
-                        xPath.compile("./enclosure/@url").evaluate(nodelist.item(i), XPathConstants.STRING)
-                                .toString()));
-            }
+            Node node = (Node) xPath.compile("//channel").evaluate(document, XPathConstants.NODE);
+            channel.setTitle(xPath.compile("./title").evaluate(node, XPathConstants.STRING).toString());
+            channel.setDescription(xPath.compile("./description").evaluate(node, XPathConstants.STRING).toString());
+            channel.setLink(xPath.compile("./link").evaluate(node, XPathConstants.STRING).toString());
+            channel.setLanguage(xPath.compile("./language").evaluate(node, XPathConstants.STRING).toString());
+            channel.setPubDate(xPath.compile("./pubDate").evaluate(node, XPathConstants.STRING).toString());
+            channel.setUrl(url);
         } catch (SAXException | ParserConfigurationException | XPathExpressionException ex) {
             throw new XMLExeption("Hír forrásból eredő hiba történt", ex);
         } catch (IOException ex) {
@@ -88,7 +76,7 @@ public class RssServiceImpl implements RssService {
             if(con != null) con.disconnect();
         }
 
-        return articles;
+        return channel;
     }
 
     private String getStringSource(URLConnection con) throws IOException {

@@ -70,17 +70,6 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
                 initRecyclerView(articles);
             }
         });
-
-        //csak teszt-------------------
-        articleViewModel.setMapMutableLiveData(articleLink);
-        articleViewModel.getMapMutableLiveData().observe(this, channelListMap -> {
-            if(channelListMap != null && channelListMap.size() > 0) {
-                for (Map.Entry<Channel, List<Article>> entry: channelListMap.entrySet()) {
-                    Log.i(TAG, "onCreate: Channel entry: " + entry.getKey() + " Article size: " + entry.getValue().size());
-                }
-            }
-        });
-        // ----------teszt vége
     }
 
     private void makeMySnackBar(String message) {

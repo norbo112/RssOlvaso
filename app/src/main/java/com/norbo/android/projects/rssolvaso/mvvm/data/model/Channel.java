@@ -8,15 +8,19 @@ public class Channel implements Serializable {
     private String description;
     private String link;
     private String language;
+    private String pubDate;
+    private String url;
 
     public Channel() {
     }
 
-    public Channel(String title, String description, String link, String language) {
+    public Channel(String title, String description, String link, String language, String pubDate, String url) {
         this.title = title;
         this.description = description;
         this.link = link;
         this.language = language;
+        this.pubDate = pubDate;
+        this.url = url;
     }
 
     public String getTitle() {
@@ -51,6 +55,22 @@ public class Channel implements Serializable {
         this.language = language;
     }
 
+    public String getPubDate() {
+        return pubDate;
+    }
+
+    public void setPubDate(String pubDate) {
+        this.pubDate = pubDate;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,12 +79,14 @@ public class Channel implements Serializable {
         return Objects.equals(title, channel.title) &&
                 Objects.equals(description, channel.description) &&
                 Objects.equals(link, channel.link) &&
-                Objects.equals(language, channel.language);
+                Objects.equals(language, channel.language) &&
+                Objects.equals(pubDate, channel.pubDate) &&
+                Objects.equals(url, channel.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, description, link, language);
+        return Objects.hash(title, description, link, language, pubDate, url);
     }
 
     @Override
@@ -74,6 +96,8 @@ public class Channel implements Serializable {
                 ", description='" + description + '\'' +
                 ", link='" + link + '\'' +
                 ", language='" + language + '\'' +
+                ", pubDate='" + pubDate + '\'' +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

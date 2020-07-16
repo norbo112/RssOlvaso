@@ -2,15 +2,12 @@ package com.norbo.android.projects.rssolvaso.mvvm.di.modules;
 
 import android.app.Application;
 
-import androidx.room.PrimaryKey;
 import androidx.room.Room;
 
 import com.norbo.android.projects.rssolvaso.mvvm.data.api.ArticleRepository;
 import com.norbo.android.projects.rssolvaso.mvvm.data.api.LinkRepository;
-import com.norbo.android.projects.rssolvaso.mvvm.data.api.RssService;
 import com.norbo.android.projects.rssolvaso.mvvm.data.repositories.LocalArticleRepository;
 import com.norbo.android.projects.rssolvaso.mvvm.data.repositories.LocalLinkRepository;
-import com.norbo.android.projects.rssolvaso.mvvm.data.services.RssServiceImpl;
 import com.norbo.android.projects.rssolvaso.mvvm.db.LinkDatabase;
 
 import java.util.concurrent.ExecutorService;
