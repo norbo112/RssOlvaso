@@ -24,16 +24,19 @@ import javax.inject.Singleton;
 public class ArticleViewModel extends ViewModel {
     private SavedStateHandle handle;
     private RssService rssService;
+    private RssChannelService rssChannelService;
     private ExecutorService executorService;
     private MutableLiveData<List<Article>> articles;
     private MutableLiveData<String> loadingMessage;
+    private MutableLiveData<Channel> channelData;
 
     @ViewModelInject
     public ArticleViewModel(@Assisted SavedStateHandle savedStateHandle,
-                            RssService rssService,
+                            RssService rssService, RssChannelService rssChannelService,
                             ExecutorService executorService) {
         this.handle = savedStateHandle;
         this.rssService = rssService;
+        this.rssChannelService = rssChannelService;
         this.executorService = executorService;
         this.loadingMessage = new MutableLiveData<>(null);
     }
@@ -61,6 +64,23 @@ public class ArticleViewModel extends ViewModel {
             }
 
             articles.postValue(list);
+        });
+    }
+
+    public MutableLiveData<Channel> getChannelData() {
+        if(channelData == null)
+            channelData = new MutableLiveData<>(new Channel());
+        return channelData;
+    }
+
+    public void loadChannelData(String url) {
+        executorService.execute(() -> {
+            try {
+                Channel channel = rssChannelService.getChannel(url);
+                channelData.postValue(channel);
+            } catch (XMLExeption | AdatOlvasasExeption xmlExeption) {
+                loadingMessage.postValue("CSatorna adatainak olvasása nem sikerült");
+            }
         });
     }
 

@@ -70,6 +70,9 @@ public class ArticleActivity extends AppCompatActivity implements ArticleRecycle
                 initRecyclerView(articles);
             }
         });
+
+        articleViewModel.loadChannelData(articleLink);
+        articleViewModel.getChannelData().observe(this, channel -> binding.setChannel(channel));
     }
 
     private void makeMySnackBar(String message) {

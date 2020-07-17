@@ -5,5 +5,5 @@ import com.norbo.android.projects.rssolvaso.mvvm.data.services.AdatOlvasasExepti
 import com.norbo.android.projects.rssolvaso.mvvm.data.services.XMLExeption;
 
 public interface RssChannelService {
-    Channel geteChannelInfo(String url) throws XMLExeption, AdatOlvasasExeption;
+    Channel getChannel(String url) throws XMLExeption, AdatOlvasasExeption;
 }

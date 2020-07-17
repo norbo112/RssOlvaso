@@ -42,7 +42,7 @@ public class RssChannelServiceImpl implements RssChannelService {
     }
 
     @Override
-    public Channel geteChannelInfo(String url) throws XMLExeption, AdatOlvasasExeption{
+    public Channel getChannel(String url) throws XMLExeption, AdatOlvasasExeption{
         Channel channel = new Channel();
         HttpURLConnection con = null;
         try {
