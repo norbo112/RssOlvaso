@@ -1,5 +1,7 @@
 package com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels;
 
+import android.util.Log;
+
 import androidx.hilt.Assisted;
 import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.MutableLiveData;
@@ -22,6 +24,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ArticleViewModel extends ViewModel {
+    private static final String TAG = "ArticleViewModel";
     private SavedStateHandle handle;
     private RssService rssService;
     private RssChannelService rssChannelService;
@@ -79,7 +82,8 @@ public class ArticleViewModel extends ViewModel {
                 Channel channel = rssChannelService.getChannel(url);
                 channelData.postValue(channel);
             } catch (XMLExeption | AdatOlvasasExeption xmlExeption) {
-                loadingMessage.postValue("CSatorna adatainak olvasása nem sikerült");
+                loadingMessage.postValue("Csatorna adatainak olvasása nem sikerült");
+                Log.e(TAG, "loadChannelData: ", xmlExeption);
             }
         });
     }

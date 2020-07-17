@@ -84,8 +84,6 @@ public class RssServiceImpl implements RssService {
             throw new XMLExeption("Hír forrásból eredő hiba történt", ex);
         } catch (IOException ex) {
             throw new AdatOlvasasExeption("Hiba az adatok olvasása közben", ex);
-        } finally {
-            if(con != null) con.disconnect();
         }
 
         return articles;
