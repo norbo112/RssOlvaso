@@ -52,8 +52,9 @@ public class RssServiceImpl implements RssService {
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                     + "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36");
 
-            if(con.getResponseCode() == -1)
-                Log.i(TAG, "fetchFeed: Connection status is -1 ");
+            Log.i(TAG, "getChannel: Response Code: "+con.getResponseCode());
+            if(con.getResponseCode() != 200)
+                throw new AdatOlvasasExeption("Nem elérhető a forrás");
 
             String srcString = getStringSource(con);
 
