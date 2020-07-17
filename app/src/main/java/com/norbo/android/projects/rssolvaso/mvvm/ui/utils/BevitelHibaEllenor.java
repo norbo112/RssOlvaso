@@ -18,6 +18,7 @@ public class BevitelHibaEllenor {
      * @return
      */
     public boolean linkIsPassed(Link link) {
-        return link.getLink().length() != 0 && link.getNev().length() != 0;
+        return (link.getLink() != null && link.getNev() != null) &&
+                (link.getLink().length() != 0 && link.getNev().length() != 0);
     }
 }
