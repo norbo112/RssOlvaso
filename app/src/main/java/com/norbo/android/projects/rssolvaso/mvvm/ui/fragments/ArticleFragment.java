@@ -1,13 +1,17 @@
 package com.norbo.android.projects.rssolvaso.mvvm.ui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
@@ -20,6 +24,7 @@ import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Channel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleFragmentRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapterFactory;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleSavedViewModel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
 import java.util.ArrayList;
@@ -29,12 +34,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class ArticleFragment extends Fragment {
+public class ArticleFragment extends Fragment implements ArticleFragmentRecyclerViewAdapter.ArticleSave,
+        ArticleFragmentRecyclerViewAdapter.ArticleView {
     private Context context;
     private List<Article> articles;
     private Channel channel;
     private ActivityArticleListInFragmentBinding binding;
     private ArticleViewModel articleViewModel;
+    private ArticleSavedViewModel articleSavedViewModel;
     private ViewGroup container;
 
     private ArticleFragmentRecyclerViewAdapter adapter;
@@ -48,6 +55,7 @@ public class ArticleFragment extends Fragment {
         super.onAttach(context);
         this.context = context;
         this.articleViewModel = new ViewModelProvider((ViewModelStoreOwner) context).get(ArticleViewModel.class);
+        this.articleSavedViewModel = new ViewModelProvider((ViewModelStoreOwner) context).get(ArticleSavedViewModel.class);
     }
 
     @Nullable
@@ -64,7 +72,7 @@ public class ArticleFragment extends Fragment {
     }
 
     private void initRecyclerView(List<Article> articles) {
-        adapter = new ArticleFragmentRecyclerViewAdapter(context, articles);
+        adapter = new ArticleFragmentRecyclerViewAdapter(this, articles);
         binding.articlelist.setLayoutManager(new LinearLayoutManager(context));
         binding.articlelist.setAdapter(adapter);
     }
@@ -81,5 +89,30 @@ public class ArticleFragment extends Fragment {
         articleViewModel.getLoadingMessage().observe(this, s -> {
             Snackbar.make(container, s, BaseTransientBottomBar.LENGTH_SHORT);
         });
+    }
+
+    @Override
+    public void saveArticle(Article article) {
+        articleSavedViewModel.insert(article);
+        Toast.makeText(context, article.getTitle()+" hír elmentve!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void viewArticle(Article article) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(article.getLink()));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if(intent.resolveActivity(context.getPackageManager()) != null)
+            startActivity(intent);
+    }
+
+    @Override
+    public void shareArticle(Article article) {
+        ShareCompat.IntentBuilder
+                .from(getActivity())
+                .setType("text/plain")
+                .setChooserTitle("Hír megosztása...")
+                .setText(article.getLink())
+                .startChooser();
     }
 }

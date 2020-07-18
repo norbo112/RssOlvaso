@@ -1,6 +1,7 @@
 package com.norbo.android.projects.rssolvaso.mvvm.ui;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,8 +45,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class NewRssReader extends AppCompatActivity implements LinkClickedListener, LinkUpdateListener,
-        ArticleFragmentRecyclerViewAdapter.ArticleView, ArticleFragmentRecyclerViewAdapter.ArticleSave {
+public class NewRssReader extends AppCompatActivity implements LinkClickedListener, LinkUpdateListener {
     private static final String TAG = "NewRssReader";
     private LinkViewModel linkViewModel;
     private ArticleSavedViewModel articleSavedViewModel;
@@ -69,6 +69,8 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
         super.onCreate(savedInstanceState);
         binding = ActivityNewRssReaderBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        if (isTablet()) setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        else setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         setuptActionBar("Hír olvasó");
 
@@ -199,31 +201,6 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
             fileSaveController.saveLinks(linkViewModel.getLinksLiveData().getValue(), data);
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void saveArticle(Article article) {
-        articleSavedViewModel.insert(article);
-        Toast.makeText(this, article.getTitle()+" hír elmentve!", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void viewArticle(Article article) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(article.getLink()));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if(intent.resolveActivity(getPackageManager()) != null)
-            startActivity(intent);
-    }
-
-    @Override
-    public void shareArticle(Article article) {
-        ShareCompat.IntentBuilder
-                .from(this)
-                .setType("text/plain")
-                .setChooserTitle("Hír megosztása...")
-                .setText(article.getLink())
-                .startChooser();
     }
 
     private void loadlinks(Intent data) {

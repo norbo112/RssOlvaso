@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ablanco.zoomy.Zoomy;
@@ -21,7 +22,7 @@ import java.util.List;
 public class ArticleFragmentRecyclerViewAdapter extends RecyclerView.Adapter<ArticleFragmentRecyclerViewAdapter.ViewHolder> {
 
     private final List<Article> mValues;
-    private final Context context;
+    private final Fragment fragment;
     private ArticleSave articleSave;
     private ArticleView articleView;
 
@@ -34,11 +35,11 @@ public class ArticleFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Art
         void saveArticle(Article article);
     }
 
-    public ArticleFragmentRecyclerViewAdapter(Context context, List<Article> items) {
+    public ArticleFragmentRecyclerViewAdapter(Fragment fragment, List<Article> items) {
         this.mValues = items;
-        this.context = context;
-        this.articleSave = (ArticleSave) context;
-        this.articleView = (ArticleView) context;
+        this.fragment = fragment;
+        this.articleSave = (ArticleSave) fragment;
+        this.articleView = (ArticleView) fragment;
     }
 
     @Override
@@ -74,7 +75,7 @@ public class ArticleFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Art
         }
 
         private void init(Article article) {
-            Zoomy.Builder builder = new Zoomy.Builder((Activity) context)
+            Zoomy.Builder builder = new Zoomy.Builder(fragment.getActivity())
                     .target(binding.imageView);
             builder.register();
             if (article.getImageUrl() != null && article.getImageUrl().length() > 0) {
