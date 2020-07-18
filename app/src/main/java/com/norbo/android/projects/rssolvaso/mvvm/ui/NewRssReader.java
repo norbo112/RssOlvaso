@@ -71,7 +71,10 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
 
         binding.fab.setOnClickListener(v -> linkAction.showDialog(LinkAction.ACTION_ADD, null, (mode, link) -> {
             if(mode == LinkAction.ACTION_ADD) {
-                linkViewModel.insertLink(link);
+                if(ellenor.linkIsPassed(link))
+                    linkViewModel.insertLink(link);
+                else
+                    Toast.makeText(this, "Kérlek töltsd ki a mezőket, különben nem tudom hozzáadni a linket", Toast.LENGTH_SHORT).show();
             }
         }));
 

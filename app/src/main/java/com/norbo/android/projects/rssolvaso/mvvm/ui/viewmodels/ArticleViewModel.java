@@ -1,36 +1,45 @@
 package com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels;
 
+import android.util.Log;
+
 import androidx.hilt.Assisted;
 import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
+import com.norbo.android.projects.rssolvaso.mvvm.data.api.RssChannelService;
 import com.norbo.android.projects.rssolvaso.mvvm.data.api.RssService;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
+import com.norbo.android.projects.rssolvaso.mvvm.data.model.Channel;
 import com.norbo.android.projects.rssolvaso.mvvm.data.services.AdatOlvasasExeption;
 import com.norbo.android.projects.rssolvaso.mvvm.data.services.XMLExeption;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Singleton;
 
 @Singleton
 public class ArticleViewModel extends ViewModel {
+    private static final String TAG = "ArticleViewModel";
     private SavedStateHandle handle;
     private RssService rssService;
+    private RssChannelService rssChannelService;
     private ExecutorService executorService;
     private MutableLiveData<List<Article>> articles;
     private MutableLiveData<String> loadingMessage;
+    private MutableLiveData<Channel> channelData;
 
     @ViewModelInject
     public ArticleViewModel(@Assisted SavedStateHandle savedStateHandle,
-                            RssService rssService,
+                            RssService rssService, RssChannelService rssChannelService,
                             ExecutorService executorService) {
         this.handle = savedStateHandle;
         this.rssService = rssService;
+        this.rssChannelService = rssChannelService;
         this.executorService = executorService;
         this.loadingMessage = new MutableLiveData<>(null);
     }
@@ -58,6 +67,24 @@ public class ArticleViewModel extends ViewModel {
             }
 
             articles.postValue(list);
+        });
+    }
+
+    public MutableLiveData<Channel> getChannelData() {
+        if(channelData == null)
+            channelData = new MutableLiveData<>(new Channel());
+        return channelData;
+    }
+
+    public void loadChannelData(String url) {
+        executorService.execute(() -> {
+            try {
+                Channel channel = rssChannelService.getChannel(url);
+                channelData.postValue(channel);
+            } catch (XMLExeption | AdatOlvasasExeption xmlExeption) {
+                loadingMessage.postValue("Csatorna adatainak olvasása nem sikerült");
+                Log.e(TAG, "loadChannelData: ", xmlExeption);
+            }
         });
     }
 
