@@ -14,8 +14,10 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.norbo.android.projects.rssolvaso.databinding.ActivityArticleSavedListBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleDelete;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleSavedRecyclerViewAdapterFactory;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleView;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleSavedViewModel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
@@ -26,7 +28,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ArticleSavedActivity extends AppCompatActivity implements ArticleRecyclerViewAdapter.ArticleView {
+public class ArticleSavedActivity extends AppCompatActivity implements ArticleView, ArticleDelete {
     private ActivityArticleSavedListBinding binding;
     private ArticleSavedViewModel articleSavedViewModel;
 
@@ -88,5 +90,10 @@ public class ArticleSavedActivity extends AppCompatActivity implements ArticleRe
                 .setChooserTitle("Hír megosztása...")
                 .setText(article.getLink())
                 .startChooser();
+    }
+
+    @Override
+    public void delete(Article article) {
+
     }
 }

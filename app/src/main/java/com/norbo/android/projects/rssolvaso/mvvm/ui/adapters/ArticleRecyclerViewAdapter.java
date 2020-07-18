@@ -24,15 +24,6 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
     private final ArticleView articleView;
     private final ArticleSave articleSave;
 
-    public interface ArticleView {
-        void viewArticle(Article article);
-        void shareArticle(Article article);
-    }
-
-    public interface ArticleSave {
-        void saveArticle(Article article);
-    }
-
     public ArticleRecyclerViewAdapter(Context context, List<Article> items) {
         this.mValues = items;
         this.context = context;

@@ -35,4 +35,9 @@ public class LocalArticleRepository implements ArticleRepository {
     public void insert(ArticleEntity articleEntity) {
         executorService.execute(() -> articleDao.insert(articleEntity));
     }
+
+    @Override
+    public void delete(ArticleEntity articleEntity) {
+        executorService.execute(() -> articleDao.delete(articleEntity));
+    }
 }

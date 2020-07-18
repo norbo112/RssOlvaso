@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ablanco.zoomy.Zoomy;
 import com.norbo.android.projects.rssolvaso.R;
-import com.norbo.android.projects.rssolvaso.databinding.NewRssReaderArticleItemBinding;
 import com.norbo.android.projects.rssolvaso.databinding.NewRssReaderArticleSavedItemBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
 import com.squareup.picasso.Picasso;
@@ -22,12 +21,14 @@ public class ArticleSavedRecyclerViewAdapter extends RecyclerView.Adapter<Articl
 
     private final List<Article> mValues;
     private final Context context;
-    private ArticleRecyclerViewAdapter.ArticleView articleView;
+    private ArticleView articleView;
+    private ArticleDelete articleDelete;
 
     public ArticleSavedRecyclerViewAdapter(Context context, List<Article> items) {
         this.mValues = items;
         this.context = context;
-        this.articleView = (ArticleRecyclerViewAdapter.ArticleView) context;
+        this.articleView = (ArticleView) context;
+        this.articleDelete = (ArticleDelete) context;
     }
 
     @Override
@@ -87,6 +88,10 @@ public class ArticleSavedRecyclerViewAdapter extends RecyclerView.Adapter<Articl
 
         public void shareArticle(Article article) {
             articleView.shareArticle(article);
+        }
+
+        public void deleteArticle(Article article) {
+            articleDelete.delete(article);
         }
     }
 }

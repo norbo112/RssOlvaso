@@ -23,6 +23,8 @@ import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Channel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapterFactory;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleSave;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleView;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleSavedViewModel;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
@@ -35,7 +37,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ArticleActivity extends AppCompatActivity implements ArticleRecyclerViewAdapter.ArticleView, ArticleRecyclerViewAdapter.ArticleSave {
+public class ArticleActivity extends AppCompatActivity implements ArticleSave, ArticleView {
     private static final String TAG = "ArticleActivity";
     private ActivityArticleListBinding binding;
     private ArticleViewModel articleViewModel;

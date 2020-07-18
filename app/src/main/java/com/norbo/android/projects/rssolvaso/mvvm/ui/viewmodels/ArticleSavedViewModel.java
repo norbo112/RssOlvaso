@@ -51,11 +51,17 @@ public class ArticleSavedViewModel extends ViewModel {
     }
 
     public void insert(Article article) {
-        executorService.execute(() -> repository.insert(
-                new ArticleEntity(
+        repository.insert(new ArticleEntity(
                         article.getTitle(), article.getLink(),
                         article.getGuid(), article.getDescription(),
                         article.getCategory(), article.getPubDate(),
-                        article.getImageUrl())));
+                        article.getImageUrl()));
+    }
+
+    public void delete(Article article) {
+        repository.delete(new ArticleEntity(article.getTitle(), article.getLink(),
+                article.getGuid(), article.getDescription(),
+                article.getCategory(), article.getPubDate(),
+                article.getImageUrl()));
     }
 }
