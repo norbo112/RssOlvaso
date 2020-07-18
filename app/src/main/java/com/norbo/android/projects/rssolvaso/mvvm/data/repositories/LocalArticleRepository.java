@@ -37,7 +37,7 @@ public class LocalArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void delete(ArticleEntity articleEntity) {
-        executorService.execute(() -> articleDao.delete(articleEntity));
+    public void delete(String title) {
+        executorService.execute(() -> articleDao.delete(title));
     }
 }

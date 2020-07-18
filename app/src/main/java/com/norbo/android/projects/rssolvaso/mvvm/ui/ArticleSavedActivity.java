@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -94,6 +95,10 @@ public class ArticleSavedActivity extends AppCompatActivity implements ArticleVi
 
     @Override
     public void delete(Article article) {
-
+        new AlertDialog.Builder(this)
+                .setMessage(article.getTitle()+" cikket, biztosan törlöd?")
+                .setPositiveButton("igen", ((dialog, which) -> articleSavedViewModel.delete(article)))
+                .setNegativeButton("mégse", ((dialog, which) -> dialog.dismiss()))
+                .show();
     }
 }

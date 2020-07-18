@@ -19,6 +19,6 @@ public interface ArticleDao {
     @Query("SELECT * FROM articleentity")
     LiveData<List<ArticleEntity>> selectAll();
 
-    @Delete
-    void delete(ArticleEntity articleEntity);
+    @Query("DELETE FROM articleentity WHERE title =:title")
+    void delete(String title);
 }

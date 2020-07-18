@@ -24,16 +24,13 @@ import javax.inject.Singleton;
 @Singleton
 public class ArticleSavedViewModel extends ViewModel {
     private SavedStateHandle handle;
-    private ExecutorService executorService;
     private ArticleRepository repository;
     private LiveData<List<Article>> articleLiveData;
 
     @ViewModelInject
     public ArticleSavedViewModel(@Assisted SavedStateHandle savedStateHandle,
-                                 ArticleRepository repository,
-                                 ExecutorService executorService) {
+                                 ArticleRepository repository) {
         this.handle = savedStateHandle;
-        this.executorService = executorService;
         this.repository = repository;
         this.articleLiveData = Transformations.map(repository.getData(), entities ->
                 entities.stream().map(articleEntity -> new Article(articleEntity.getId(),
@@ -59,9 +56,6 @@ public class ArticleSavedViewModel extends ViewModel {
     }
 
     public void delete(Article article) {
-        repository.delete(new ArticleEntity(article.getTitle(), article.getLink(),
-                article.getGuid(), article.getDescription(),
-                article.getCategory(), article.getPubDate(),
-                article.getImageUrl()));
+        repository.delete(article.getTitle());
     }
 }
