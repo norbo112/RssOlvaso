@@ -5,4 +5,4 @@ Rss csatornák olvasására alkalmas mobil alkalmazás.
 Lehetőség van új link felvételére, szerkesztésére,
 A Hírek megoszthatók és ellehet menteni őket.
 
-hirolvaso.apk Mobil alkalmazást, kipróbálásra is feltöltöttem
+A hirolvaso.apk alkalmazást kipróbálásra feltöltöttem
