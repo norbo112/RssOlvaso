@@ -3,6 +3,7 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -13,12 +14,14 @@ import com.ablanco.zoomy.Zoomy;
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.databinding.NewRssReaderArticleItemBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
+import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.utils.ArticleDescriptionImage;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecyclerViewAdapter.ViewHolder> {
-
     private final List<Article> mValues;
     private final Context context;
     private final ArticleView articleView;
@@ -73,7 +76,15 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
                         .fit()
                         .into(binding.imageView);
             } else {
-                binding.imageView.setImageResource(android.R.drawable.dialog_holo_light_frame);
+                String urlFromDesc = ArticleDescriptionImage.getImageUrlFromDescription(article.getDescription());
+                if (urlFromDesc != null) {
+                    Picasso.get()
+                    .load(urlFromDesc)
+                    .fit()
+                    .into(binding.imageView);
+                } else {
+                    binding.imageView.setImageResource(android.R.drawable.dialog_holo_light_frame);
+                }
             }
 
             binding.articleDescription.setText(Html.fromHtml(article.getDescription(), Html.FROM_HTML_MODE_LEGACY));
