@@ -3,7 +3,6 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +19,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.norbo.android.projects.rssolvaso.R;
 import com.norbo.android.projects.rssolvaso.databinding.ActivityArticleListBinding;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
-import com.norbo.android.projects.rssolvaso.mvvm.data.model.Channel;
-import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapter;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleRecyclerViewAdapterFactory;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleSave;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.ArticleView;
@@ -29,8 +26,6 @@ import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleSavedViewM
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.ArticleViewModel;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -66,7 +61,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleSave, A
                 articleViewModel.snackBarShoved();
             }
         });
-        articleViewModel.getArticlesByLink(articleLink);
+        articleViewModel.loadArticlesByLink(articleLink);
         articleViewModel.getArticles().observe(this, articles -> {
             if(articles != null) {
                 initRecyclerView(articles);
@@ -100,7 +95,7 @@ public class ArticleActivity extends AppCompatActivity implements ArticleSave, A
     }
 
     private View.OnClickListener actionBarRetry = v -> {
-        articleViewModel.getArticlesByLink(articleLink);
+        articleViewModel.loadArticlesByLink(articleLink);
     };
 
     @Override

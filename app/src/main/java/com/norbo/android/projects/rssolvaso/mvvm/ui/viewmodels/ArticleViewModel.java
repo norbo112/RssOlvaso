@@ -54,7 +54,7 @@ public class ArticleViewModel extends ViewModel {
         return loadingMessage;
     }
 
-    public void getArticlesByLink(String link) {
+    public void loadArticlesByLink(String link) {
         loadingMessage.postValue("Cikkek betöltése");
         executorService.execute(() -> {
             List<Article> list = null;
