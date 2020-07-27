@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public final class ArticleDescriptionImage {
     public String getImageUrlFromDescription(String description) {
         String result = null;
-        Pattern pattern = Pattern.compile("src=\"([^\"]+.(jpg|png|gif))\"");
+        Pattern pattern = Pattern.compile("src=\"([^\"]+\\.(jpg|png|gif))\"");
         Matcher matcher = pattern.matcher(description);
         if (matcher.find()) {
             result = matcher.group(1);
