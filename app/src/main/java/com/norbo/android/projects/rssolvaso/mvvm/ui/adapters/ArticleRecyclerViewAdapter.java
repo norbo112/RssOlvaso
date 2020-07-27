@@ -3,7 +3,6 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -18,20 +17,20 @@ import com.norbo.android.projects.rssolvaso.mvvm.ui.adapters.utils.ArticleDescri
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecyclerViewAdapter.ViewHolder> {
     private final List<Article> mValues;
     private final Context context;
     private final ArticleView articleView;
     private final ArticleSave articleSave;
+    private final ArticleDescriptionImage articleDescriptionImage;
 
     public ArticleRecyclerViewAdapter(Context context, List<Article> items) {
         this.mValues = items;
         this.context = context;
         this.articleView = (ArticleView) context;
         this.articleSave = (ArticleSave) context;
+        this.articleDescriptionImage = new ArticleDescriptionImage();
     }
 
     @Override
@@ -76,7 +75,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
                         .fit()
                         .into(binding.imageView);
             } else {
-                String urlFromDesc = ArticleDescriptionImage.getImageUrlFromDescription(article.getDescription());
+                String urlFromDesc = articleDescriptionImage.getImageUrlFromDescription(article.getDescription());
                 if (urlFromDesc != null) {
                     Picasso.get()
                     .load(urlFromDesc)
