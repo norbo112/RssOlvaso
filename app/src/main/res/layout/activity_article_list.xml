@@ -22,7 +22,7 @@
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
                 app:contentScrim="@color/colorPrimary"
                 android:fitsSystemWindows="true"
                 app:titleEnabled="false">
