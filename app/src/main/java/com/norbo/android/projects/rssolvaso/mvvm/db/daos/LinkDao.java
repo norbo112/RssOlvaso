@@ -23,6 +23,9 @@ public interface LinkDao {
     @Query("SELECT * FROM linkentity ORDER BY nev ASC")
     LiveData<List<LinkEntity>> getAll();
 
+    @Query("DELETE FROM linkentity")
+    void deleteAll();
+
     @Query("SELECT COUNT(*) FROM linkentity")
     int count();
 

@@ -14,4 +14,5 @@ public interface LinkRepository {
     void update(LinkEntity linkEntity);
 
     void delete(LinkEntity linkEntity);
+    void deleteAll();
 }

@@ -20,4 +20,5 @@
     <string name="rss_article_btn_share_label">Megosztás</string>
     <string name="menu_links_load_label">Linkek betöltése</string>
     <string name="menu_save_links_label">Linkek mentése</string>
+    <string name="menu_link_clear_label">Linkek törlése</string>
 </resources>

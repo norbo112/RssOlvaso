@@ -107,8 +107,18 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
             fileController.showFileChooser(this);
         } else if(item.getItemId() == R.id.menu_savelink) {
             fileSaveController.showDirectoryChooser(this);
+        } else if(item.getItemId() == R.id.menu_link_clear) {
+            linksClear();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void linksClear() {
+        new AlertDialog.Builder(this)
+                .setMessage("tényleg tötölni akarod a link listát?")
+                .setNegativeButton("mégse", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("ok", (dialog, which) -> linkViewModel.deleteAll())
+                .show();
     }
 
     private void setuptActionBar(String title) {

@@ -58,4 +58,8 @@ public class LinkViewModel extends ViewModel {
     public void delete(Link link) {
         repository.delete(new LinkEntity(link.getId(), link.getNev(), link.getLink()));
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }
