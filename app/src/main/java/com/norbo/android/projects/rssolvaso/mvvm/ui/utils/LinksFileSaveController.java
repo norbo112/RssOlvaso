@@ -67,7 +67,7 @@ public class LinksFileSaveController {
     private void saveLinksToDirectory(List<Link> links, String path) {
         String name = "links_"+System.currentTimeMillis()+".json";
         List<LinkToFile> linkToFiles = links.stream()
-                .map(link -> new LinkToFile(link.getNev(), link.getLink()))
+                .map(link -> new LinkToFile(link.getNev(), link.getLink(), link.getFavorite()))
                 .collect(Collectors.toList());
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path, name)))) {
             Gson gson = new Gson();

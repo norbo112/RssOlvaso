@@ -116,7 +116,7 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
 
     private void linksClear() {
         new AlertDialog.Builder(this)
-                .setMessage("tényleg tötölni akarod a link listát?")
+                .setMessage("Tényleg tötölni akarod a link listát?")
                 .setNegativeButton("mégse", (dialog, which) -> dialog.dismiss())
                 .setPositiveButton("ok", (dialog, which) -> linkViewModel.deleteAll())
                 .show();

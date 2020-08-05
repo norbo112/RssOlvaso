@@ -44,7 +44,7 @@ public class LinkViewModel extends ViewModel {
 
     public void insert(List<Link> links) {
         repository.insert(links.stream()
-                .map(link -> new LinkEntity(link.getNev(), link.getLink()))
+                .map(link -> new LinkEntity(link.getNev(), link.getLink(), link.getFavorite()))
                 .collect(Collectors.toList()));
     }
 

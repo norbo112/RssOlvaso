@@ -19,6 +19,14 @@ public class LinkEntity {
     public LinkEntity(String nev, String link) {
         this.nev = nev;
         this.link = link;
+        this.favorite = 0;
+    }
+
+    @Ignore
+    public LinkEntity(String nev, String link, Integer favorite) {
+        this.nev = nev;
+        this.link = link;
+        this.favorite = favorite;
     }
 
     @Ignore
