@@ -3,6 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/link_menu_fav"
+        android:icon="@drawable/ic_favorite"
+        android:title="Kedvenchez ad" />
+    <item
         android:id="@+id/link_menu_edit"
         android:icon="@drawable/ic_edit"
         android:title="Szerkeszt" />

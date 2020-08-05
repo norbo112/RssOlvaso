@@ -27,7 +27,8 @@ public class DatabaseModule {
     @Singleton
     LinkDatabase linkDatabase(Application application) {
         return Room.databaseBuilder(application, LinkDatabase.class, LinkDatabase.DB_NAME)
-                .addMigrations(LinkDatabase.MIGRATE_1_2).build();
+                .addMigrations(LinkDatabase.MIGRATE_1_2)
+                .addMigrations(LinkDatabase.MIGRATE_2_3).build();
     }
 
     @Provides

@@ -7,6 +7,7 @@ public class Link implements Serializable {
     private Integer id;
     private String nev;
     private String link;
+    private Integer favorite;
 
     public Link() {
     }
@@ -20,6 +21,21 @@ public class Link implements Serializable {
         this.id = id;
         this.nev = nev;
         this.link = link;
+    }
+
+    public Link(Integer id, String nev, String link, Integer favorite) {
+        this.id = id;
+        this.nev = nev;
+        this.link = link;
+        this.favorite = favorite;
+    }
+
+    public Integer getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Integer favorite) {
+        this.favorite = favorite;
     }
 
     public Integer getId() {
@@ -53,12 +69,13 @@ public class Link implements Serializable {
         Link link1 = (Link) o;
         return Objects.equals(id, link1.id) &&
                 Objects.equals(nev, link1.nev) &&
-                Objects.equals(link, link1.link);
+                Objects.equals(link, link1.link) &&
+                Objects.equals(favorite, link1.favorite);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nev, link);
+        return Objects.hash(id, nev, link, favorite);
     }
 
     @Override
@@ -67,6 +84,7 @@ public class Link implements Serializable {
                 "id=" + id +
                 ", nev='" + nev + '\'' +
                 ", link='" + link + '\'' +
+                ", favorite=" + favorite +
                 '}';
     }
 }

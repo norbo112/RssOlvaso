@@ -28,7 +28,8 @@ public class LinkViewModel extends ViewModel {
                         (linkEntity -> new Link(
                                 linkEntity.getId(),
                                 linkEntity.getNev(),
-                                linkEntity.getLink()))).collect(Collectors.toList()));
+                                linkEntity.getLink(),
+                                linkEntity.getFavorite()))).collect(Collectors.toList()));
     }
 
     public LiveData<List<Link>> getLinksLiveData() {
@@ -61,5 +62,9 @@ public class LinkViewModel extends ViewModel {
 
     public void deleteAll() {
         repository.deleteAll();
+    }
+
+    public void favorite(Link link) {
+        repository.setFavorite(new LinkEntity(link.getId(), link.getNev(), link.getLink(), link.getFavorite()));
     }
 }

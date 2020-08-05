@@ -27,7 +27,6 @@ import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.LinksFileSaveControlle
 import com.norbo.android.projects.rssolvaso.mvvm.ui.utils.actions.LinkAction;
 import com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels.LinkViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -77,6 +76,8 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
                     Toast.makeText(this, "Kérlek töltsd ki a mezőket, különben nem tudom hozzáadni a linket", Toast.LENGTH_SHORT).show();
             }
         }));
+
+
 
         fromSharedLinkInsert();
     }
@@ -128,8 +129,9 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
     }
 
     private void initRecyclerView(List<Link> links) {
+        MyLinkRecyclerViewAdapter adapter = new MyLinkRecyclerViewAdapter(this, links);
         binding.list.setLayoutManager(new LinearLayoutManager(this));
-        binding.list.setAdapter(new MyLinkRecyclerViewAdapter(this, links));
+        binding.list.setAdapter(adapter);
     }
 
     @Override
@@ -157,6 +159,13 @@ public class NewRssReader extends AppCompatActivity implements LinkClickedListen
                 .setPositiveButton("igen", (dialog, which) -> linkViewModel.delete(link))
                 .setNegativeButton("nem", (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    @Override
+    public void favoriteLink(Link link) {
+        if(link.getFavorite() == 0) link.setFavorite(1);
+        else link.setFavorite(0);
+        linkViewModel.favorite(link);
     }
 
     @Override

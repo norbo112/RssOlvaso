@@ -15,4 +15,6 @@ public interface LinkRepository {
 
     void delete(LinkEntity linkEntity);
     void deleteAll();
+
+    void setFavorite(LinkEntity entity);
 }

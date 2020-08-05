@@ -11,7 +11,7 @@ import com.norbo.android.projects.rssolvaso.mvvm.db.daos.LinkDao;
 import com.norbo.android.projects.rssolvaso.mvvm.db.entities.ArticleEntity;
 import com.norbo.android.projects.rssolvaso.mvvm.db.entities.LinkEntity;
 
-@Database(entities = {LinkEntity.class, ArticleEntity.class}, version = 2, exportSchema = false)
+@Database(entities = {LinkEntity.class, ArticleEntity.class}, version = 3, exportSchema = false)
 public abstract class LinkDatabase extends RoomDatabase {
     public static final String DB_NAME = "LinkDatabase";
     public abstract LinkDao linkDao();
@@ -30,6 +30,13 @@ public abstract class LinkDatabase extends RoomDatabase {
                     "pubDate TEXT ,"+
                     "imageUrl TEXT " +
                     ")");
+        }
+    };
+
+    public static final Migration MIGRATE_2_3 = new Migration(2,3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE linkentity ADD COLUMN favorite INTEGER DEFAULT 0");
         }
     };
 }

@@ -20,7 +20,7 @@ public interface LinkDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<LinkEntity> linkEntities);
 
-    @Query("SELECT * FROM linkentity ORDER BY nev ASC")
+    @Query("SELECT * FROM linkentity ORDER BY favorite DESC")
     LiveData<List<LinkEntity>> getAll();
 
     @Query("DELETE FROM linkentity")
@@ -34,4 +34,7 @@ public interface LinkDao {
 
     @Delete
     void delete(LinkEntity linkEntity);
+
+    @Query("UPDATE linkentity SET favorite = :fav WHERE id =:linkid ")
+    int favorite(int linkid, int fav);
 }

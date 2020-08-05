@@ -60,4 +60,9 @@ public class LocalLinkRepository implements LinkRepository {
     public void deleteAll() {
         executorService.execute(() -> linkDao.deleteAll());
     }
+
+    @Override
+    public void setFavorite(LinkEntity entity) {
+        executorService.execute(() -> linkDao.favorite(entity.getId(), entity.getFavorite()));
+    }
 }

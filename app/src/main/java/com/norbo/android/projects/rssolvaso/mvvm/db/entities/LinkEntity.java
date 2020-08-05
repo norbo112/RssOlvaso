@@ -10,6 +10,7 @@ public class LinkEntity {
     private Integer id;
     private String nev;
     private String link;
+    private Integer favorite;
 
     public LinkEntity() {
     }
@@ -25,6 +26,22 @@ public class LinkEntity {
         this.id = id;
         this.nev = nev;
         this.link = link;
+    }
+
+    @Ignore
+    public LinkEntity(Integer id, String nev, String link, Integer favorite) {
+        this.id = id;
+        this.nev = nev;
+        this.link = link;
+        this.favorite = favorite;
+    }
+
+    public Integer getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Integer favorite) {
+        this.favorite = favorite;
     }
 
     public Integer getId() {

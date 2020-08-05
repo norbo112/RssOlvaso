@@ -83,6 +83,8 @@ public class MyLinkRecyclerViewAdapter extends RecyclerView.Adapter<MyLinkRecycl
                     linkUpdateListener.linkUpdate(link);
                 } else if(item.getItemId() == R.id.link_menu_delete) {
                     linkUpdateListener.deleteLink(link);
+                } else if(item.getItemId() == R.id.link_menu_fav) {
+                    linkUpdateListener.favoriteLink(link);
                 }
                 return true;
             });
