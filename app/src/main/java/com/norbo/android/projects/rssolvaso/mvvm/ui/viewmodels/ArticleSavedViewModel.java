@@ -3,20 +3,16 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui.viewmodels;
 import androidx.hilt.Assisted;
 import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.norbo.android.projects.rssolvaso.mvvm.data.api.ArticleRepository;
-import com.norbo.android.projects.rssolvaso.mvvm.data.api.RssService;
 import com.norbo.android.projects.rssolvaso.mvvm.data.model.Article;
-import com.norbo.android.projects.rssolvaso.mvvm.data.repositories.LocalArticleRepository;
 import com.norbo.android.projects.rssolvaso.mvvm.db.entities.ArticleEntity;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import javax.inject.Singleton;
@@ -57,5 +53,9 @@ public class ArticleSavedViewModel extends ViewModel {
 
     public void delete(Article article) {
         repository.delete(article.getTitle());
+    }
+
+    public CompletableFuture<ArticleEntity> getOne(String title) {
+        return repository.getOne(title);
     }
 }

@@ -21,4 +21,7 @@ public interface ArticleDao {
 
     @Query("DELETE FROM articleentity WHERE title =:title")
     void delete(String title);
+
+    @Query("SELECT title FROM articleentity WHERE title =:title")
+    ArticleEntity getOne(String title);
 }

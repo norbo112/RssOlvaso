@@ -6,9 +6,9 @@ import com.norbo.android.projects.rssolvaso.mvvm.data.api.ArticleRepository;
 import com.norbo.android.projects.rssolvaso.mvvm.db.LinkDatabase;
 import com.norbo.android.projects.rssolvaso.mvvm.db.daos.ArticleDao;
 import com.norbo.android.projects.rssolvaso.mvvm.db.entities.ArticleEntity;
-import com.norbo.android.projects.rssolvaso.mvvm.db.entities.LinkEntity;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
@@ -39,5 +39,10 @@ public class LocalArticleRepository implements ArticleRepository {
     @Override
     public void delete(String title) {
         executorService.execute(() -> articleDao.delete(title));
+    }
+
+    @Override
+    public CompletableFuture<ArticleEntity> getOne(String title) {
+        return CompletableFuture.supplyAsync(() -> articleDao.getOne(title), executorService);
     }
 }

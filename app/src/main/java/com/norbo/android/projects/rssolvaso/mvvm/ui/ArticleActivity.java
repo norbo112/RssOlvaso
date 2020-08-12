@@ -3,6 +3,7 @@ package com.norbo.android.projects.rssolvaso.mvvm.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -135,7 +136,17 @@ public class ArticleActivity extends AppCompatActivity implements ArticleSave, A
 
     @Override
     public void saveArticle(Article article) {
-        articleSavedViewModel.insert(article);
-        Toast.makeText(this, article.getTitle()+" hír elmentve!", Toast.LENGTH_SHORT).show();
+        articleSavedViewModel.getOne(article.getTitle()).whenComplete((articleEntity, throwable) -> {
+            if(articleEntity != null) {
+                runOnUiThread(() -> toaster("Ezt a hírt már mentetted"));
+            } else {
+                articleSavedViewModel.insert(article);
+                runOnUiThread(() -> toaster(article.getTitle()+" hír elmentve!"));
+            }
+        });
+    }
+
+    public void toaster(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
